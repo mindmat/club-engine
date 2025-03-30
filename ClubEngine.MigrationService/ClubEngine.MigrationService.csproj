@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-ClubEngine.MigrationService-13f4cfcc-536d-48d7-869b-3fc4be0020c4</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Microsoft.EntityFrameworkCore.SqlServer" Version="9.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ClubEngine.ApiService\ClubEngine.ApiService.csproj" />
+    <ProjectReference Include="..\ClubEngine.ServiceDefaults\ClubEngine.ServiceDefaults.csproj" />
+  </ItemGroup>
+</Project>

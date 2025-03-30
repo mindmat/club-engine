@@ -1,0 +1,6 @@
+﻿CLI:
+dotnet ef migrations add {name} --context AppDbContext
+dotnet ef migrations remove -f
+
+dotnet ef database update
+dotnet ef database update --context AppDbContext --connection
