@@ -1,6 +1,11 @@
 using System.Diagnostics;
-using ClubEngine.ApiService.Infrastructure;
+
+using AppEngine.DataAccess;
+
+using ClubEngine.ApiService.Clubs;
+
 using Microsoft.EntityFrameworkCore;
+
 using OpenTelemetry.Trace;
 
 namespace ClubEngine.MigrationService;
@@ -19,7 +24,7 @@ public class Worker(
         try
         {
             using var scope = serviceProvider.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<ClubEngineDbContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             await RunMigrationAsync(dbContext, cancellationToken);
             await SeedDataAsync(dbContext, cancellationToken);
@@ -33,18 +38,17 @@ public class Worker(
         hostApplicationLifetime.StopApplication();
     }
 
-    private static async Task RunMigrationAsync(ClubEngineDbContext dbContext, CancellationToken cancellationToken)
+    private static async Task RunMigrationAsync(AppDbContext dbContext, CancellationToken cancellationToken)
     {
         var strategy = dbContext.Database.CreateExecutionStrategy();
         await strategy.ExecuteAsync(async () =>
         {
-            var cs = dbContext.Database.GetConnectionString();
             // Run migration in a transaction to avoid partial migration if it fails.
             await dbContext.Database.MigrateAsync(cancellationToken);
         });
     }
 
-    private static async Task SeedDataAsync(ClubEngineDbContext dbContext, CancellationToken cancellationToken)
+    private static async Task SeedDataAsync(AppDbContext dbContext, CancellationToken cancellationToken)
     {
         //SupportTicket firstTicket = new()
         //{

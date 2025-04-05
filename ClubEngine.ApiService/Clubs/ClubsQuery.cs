@@ -9,9 +9,9 @@ public class ClubsQueryHandler(IQueryable<Club> clubs) : IRequestHandler<ClubsQu
 {
     public async Task<IEnumerable<ClubListItem>> Handle(ClubsQuery request, CancellationToken cancellationToken)
     {
-        return await clubs.Select(clb => new ClubListItem(clb.Id, clb.Name))
+        return await clubs.Select(clb => new ClubListItem(clb.Id, clb.Name, clb.Acronym))
                           .ToListAsync(cancellationToken);
     }
 }
 
-public record ClubListItem(Guid Id, string Name);
+public record ClubListItem(Guid Id, string Name, string Acronym);

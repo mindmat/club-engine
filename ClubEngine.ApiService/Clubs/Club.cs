@@ -1,24 +1,22 @@
-﻿using AppEngine.DataAccess;
+﻿using AppEngine.Partitions;
+
 using ClubEngine.ApiService.Members;
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ClubEngine.ApiService.Clubs;
 
-public class Club : Entity
+public class Club : Partition
 {
-    public string Name { get; set; } = null!;
     public ICollection<Member>? Members { get; set; }
 }
 
-public class ClubMap : EntityMap<Club>
+public class ClubMap : IEntityTypeConfiguration<Club>
 {
-    protected override void ConfigureEntity(EntityTypeBuilder<Club> builder)
+    public void Configure(EntityTypeBuilder<Club> builder)
     {
         builder.ToTable("Clubs");
-
-        builder.Property(ent => ent.Name)
-               .HasMaxLength(300);
     }
 }

@@ -1,11 +1,7 @@
 using AppEngine;
 using AppEngine.ErrorHandling;
-using AppEngine.Mediator;
 
 using ClubEngine.ApiService;
-using ClubEngine.ApiService.Infrastructure;
-
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,12 +30,9 @@ builder.Services.AddOpenApiDocument();
     //};
 //});
 
-builder.Services.AddDbContext<DbContext, ClubEngineDbContext>(options =>
-                                                                  options.UseSqlServer(builder.Configuration.GetConnectionString("database")
-                                                                                       ?? throw new InvalidOperationException("Connection string 'database' not found.")));
 //builder.Services.AddControllers();
 builder.Services.AddScoped<HomeController>();
-builder.Services.AddAppEngine([typeof(Program).Assembly]);
+builder.AddAppEngine([typeof(Program).Assembly]);
 
 
 var app = builder.Build();

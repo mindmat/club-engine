@@ -110,7 +110,7 @@ export class NotificationService
         this.connectionEstablished$.pipe(
             filter(c => !!c),
             mergeMap(_ => this.subscription$),
-        ).subscribe(name => this.hubConnection.invoke('SubscribeToEvent', name));
+        ).subscribe(name => this.hubConnection.invoke('SubscribeToPartition', name));
     }
 }
 

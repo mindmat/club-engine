@@ -45,6 +45,38 @@
           }
         }
       }
+    },
+    "/api/PartitionByAcronymQuery": {
+      "post": {
+        "tags": [
+          "PartitionByAcronym"
+        ],
+        "operationId": "PartitionByAcronym_Query",
+        "requestBody": {
+          "x-name": "PartitionByAcronymQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PartitionByAcronymQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartitionDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -59,12 +91,41 @@
           },
           "name": {
             "type": "string"
+          },
+          "acronym": {
+            "type": "string"
           }
         }
       },
       "ClubsQuery": {
         "type": "object",
         "additionalProperties": false
+      },
+      "PartitionDetails": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "acronym": {
+            "type": "string"
+          }
+        }
+      },
+      "PartitionByAcronymQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "acronym": {
+            "type": "string",
+            "nullable": true
+          }
+        }
       }
     }
   }

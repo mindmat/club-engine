@@ -17,6 +17,8 @@ namespace ClubEngine.ApiService.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Acronym = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
                     IncrementalKey = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
@@ -52,6 +54,32 @@ namespace ClubEngine.ApiService.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "MenuNodeReadModels",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PartitionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Key = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Hidden = table.Column<bool>(type: "bit", nullable: false),
+                    Style = table.Column<int>(type: "int", nullable: false),
+                    IncrementalKey = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MenuNodeReadModels", x => x.Id)
+                        .Annotation("SqlServer:Clustered", false);
+                    table.ForeignKey(
+                        name: "FK_MenuNodeReadModels_Clubs_PartitionId",
+                        column: x => x.PartitionId,
+                        principalTable: "Clubs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Clubs_IncrementalKey",
                 table: "Clubs",
@@ -70,6 +98,19 @@ namespace ClubEngine.ApiService.Migrations
                 column: "IncrementalKey",
                 unique: true)
                 .Annotation("SqlServer:Clustered", true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MenuNodeReadModels_IncrementalKey",
+                table: "MenuNodeReadModels",
+                column: "IncrementalKey",
+                unique: true)
+                .Annotation("SqlServer:Clustered", true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MenuNodeReadModels_PartitionId_Key",
+                table: "MenuNodeReadModels",
+                columns: new[] { "PartitionId", "Key" },
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -77,6 +118,9 @@ namespace ClubEngine.ApiService.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Members");
+
+            migrationBuilder.DropTable(
+                name: "MenuNodeReadModels");
 
             migrationBuilder.DropTable(
                 name: "Clubs");
