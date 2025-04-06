@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace AppEngine.Mediator;
 
 public class MediatorEndpointApiDescriptionGroupCollectionProvider(RequestRegistry requestRegistry,
-                                                                   TranslationAggregator translationAggregator) 
+                                                                   Translator translator) 
     : IApiDescriptionGroupCollectionProvider
 {
     public int Order => 1;
@@ -23,7 +23,7 @@ public class MediatorEndpointApiDescriptionGroupCollectionProvider(RequestRegist
                 var (request, suffix) = Split(requestType.Request.Name);
                 var controllerActionDescriptor = new ControllerActionDescriptor
                                                  {
-                                                     DisplayName = translationAggregator.GetResourceString(requestType.Request.Name),
+                                                     DisplayName = translator.GetResourceString(requestType.Request.Name),
                                                      ControllerName = request,
                                                      ActionName = suffix,
                                                      ControllerTypeInfo = requestType.RequestHandler.GetTypeInfo(),

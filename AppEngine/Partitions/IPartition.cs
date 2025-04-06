@@ -1,4 +1,7 @@
-﻿using AppEngine.DataAccess;
+﻿using AppEngine.Authorization.UsersInPartition;
+using AppEngine.Authorization.UsersInPartition.AccessRequests;
+using AppEngine.Configurations;
+using AppEngine.DataAccess;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -16,6 +19,9 @@ public abstract class Partition : Entity, IPartition
 {
     public string Name { get; set; } = null!;
     public string Acronym { get; set; } = null!;
+    public ICollection<UserInPartition>? Users { get; set; }
+    public ICollection<AccessToPartitionRequest>? AccessRequests { get; set; }
+    public ICollection<PartitionConfiguration>? Configurations { get; set; }
 }
 
 

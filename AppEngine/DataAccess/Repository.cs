@@ -1,10 +1,22 @@
-﻿using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace AppEngine.DataAccess;
 
-public class Repository<TEntity>(DbContext dbContext) : Queryable<TEntity>(dbContext)//, IRepository<TEntity>
+using System.Linq.Expressions;
+
+public interface IRepository<TEntity> : IQueryable<TEntity>
+    where TEntity : Entity
+{
+    Task<TEntity?> Get(Expression<Func<TEntity, bool>> predicate);
+    Task<TEntity?> GetById(Guid id);
+    Task Upsert(TEntity entity, CancellationToken cancellationToken = default);
+    TEntity Insert(TEntity rootEntity);
+    EntityEntry<TEntity> Remove(TEntity entity);
+    void Remove(Expression<Func<TEntity, bool>> predicate);
+}
+
+public class Repository<TEntity>(DbContext dbContext) : Queryable<TEntity>(dbContext), IRepository<TEntity>
     where TEntity : Entity, new()
 {
     public Task<TEntity?> Get(Expression<Func<TEntity, bool>> predicate)
@@ -17,13 +29,13 @@ public class Repository<TEntity>(DbContext dbContext) : Queryable<TEntity>(dbCon
         return DbSet.FirstOrDefaultAsync(entity => entity.Id == id);
     }
 
-    public TEntity InsertObjectTree(TEntity rootEntity)
+    public TEntity Insert(TEntity rootEntity)
     {
         var entry = DbSet.Add(rootEntity);
         return entry.Entity;
     }
 
-    public async Task InsertOrUpdateEntity(TEntity entity, CancellationToken cancellationToken = default)
+    public async Task Upsert(TEntity entity, CancellationToken cancellationToken = default)
     {
         // prevent empty Guid
         if (entity.Id == Guid.Empty)

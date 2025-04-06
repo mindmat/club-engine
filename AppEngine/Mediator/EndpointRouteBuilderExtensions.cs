@@ -111,7 +111,7 @@ public static class EndpointRouteBuilderExtensions
         //var authorizationChecker = container.GetInstance<IAuthorizationChecker>();
         //if (request is IEventBoundRequest eventBoundRequest)
         //{
-        //    await authorizationChecker.ThrowIfUserHasNotRight(eventBoundRequest.EventId, requestType.Name);
+        //    await authorizationChecker.ThrowIfUserHasNotRight(eventBoundRequest.PartitionId, requestType.Name);
         //}
 
         var mediator = scope.ServiceProvider.GetService<IMediator>()!;

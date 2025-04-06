@@ -4,11 +4,11 @@ using System.Resources;
 
 namespace AppEngine.Internationalization;
 
-public class TranslationAggregator
+public class Translator
 {
     private readonly IDictionary<string, ResourceManager> _namespaceToResources;
 
-    public TranslationAggregator(IEnumerable<ResourceManager> resourceManagers)
+    public Translator(IEnumerable<ResourceManager> resourceManagers)
     {
         var baseNameProperty = typeof(ResourceManager).GetRuntimeProperty("BaseName");
         if (baseNameProperty == null)
@@ -23,6 +23,19 @@ public class TranslationAggregator
                                                               tmp => tmp.ResourceManager);
     }
 
+    public string TranslateEnum<TEnum>(TEnum value)
+        where TEnum : struct
+    {
+        return GetResourceString($"{typeof(TEnum).Name}_{value}");
+    }
+
+    public string? TranslateEnum<TEnum>(TEnum? value)
+        where TEnum : struct
+    {
+        return value == null
+            ? null
+            : TranslateEnum(value.Value);
+    }
     public string? GetResourceString(Type type, CultureInfo? cultureInfo = null)
     {
         return GetResourceString(type, type.Name, cultureInfo);

@@ -34,7 +34,6 @@ builder.Services.AddOpenApiDocument();
 builder.Services.AddScoped<HomeController>();
 builder.AddAppEngine([typeof(Program).Assembly]);
 
-
 var app = builder.Build();
 //app.Services.GetService()
 // Configure the HTTP request pipeline.
