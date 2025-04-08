@@ -30,8 +30,7 @@
         ></span>
         <img
             class="w-full"
-            [src]="'images/flags/' + flagCodes[lang].toUpperCase() + '.svg'"
-            [alt]="'Flag image for ' + lang"
-        />
+            [src]="'images/flags/' + flagCodes[lang]?.toUpperCase() + '.svg'"
+            [alt]="'Flag image for ' + lang" />
     </span>
 </ng-template>

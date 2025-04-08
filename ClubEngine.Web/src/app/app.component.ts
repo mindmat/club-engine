@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-root',
@@ -11,5 +12,9 @@ export class AppComponent {
     /**
      * Constructor
      */
-    constructor() {}
+    constructor(translateService: TranslateService) {
+        translateService.addLangs(['de', 'en']);
+        var language = window.localStorage.getItem('language') ?? 'de';
+        translateService.use(language);
+    }
 }

@@ -25,6 +25,7 @@ import { FuseFindByKeyPipe } from '@fuse/pipes/find-by-key/find-by-key.pipe';
 import { ClubListItem } from 'app/api/api';
 import { BehaviorSubject, Subject, combineLatest, takeUntil } from 'rxjs';
 import { SelectClubService } from './select-club.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'select-club',
@@ -32,22 +33,19 @@ import { SelectClubService } from './select-club.service';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-        CdkScrollable,
-        MatFormFieldModule,
-        MatSelectModule,
-        MatOptionModule,
-        MatIconModule,
-        MatInputModule,
-        MatSlideToggleModule,
-        NgClass,
-        MatTooltipModule,
-        MatProgressBarModule,
-        MatButtonModule,
-        RouterLink,
-        FuseFindByKeyPipe,
-        PercentPipe,
-        I18nPluralPipe,
-    ],
+    CdkScrollable,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatIconModule,
+    MatInputModule,
+    MatSlideToggleModule,
+    MatTooltipModule,
+    MatProgressBarModule,
+    MatButtonModule,
+    RouterLink,
+    TranslatePipe
+],
 })
 export class SelectClubComponent implements OnInit, OnDestroy {
     // categories: Category[];

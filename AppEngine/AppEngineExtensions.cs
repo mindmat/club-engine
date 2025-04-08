@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Resources;
 
 using AppEngine.Authentication;
 using AppEngine.Authorization;
@@ -12,6 +13,7 @@ using AppEngine.Internationalization;
 using AppEngine.Json;
 using AppEngine.Mediator;
 using AppEngine.Partitions;
+using AppEngine.Properties;
 using AppEngine.ReadModels;
 using AppEngine.Secrets;
 using AppEngine.ServiceBus;
@@ -35,7 +37,7 @@ namespace AppEngine;
 
 public static class AppEngineExtensions
 {
-    public static void AddAppEngine(this WebApplicationBuilder builder, Assembly[] appAssemblies, string? databaseConnectionStringKey = null)
+    public static void AddAppEngine(this WebApplicationBuilder builder, Assembly[] appAssemblies, ResourceManager[] resourceManagers, string? databaseConnectionStringKey = null)
     {
         var assemblyContainer = new AppAssemblies([typeof(AppEngineExtensions).Assembly, .. appAssemblies]);
         builder.Services.AddSingleton(assemblyContainer);
@@ -54,7 +56,7 @@ public static class AppEngineExtensions
 
         //builder.Services.AddOpenApiDocument(document => document.DocumentName = "v1");
 
-        builder.Services.AddSingleton<Translator>();
+        builder.Services.AddSingleton(_=> new Translator([Resources.ResourceManager, .. resourceManagers]));
 
         var domainEventTypes = assemblyContainer.Assemblies.GetTypesImplementing(typeof(DomainEvent));
         builder.Services.AddSingleton(services => new DomainEventCatalog(domainEventTypes, services.GetService<Translator>()!));
@@ -155,7 +157,7 @@ public static class AppEngineExtensions
         builder.Services.AddMediatR(cfg =>
         {
             cfg.Lifetime = ServiceLifetime.Scoped;
-            
+
             cfg.RegisterServicesFromAssemblies(assemblyContainer.Assemblies);
             cfg.AddOpenBehavior(typeof(ExtractPartitionIdDecorator<,>));
             //cfg.AddOpenBehavior(typeof(AuditLogger<,>));

@@ -13,8 +13,7 @@ import {
     FuseNavigationService,
     FuseVerticalNavigationComponent,
 } from '@fuse/components/navigation';
-import { AvailableLangs, TranslocoService } from '@jsverse/transloco';
-import { take } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'languages',
@@ -25,17 +24,23 @@ import { take } from 'rxjs';
     imports: [MatButtonModule, MatMenuModule, NgTemplateOutlet],
 })
 export class LanguagesComponent implements OnInit, OnDestroy {
-    availableLangs: AvailableLangs;
     activeLang: string;
-    flagCodes: any;
+    flagCodes= {
+        'de': 'de',
+        'en': 'us'
+    };
+    availableLangs: AvailableLanguage[]= [
+        { id: 'de', label: 'Deutsch' },
+        { id: 'en', label: 'English' }
+    ];
 
     /**
      * Constructor
      */
     constructor(
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _fuseNavigationService: FuseNavigationService,
-        private _translocoService: TranslocoService
+        private changeDetectorRef: ChangeDetectorRef,
+        private fuseNavigationService: FuseNavigationService,
+        private translateService: TranslateService
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -46,23 +51,21 @@ export class LanguagesComponent implements OnInit, OnDestroy {
      * On init
      */
     ngOnInit(): void {
-        // Get the available languages from transloco
-        this.availableLangs = this._translocoService.getAvailableLangs();
-
-        // Subscribe to language changes
-        this._translocoService.langChanges$.subscribe((activeLang) => {
-            // Get the active lang
-            this.activeLang = activeLang;
-
-            // Update the navigation
-            this._updateNavigation(activeLang);
-        });
-
-        // Set the country iso codes for languages for flags
-        this.flagCodes = {
-            en: 'us',
-            tr: 'tr',
-        };
+            this.activeLang = this.translateService.currentLang;
+    
+            // Subscribe to language changes
+            this.translateService.onLangChange.subscribe(lang =>
+            {
+                // Get the active lang
+                this.activeLang = lang.lang;
+                window.localStorage.setItem('language', lang.lang);
+                this.changeDetectorRef.markForCheck();
+    
+                // Update the navigation
+                this._updateNavigation(this.activeLang);
+            });
+    
+            this.changeDetectorRef.markForCheck();
     }
 
     /**
@@ -74,14 +77,8 @@ export class LanguagesComponent implements OnInit, OnDestroy {
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
 
-    /**
-     * Set the active lang
-     *
-     * @param lang
-     */
     setActiveLang(lang: string): void {
-        // Set the active lang
-        this._translocoService.setActiveLang(lang);
+        this.translateService.use(lang);
     }
 
     /**
@@ -94,16 +91,6 @@ export class LanguagesComponent implements OnInit, OnDestroy {
         return item.id || index;
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Private methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Update the navigation
-     *
-     * @param lang
-     * @private
-     */
     private _updateNavigation(lang: string): void {
         // For the demonstration purposes, we will only update the Dashboard names
         // from the navigation but you can do a full swap and change the entire
@@ -114,7 +101,7 @@ export class LanguagesComponent implements OnInit, OnDestroy {
 
         // Get the component -> navigation data -> item
         const navComponent =
-            this._fuseNavigationService.getComponent<FuseVerticalNavigationComponent>(
+            this.fuseNavigationService.getComponent<FuseVerticalNavigationComponent>(
                 'mainNavigation'
             );
 
@@ -122,44 +109,12 @@ export class LanguagesComponent implements OnInit, OnDestroy {
         if (!navComponent) {
             return null;
         }
-
-        // Get the flat navigation data
-        const navigation = navComponent.navigation;
-
-        // Get the Project dashboard item and update its title
-        const projectDashboardItem = this._fuseNavigationService.getItem(
-            'dashboards.project',
-            navigation
-        );
-        if (projectDashboardItem) {
-            this._translocoService
-                .selectTranslate('Project')
-                .pipe(take(1))
-                .subscribe((translation) => {
-                    // Set the title
-                    projectDashboardItem.title = translation;
-
-                    // Refresh the navigation component
-                    navComponent.refresh();
-                });
-        }
-
-        // Get the Analytics dashboard item and update its title
-        const analyticsDashboardItem = this._fuseNavigationService.getItem(
-            'dashboards.analytics',
-            navigation
-        );
-        if (analyticsDashboardItem) {
-            this._translocoService
-                .selectTranslate('Analytics')
-                .pipe(take(1))
-                .subscribe((translation) => {
-                    // Set the title
-                    analyticsDashboardItem.title = translation;
-
-                    // Refresh the navigation component
-                    navComponent.refresh();
-                });
-        }
     }
+}
+
+
+export class AvailableLanguage
+{
+    id: string;
+    label: string;
 }

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections;
+using System.Globalization;
 using System.Reflection;
 using System.Resources;
 
@@ -11,6 +12,7 @@ public class Translator
     public Translator(IEnumerable<ResourceManager> resourceManagers)
     {
         var baseNameProperty = typeof(ResourceManager).GetRuntimeProperty("BaseName");
+
         if (baseNameProperty == null)
         {
             throw new ArgumentNullException("ResourceManager does not have a BaseName anymore");
@@ -36,6 +38,7 @@ public class Translator
             ? null
             : TranslateEnum(value.Value);
     }
+
     public string? GetResourceString(Type type, CultureInfo? cultureInfo = null)
     {
         return GetResourceString(type, type.Name, cultureInfo);
@@ -52,6 +55,7 @@ public class Translator
 
         var result = resourceManager.Select(rsm => rsm.GetString(key, cultureInfo))
                                     .FirstOrDefault(val => val != null);
+
         if (result == null)
         {
             // Fallback: search in all resources (also when namespace doesn't match)
@@ -61,7 +65,7 @@ public class Translator
 
         return result;
     }
-    
+
     public string GetResourceString(string key, string? typeNamespace = null, CultureInfo? cultureInfo = null)
     {
         if (typeNamespace != null)
@@ -82,8 +86,8 @@ public class Translator
     private IEnumerable<ResourceManager> GetResourceManagersForType(Type type)
     {
         return type.Namespace == null
-                   ? []
-                   : GetResourceManagersForType(type.Namespace);
+            ? []
+            : GetResourceManagersForType(type.Namespace);
     }
 
     private IEnumerable<ResourceManager> GetResourceManagersForType(string typeNamespace)
@@ -91,11 +95,34 @@ public class Translator
         var resourceManager = _namespaceToResources.Where(ntr => typeNamespace.StartsWith(ntr.Key))
                                                    .Select(ntr => ntr.Value)
                                                    .ToArray();
+
         if (!resourceManager.Any())
         {
             resourceManager = _namespaceToResources.Values.ToArray();
         }
 
         return resourceManager;
+    }
+
+
+    public IDictionary<string, string> GetAllTranslations(CultureInfo culture)
+    {
+        var dict = new Dictionary<string, string>();
+        foreach (var resourceManager in _namespaceToResources.Values)
+        {
+            var keys = resourceManager.GetResourceSet(CultureInfo.InvariantCulture, false, true)
+                                      ?.OfType<DictionaryEntry>()
+                                      .ToDictionary(entry => entry.Key, entry => entry.Value)
+                                      .Select(entry => entry.Key)
+                                      .OfType<string>()
+                       ?? [];
+
+            foreach (var key in keys)
+            {
+                dict.Add(key, resourceManager.GetString(key, culture) ?? key);
+            }
+        }
+
+        return dict;
     }
 }

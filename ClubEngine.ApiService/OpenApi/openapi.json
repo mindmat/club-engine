@@ -11,6 +11,41 @@
     }
   ],
   "paths": {
+    "/api/AccessRequestsOfPartitionQuery": {
+      "post": {
+        "tags": [
+          "AccessRequestsOfPartition"
+        ],
+        "operationId": "AccessRequestsOfPartition_Query",
+        "requestBody": {
+          "x-name": "AccessRequestsOfPartitionQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccessRequestsOfPartitionQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AccessRequestOfPartition"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/ClubsQuery": {
       "post": {
         "tags": [
@@ -38,6 +73,76 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/ClubListItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/DomainEventCatalogQuery": {
+      "post": {
+        "tags": [
+          "DomainEventCatalog"
+        ],
+        "operationId": "DomainEventCatalog_Query",
+        "requestBody": {
+          "x-name": "DomainEventCatalogQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DomainEventCatalogQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DomainEventCatalogItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/MenuNodesQuery": {
+      "post": {
+        "tags": [
+          "MenuNodes"
+        ],
+        "operationId": "MenuNodes_Query",
+        "requestBody": {
+          "x-name": "MenuNodesQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MenuNodesQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MenuNodeContent"
                   }
                 }
               }
@@ -77,10 +182,437 @@
           }
         }
       }
+    },
+    "/api/PartitionsOfUserQuery": {
+      "post": {
+        "tags": [
+          "PartitionsOfUser"
+        ],
+        "operationId": "PartitionsOfUser_Query",
+        "requestBody": {
+          "x-name": "PartitionsOfUserQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PartitionsOfUserQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartitionsOfUser"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/RemoveUserFromPartitionCommand": {
+      "post": {
+        "tags": [
+          "RemoveUserFromPartition"
+        ],
+        "operationId": "RemoveUserFromPartition_Command",
+        "requestBody": {
+          "x-name": "RemoveUserFromPartitionCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoveUserFromPartitionCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/RequestAccessCommand": {
+      "post": {
+        "tags": [
+          "RequestAccess"
+        ],
+        "operationId": "RequestAccess_Command",
+        "requestBody": {
+          "x-name": "RequestAccessCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestAccessCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "guid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/RespondToRequestCommand": {
+      "post": {
+        "tags": [
+          "RespondToRequest"
+        ],
+        "operationId": "RespondToRequest_Command",
+        "requestBody": {
+          "x-name": "RespondToRequestCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RespondToRequestCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/RightsOfUserInPartitionQuery": {
+      "post": {
+        "tags": [
+          "RightsOfUserInPartition"
+        ],
+        "operationId": "RightsOfUserInPartition_Query",
+        "requestBody": {
+          "x-name": "RightsOfUserInPartitionQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RightsOfUserInPartitionQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SaveDomainEventCommand": {
+      "post": {
+        "tags": [
+          "SaveDomainEvent"
+        ],
+        "operationId": "SaveDomainEvent_Command",
+        "requestBody": {
+          "x-name": "SaveDomainEventCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveDomainEventCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/SetRoleOfUserInPartitionCommand": {
+      "post": {
+        "tags": [
+          "SetRoleOfUserInPartition"
+        ],
+        "operationId": "SetRoleOfUserInPartition_Command",
+        "requestBody": {
+          "x-name": "SetRoleOfUserInPartitionCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetRoleOfUserInPartitionCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/StartUpdateReadModelsOfEventCommand": {
+      "post": {
+        "tags": [
+          "StartUpdateReadModelsOfEvent"
+        ],
+        "operationId": "StartUpdateReadModelsOfEvent_Command",
+        "requestBody": {
+          "x-name": "StartUpdateReadModelsOfEventCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartUpdateReadModelsOfEventCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/TranslationQuery": {
+      "post": {
+        "tags": [
+          "Translation"
+        ],
+        "operationId": "Translation_Query",
+        "requestBody": {
+          "x-name": "TranslationQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TranslationQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UpdateReadModelCommand": {
+      "post": {
+        "tags": [
+          "UpdateReadModel"
+        ],
+        "operationId": "UpdateReadModel_Command",
+        "requestBody": {
+          "x-name": "UpdateReadModelCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateReadModelCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/UpdateUserInfoCommand": {
+      "post": {
+        "tags": [
+          "UpdateUserInfo"
+        ],
+        "operationId": "UpdateUserInfo_Command",
+        "requestBody": {
+          "x-name": "UpdateUserInfoCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserInfoCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/UserInPartitionRolesQuery": {
+      "post": {
+        "tags": [
+          "UserInPartitionRoles"
+        ],
+        "operationId": "UserInPartitionRoles_Query",
+        "requestBody": {
+          "x-name": "UserInPartitionRolesQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserInPartitionRolesQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RoleDescription"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UsersOfPartitionQuery": {
+      "post": {
+        "tags": [
+          "UsersOfPartition"
+        ],
+        "operationId": "UsersOfPartition_Query",
+        "requestBody": {
+          "x-name": "UsersOfPartitionQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UsersOfPartitionQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserInPartitionDisplayItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AccessRequestOfPartition": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "avatarUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "requestReceived": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "requestText": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AccessRequestsOfPartitionQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "includeDeniedRequests": {
+            "type": "boolean"
+          }
+        }
+      },
       "ClubListItem": {
         "type": "object",
         "additionalProperties": false,
@@ -100,6 +632,73 @@
       "ClubsQuery": {
         "type": "object",
         "additionalProperties": false
+      },
+      "DomainEventCatalogItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "typeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "userText": {
+            "type": "string"
+          }
+        }
+      },
+      "DomainEventCatalogQuery": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "MenuNodeContent": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string",
+            "nullable": true
+          },
+          "style": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MenuNodeStyle"
+              }
+            ]
+          },
+          "hidden": {
+            "type": "boolean"
+          }
+        }
+      },
+      "MenuNodeStyle": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "None",
+          "Info",
+          "ToDo",
+          "Important"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "MenuNodesQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
       },
       "PartitionDetails": {
         "type": "object",
@@ -124,6 +723,334 @@
           "acronym": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "PartitionsOfUser": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "authorizedPartitions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PartitionOfUser"
+            }
+          },
+          "requests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccessRequest"
+            }
+          }
+        }
+      },
+      "PartitionOfUser": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "eventName": {
+            "type": "string"
+          },
+          "eventAcronym": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/UserInPartitionRole"
+          },
+          "roleText": {
+            "type": "string"
+          }
+        }
+      },
+      "UserInPartitionRole": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "None",
+          "Reader",
+          "Writer",
+          "Admin"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "AccessRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "partitionName": {
+            "type": "string"
+          },
+          "partitionAcronym": {
+            "type": "string"
+          },
+          "requestSent": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PartitionsOfUserQuery": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "RemoveUserFromPartitionCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "RequestAccessCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "requestText": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RespondToRequestCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "accessToEventRequestId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "response": {
+            "$ref": "#/components/schemas/RequestResponse"
+          }
+        }
+      },
+      "RequestResponse": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Granted",
+          "Denied"
+        ],
+        "enum": [
+          1,
+          2
+        ]
+      },
+      "RightsOfUserInPartitionQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "SaveDomainEventCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "domainEventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "domainEventId_Parent": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "eventData": {
+            "type": "string"
+          },
+          "partitionId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "eventType": {
+            "type": "string"
+          }
+        }
+      },
+      "SetRoleOfUserInPartitionCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "role": {
+            "$ref": "#/components/schemas/UserInPartitionRole"
+          }
+        }
+      },
+      "StartUpdateReadModelsOfEventCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "queryNames": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "TranslationQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "language": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateReadModelCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "queryName": {
+            "type": "string"
+          },
+          "rowId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "dirtyMoment": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateUserInfoCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "provider": {
+            "$ref": "#/components/schemas/IdentityProvider"
+          },
+          "identifier": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IdentityProvider": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Google",
+          "Microsoft",
+          "Auth0"
+        ],
+        "enum": [
+          1,
+          2,
+          3
+        ]
+      },
+      "RoleDescription": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "role": {
+            "$ref": "#/components/schemas/UserInPartitionRole"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "UserInPartitionRolesQuery": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "UserInPartitionDisplayItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "role": {
+            "$ref": "#/components/schemas/UserInPartitionRole"
+          },
+          "roleText": {
+            "type": "string"
+          },
+          "userEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "userId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "userDisplayName": {
+            "type": "string"
+          },
+          "userAvatarUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "UsersOfPartitionQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
           }
         }
       }
