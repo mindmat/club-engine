@@ -123,4 +123,31 @@
   <data name="Overview" xml:space="preserve">
     <value>Overview</value>
   </data>
+  <data name="AddAllNewMembers" xml:space="preserve">
+    <value>Add all {{count}}</value>
+  </data>
+  <data name="Mitgliederliste" xml:space="preserve">
+    <value>Member list</value>
+  </data>
+  <data name="ImportMemberList" xml:space="preserve">
+    <value>Import member list</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="NewMembers" xml:space="preserve">
+    <value>New members</value>
+  </data>
+  <data name="ClickToUpload" xml:space="preserve">
+    <value>Click to upload</value>
+  </data>
+  <data name="OrDragDrop" xml:space="preserve">
+    <value>or drag &amp; drop</value>
+  </data>
+  <data name="Uploading" xml:space="preserve">
+    <value>uploading {{filename}}...</value>
+  </data>
+  <data name="UploadSuccessful" xml:space="preserve">
+    <value>Upload successful</value>
+  </data>
 </root>

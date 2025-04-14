@@ -23,14 +23,16 @@ public class SaveDomainEventCommandHandler(DbContext dbContext,
     public async Task Handle(SaveDomainEventCommand command, CancellationToken cancellationToken)
     {
         var id = command.DomainEventId == Guid.Empty ? Guid.NewGuid() : command.DomainEventId;
+
         await _domainEvents.AddAsync(new PersistedDomainEvent
-        {
-            Id = id,
-            PartitionId = command.PartitionId,
-            DomainEventId_Parent = command.DomainEventId_Parent,
-            Timestamp = timeProvider.RequestTime,
-            Type = command.EventType,
-            Data = command.EventData
-        }, cancellationToken);
+                                     {
+                                         Id = id,
+                                         PartitionId = command.PartitionId,
+                                         DomainEventId_Parent = command.DomainEventId_Parent,
+                                         Timestamp = timeProvider.RequestTime,
+                                         Type = command.EventType,
+                                         Data = command.EventData
+                                     },
+                                     cancellationToken);
     }
 }

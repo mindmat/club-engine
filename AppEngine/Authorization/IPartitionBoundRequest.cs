@@ -2,5 +2,5 @@
 
 public interface IPartitionBoundRequest
 {
-    Guid PartitionId { get; }
+    Guid PartitionId { get; set; }
 }

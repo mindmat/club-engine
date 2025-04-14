@@ -4,7 +4,6 @@ namespace AppEngine.Types;
 
 public static class TypeExtensions
 {
-
     public static bool IsConcreteType(this Type serviceType)
     {
         if (!serviceType.GetTypeInfo().IsAbstract && !serviceType.IsArray && serviceType != typeof(object))
@@ -29,6 +28,7 @@ public static class TypeExtensions
         }
 
         var interfaces = implementation.GetInterfaces();
+
         foreach (var t in interfaces)
         {
             if (IsGenericImplementationOf(t, service))
@@ -38,6 +38,7 @@ public static class TypeExtensions
         }
 
         var type = implementation.GetTypeInfo().BaseType ?? ((implementation != typeof(object)) ? typeof(object) : null);
+
         while (type != null)
         {
             if (IsGenericImplementationOf(type, service))
@@ -75,6 +76,7 @@ public static class TypeExtensions
 
         return false;
     }
+
     internal static bool IsGenericTypeDefinitionOf(this Type genericTypeDefinition, Type typeToCheck)
     {
         if (typeToCheck.GetTypeInfo().IsGenericType)
@@ -83,5 +85,10 @@ public static class TypeExtensions
         }
 
         return false;
+    }
+
+    public static bool ImplementsInterface<TInterface>(this Type type)
+    {
+        return typeof(TInterface).IsAssignableFrom(type);
     }
 }

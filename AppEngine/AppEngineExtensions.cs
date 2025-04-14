@@ -56,7 +56,7 @@ public static class AppEngineExtensions
 
         //builder.Services.AddOpenApiDocument(document => document.DocumentName = "v1");
 
-        builder.Services.AddSingleton(_=> new Translator([Resources.ResourceManager, .. resourceManagers]));
+        builder.Services.AddSingleton(_ => new Translator([Resources.ResourceManager, .. resourceManagers]));
 
         var domainEventTypes = assemblyContainer.Assemblies.GetTypesImplementing(typeof(DomainEvent));
         builder.Services.AddSingleton(services => new DomainEventCatalog(domainEventTypes, services.GetService<Translator>()!));
@@ -73,7 +73,7 @@ public static class AppEngineExtensions
         var partitionQueryableType = typeof(PartitionQueryable<>).MakeGenericType(partitionType);
         builder.Services.AddScoped(typeof(IQueryable<IPartition>), partitionQueryableType);
         builder.Services.AddScoped<PartitionContext>();
-        builder.Services.AddScoped<PartitionAcronymResolver, PartitionAcronymResolver>();
+        builder.Services.AddScoped<IPartitionAcronymResolver, PartitionAcronymResolver>();
 
         builder.Services.AddScoped<ChangeTrigger>();
 
@@ -167,12 +167,6 @@ public static class AppEngineExtensions
         builder.Services.AddSingleton(new RequestRegistry(assemblyContainer.Assemblies.GetTypesImplementing(typeof(IRequestHandler<,>)),
                                                           assemblyContainer.Assemblies.GetTypesImplementing(typeof(IRequestHandler<>))));
         builder.Services.AddSingleton<IApiDescriptionGroupCollectionProvider, MediatorEndpointApiDescriptionGroupCollectionProvider>();
-    }
-
-    public static void MapAppEngineEndpoints(this IEndpointRouteBuilder endpoints, IServiceProvider services)
-    {
-        endpoints.MapRequests(services);
-        endpoints.MapHub<NotificationHub>("/notifications");
     }
 
     public static void MapAppEngineEndpoints(this WebApplication app)

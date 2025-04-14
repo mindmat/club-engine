@@ -14,9 +14,10 @@ public class TranslationQueryHandler(Translator translator) : IRequestHandler<Tr
     public Task<IDictionary<string, string>> Handle(TranslationQuery query, CancellationToken cancellationToken)
     {
         var culture = query.Language == null
-                          ? CultureInfo.InvariantCulture
-                          : new CultureInfo(query.Language);
+            ? CultureInfo.InvariantCulture
+            : new CultureInfo(query.Language);
         var dict = translator.GetAllTranslations(culture);
+
         return Task.FromResult(dict);
     }
 }

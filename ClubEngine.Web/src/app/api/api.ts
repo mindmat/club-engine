@@ -181,6 +181,105 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    importMemberList_Query(importMemberListQuery: ImportMemberListQuery | undefined): Observable<ListDifferences> {
+        let url_ = this.baseUrl + "/api/ImportMemberListQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(importMemberListQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processImportMemberList_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processImportMemberList_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ListDifferences>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ListDifferences>;
+        }));
+    }
+
+    protected processImportMemberList_Query(response: HttpResponseBase): Observable<ListDifferences> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ListDifferences;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    importNewMembers_Command(importNewMembersCommand: ImportNewMembersCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/ImportNewMembersCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(importNewMembersCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processImportNewMembers_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processImportNewMembers_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processImportNewMembers_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     menuNodes_Query(menuNodesQuery: MenuNodesQuery | undefined): Observable<MenuNodeContent[]> {
         let url_ = this.baseUrl + "/api/MenuNodesQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -956,6 +1055,54 @@ export interface DomainEventCatalogItem {
 }
 
 export interface DomainEventCatalogQuery {
+}
+
+export interface ListDifferences {
+    added?: ImportedMember[];
+    modified?: ImportedMember[];
+    deleted?: ImportedMember[];
+}
+
+export interface ImportedMember {
+    id?: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    email?: string | null;
+    adresse?: string | null;
+    plz?: string | null;
+    ort?: string | null;
+    mobile?: string | null;
+    tags?: string[];
+}
+
+export interface ImportMemberListQuery {
+    file?: FileUpload;
+    partitionId?: string;
+}
+
+export interface FileUpload {
+    contentType?: string;
+    filename?: string;
+    fileStream?: Stream;
+}
+
+export interface MarshalByRefObject {
+}
+
+export interface Stream extends MarshalByRefObject {
+    canRead?: boolean;
+    canWrite?: boolean;
+    canSeek?: boolean;
+    canTimeout?: boolean;
+    length?: number;
+    position?: number;
+    readTimeout?: number;
+    writeTimeout?: number;
+}
+
+export interface ImportNewMembersCommand {
+    partitionId?: string;
+    newMembers?: ImportedMember[] | null;
 }
 
 export interface MenuNodeContent {

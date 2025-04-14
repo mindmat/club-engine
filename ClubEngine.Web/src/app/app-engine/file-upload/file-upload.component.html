@@ -10,6 +10,6 @@
                 <p *ngIf="lastError" class="text-xs text-red-500">{{ lastError }}</p>
             </div>
         </div>
-        <input id="dropzone-file" type="file" class="hidden" accept=".xml" (change)="fileSelected($event)" />
+        <input id="dropzone-file" type="file" class="hidden" (change)="fileSelected($event)" />
     </label>
 </div>

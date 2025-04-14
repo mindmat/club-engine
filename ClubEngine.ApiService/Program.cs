@@ -20,6 +20,8 @@ builder.Services.AddCors();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddOpenApiDocument();
+
+builder.Services.AddAntiforgery();
 //settings =>
 //{
 //settings.DocumentName = "swagger";
@@ -62,6 +64,8 @@ app.MapGet("/weatherforecast",
 app.MapGet("/hello", () => "Hello, World!")
    .WithSummary("Get a greeting")
    .WithDescription("This endpoint returns a friendly greeting.");
+
+app.UseAntiforgery();
 
 app.MapAppEngineEndpoints();
 

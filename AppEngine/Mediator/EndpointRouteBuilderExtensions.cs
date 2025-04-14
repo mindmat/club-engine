@@ -1,7 +1,12 @@
 ﻿using System.Collections;
+using System.ComponentModel.Design;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+
+using AppEngine.Authorization;
+using AppEngine.Partitions;
+using AppEngine.Types;
 
 using MediatR;
 
@@ -33,27 +38,171 @@ public static class EndpointRouteBuilderExtensions
 
         foreach (var request in requests.RequestTypes)
         {
-            app.MapPost($"/api/{request.Request.Name}", CreateProcessRequest(request.Request, services))
-               //.RequireAuthorization()
-               //.RequireCors(c => c.AllowAnyHeader().AllowAnyOrigin().AllowAnyHeader())
-               .WithDisplayName(request.Request.Name)
-               .WithMetadata(request);
+            if (request.Request.ImplementsInterface<IReceiveFileCommand>())
+            {
+                app.MapPost("/api/{partition}/upload/" + request.Request.Name, CreateUploadProcessRequest(request.Request, services))
+                   //.RequireAuthorization()
+                   //.RequireCors(c => c.AllowAnyHeader().AllowAnyOrigin().AllowAnyHeader())
+                   .WithDisplayName(request.Request.Name)
+                   .WithMetadata(request)
+                   .DisableAntiforgery();
+            }
+            else
+            {
+                app.MapPost($"/api/{request.Request.Name}", CreateProcessRequest(request.Request, services))
+                   //.RequireAuthorization()
+                   //.RequireCors(c => c.AllowAnyHeader().AllowAnyOrigin().AllowAnyHeader())
+                   .WithDisplayName(request.Request.Name)
+                   .WithMetadata(request);
+            }
         }
     }
 
-    public static void MapRequests(this IEndpointRouteBuilder endpointsBuilder, IServiceProvider container)
+    private static Delegate CreateUploadProcessRequest(Type requestType, IServiceProvider container)
     {
-        var requests = container.GetService<RequestRegistry>();
+        var openGenericMethod = typeof(EndpointRouteBuilderExtensions).GetMethod(nameof(CreateUploadProcessRequestGeneric),
+                                                                                 BindingFlags.Static | BindingFlags.NonPublic)!;
+        var genericMethod = openGenericMethod.MakeGenericMethod(requestType);
 
-        foreach (var request in requests.RequestTypes)
+        return (Delegate)genericMethod.Invoke(null, [container])!;
+    }
+
+    private static Delegate CreateUploadProcessRequestGeneric<TRequest>(IServiceProvider container)
+        where TRequest : IBaseRequest, IReceiveFileCommand
+    {
+        return (HttpContext context, string partition, IFormFile file) => ProcessUploadRequest<TRequest>(context, partition, file, container);
+    }
+
+    private static async Task ProcessUploadRequest<TRequest>(HttpContext context, string partition, IFormFile file, IServiceProvider services)
+        where TRequest : IBaseRequest, IReceiveFileCommand
+    {
+        using var scope = services.CreateScope();
+
+        var requestType = typeof(TRequest);
+        var acronymResolver = scope.ServiceProvider.GetService<IPartitionAcronymResolver>()!;
+        var fileCommand = (IReceiveFileCommand)Activator.CreateInstance(requestType)!;
+        fileCommand.File = new FileUpload(file.ContentType, file.FileName, file.OpenReadStream());
+        var request = fileCommand as IBaseRequest;
+
+        if (request is IPartitionBoundRequest partitionRequest)
         {
-            endpointsBuilder.MapPost($"/api/{request.Request.Name}", CreateProcessRequest(request.Request, container))
-                            //.RequireAuthorization()
-                            //.RequireCors(c => c.AllowAnyHeader().AllowAnyOrigin().AllowAnyHeader())
-                            .WithDisplayName(request.Request.Name)
-                            .WithMetadata(request);
+            partitionRequest.PartitionId = await acronymResolver.GetPartitionIdFromAcronym(partition);
+        }
+
+
+        //scope.ServiceProvider.GetService<IHttpContextAccessor>()!.HttpContext = context;
+        //var authorizationChecker = services.GetInstance<IAuthorizationChecker>();
+        //if (request is IEventBoundRequest eventBoundRequest)
+        //{
+        //    await authorizationChecker.ThrowIfUserHasNotRight(eventBoundRequest.PartitionId, requestType.Name);
+        //}
+
+        var mediator = scope.ServiceProvider.GetService<IMediator>()!;
+        var response = await mediator.Send(request, context.RequestAborted);
+
+        if (context.Request.GetTypedHeaders().Accept.Any(ach => ach.MediaType == "text/plain") && response is string textResponse)
+        {
+            context.Response.ContentType = "text/plain";
+            await context.Response.WriteAsync(textResponse, context.RequestAborted);
+        }
+        else
+        {
+            if (response is Unit)
+            {
+                context.Response.StatusCode = 204;
+                await context.Response.Body.FlushAsync(context.RequestAborted);
+            }
+            else
+            {
+                await SerializeAsJson(context, response, requestType);
+                await context.Response.Body.FlushAsync(context.RequestAborted);
+            }
         }
     }
+
+    private static async Task SerializeAsJson(HttpContext context, object? response, Type requestType)
+    {
+        context.Response.Headers["content-type"] = "application/json";
+
+        //if (response is ISerializedJson serializedJson)
+        //{
+        //    await context.Response.WriteAsync(serializedJson.Content, context.RequestAborted);
+        //}
+        //else
+        {
+            var objectType = response?.GetType() ?? requestType;
+            await JsonSerializer.SerializeAsync(context.Response.Body, response, objectType, _jsonSettings, context.RequestAborted);
+        }
+    }
+
+    //private static async Task SerializeAsXlsx(HttpContext context, object? response, ILogger logger)
+    //{
+    //    // try to serialize as xlsx
+    //    context.Response.Headers.ContentType = "application/octet-stream";
+    //    LoadOptions.DefaultGraphicEngine = new DefaultGraphicEngine("DejaVu Sans");
+    //    var workbook = new XLWorkbook();
+    //    foreach (var (name, values, rowType) in GetEnumerableProperties(response))
+    //    {
+    //        var mappings = GetExportableProperties(rowType).ToList();
+
+    //        var dataTable = new DataTable(name);
+
+    //        foreach (var mapping in mappings)
+    //        {
+    //            dataTable.Columns.Add(new DataColumn(mapping.Name, mapping.GetValue.Method.ReturnType) { Caption = mapping.Caption });
+    //        }
+
+    //        if (values is null)
+    //        {
+    //            continue;
+    //        }
+
+    //        var isFirstRow = true;
+    //        foreach (var dataRow in values)
+    //        {
+    //            if (isFirstRow)
+    //            {
+    //                isFirstRow = false;
+    //                if (dataRow is IDynamicColumns firstRowWithDynamicColumns)
+    //                {
+    //                    foreach (var dynamicColumn in firstRowWithDynamicColumns.DynamicColumns!)
+    //                    {
+    //                        mappings.Add(new ExportableProperty(dynamicColumn.Key, dynamicColumn.Key, (row => ((IDynamicColumns)row).DynamicColumns?[dynamicColumn.Key])));
+    //                        dataTable.Columns.Add(dynamicColumn.Key);
+    //                    }
+    //                }
+    //            }
+
+    //            var tableRow = dataTable.NewRow();
+    //            foreach (var mapping in mappings)
+    //            {
+    //                tableRow[mapping.Name] = FormatValue(mapping.GetValue(dataRow));
+    //            }
+
+    //            dataTable.Rows.Add(tableRow);
+    //        }
+
+    //        var worksheet = workbook.AddWorksheet(dataTable, name);
+    //        try
+    //        {
+    //            worksheet.Columns().AdjustToContents();
+    //        }
+    //        catch
+    //        {
+    //            // sandbox
+    //            foreach (var fontFamily in SixLabors.Fonts.SystemFonts.Collection.Families)
+    //            {
+    //                logger.LogInformation("Font available: {name}", fontFamily.Name);
+    //            }
+    //        }
+    //        //worksheet.Sort(1);
+    //    }
+
+    //    var stream = new MemoryStream();
+    //    workbook.SaveAs(stream);
+    //    stream.Position = 0;
+    //    await context.Response.BodyWriter.WriteAsync(stream.ToArray());
+    //}
 
     private static RequestDelegate CreateProcessRequest(Type requestType, IServiceProvider container)
     {
@@ -155,89 +304,6 @@ public static class EndpointRouteBuilderExtensions
         }
     }
 
-    private static async Task SerializeAsJson(HttpContext context, object? response, Type requestType)
-    {
-        context.Response.Headers["content-type"] = "application/json";
-
-        //if (response is ISerializedJson serializedJson)
-        //{
-        //    await context.Response.WriteAsync(serializedJson.Content, context.RequestAborted);
-        //}
-        //else
-        {
-            var objectType = response?.GetType() ?? requestType;
-            await JsonSerializer.SerializeAsync(context.Response.Body, response, objectType, _jsonSettings, context.RequestAborted);
-        }
-    }
-
-    //private static async Task SerializeAsXlsx(HttpContext context, object? response, ILogger logger)
-    //{
-    //    // try to serialize as xlsx
-    //    context.Response.Headers.ContentType = "application/octet-stream";
-    //    LoadOptions.DefaultGraphicEngine = new DefaultGraphicEngine("DejaVu Sans");
-    //    var workbook = new XLWorkbook();
-    //    foreach (var (name, values, rowType) in GetEnumerableProperties(response))
-    //    {
-    //        var mappings = GetExportableProperties(rowType).ToList();
-
-    //        var dataTable = new DataTable(name);
-
-    //        foreach (var mapping in mappings)
-    //        {
-    //            dataTable.Columns.Add(new DataColumn(mapping.Name, mapping.GetValue.Method.ReturnType) { Caption = mapping.Caption });
-    //        }
-
-    //        if (values is null)
-    //        {
-    //            continue;
-    //        }
-
-    //        var isFirstRow = true;
-    //        foreach (var dataRow in values)
-    //        {
-    //            if (isFirstRow)
-    //            {
-    //                isFirstRow = false;
-    //                if (dataRow is IDynamicColumns firstRowWithDynamicColumns)
-    //                {
-    //                    foreach (var dynamicColumn in firstRowWithDynamicColumns.DynamicColumns!)
-    //                    {
-    //                        mappings.Add(new ExportableProperty(dynamicColumn.Key, dynamicColumn.Key, (row => ((IDynamicColumns)row).DynamicColumns?[dynamicColumn.Key])));
-    //                        dataTable.Columns.Add(dynamicColumn.Key);
-    //                    }
-    //                }
-    //            }
-
-    //            var tableRow = dataTable.NewRow();
-    //            foreach (var mapping in mappings)
-    //            {
-    //                tableRow[mapping.Name] = FormatValue(mapping.GetValue(dataRow));
-    //            }
-
-    //            dataTable.Rows.Add(tableRow);
-    //        }
-
-    //        var worksheet = workbook.AddWorksheet(dataTable, name);
-    //        try
-    //        {
-    //            worksheet.Columns().AdjustToContents();
-    //        }
-    //        catch
-    //        {
-    //            // sandbox
-    //            foreach (var fontFamily in SixLabors.Fonts.SystemFonts.Collection.Families)
-    //            {
-    //                logger.LogInformation("Font available: {name}", fontFamily.Name);
-    //            }
-    //        }
-    //        //worksheet.Sort(1);
-    //    }
-
-    //    var stream = new MemoryStream();
-    //    workbook.SaveAs(stream);
-    //    stream.Position = 0;
-    //    await context.Response.BodyWriter.WriteAsync(stream.ToArray());
-    //}
 
     private static object? FormatValue(object? value)
     {

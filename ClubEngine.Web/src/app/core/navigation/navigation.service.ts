@@ -47,16 +47,16 @@ export class NavigationService {
                             link: `/select-event`
                         },
                         {
-                            id: 'registrations',
-                            title: translateService.instant('Registrations'),
+                            id: 'admin',
+                            title: translateService.instant('Admin'),
                             type: 'group',
                             children: [
                                 {
-                                    id: 'overview',
-                                    title: translateService.instant('Overview'),
+                                    id: 'import-member-list',
+                                    title: translateService.instant('ImportMemberList'),
                                     type: 'basic',
                                     icon: 'heroicons_outline:clipboard-check',
-                                    link: `/${e.acronym}/overview`,
+                                    link: `/${e.acronym}/import-member-list`,
                                 },
                                 // {
                                 //     id: 'release-mails',

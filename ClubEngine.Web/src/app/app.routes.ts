@@ -7,6 +7,7 @@ import { SelectClubComponent } from './modules/admin/select-club/select-club.com
 import { inject } from '@angular/core';
 import { SelectClubService } from './modules/admin/select-club/select-club.service';
 import { PartitionAcronymResolver } from './app-engine/partitions/club-acronym.resolver';
+import { ImportMemberListComponent } from './modules/admin/import-member-list/import-member-list.component';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -92,7 +93,11 @@ export const appRoutes: Route[] = [
                 children: [
         
                     // Redirect empty path to '/overview'
-                    { path: '', pathMatch: 'full', redirectTo: 'overview' },
+                    { path: '', pathMatch: 'full', redirectTo: 'import-member-list' },
+                    {
+                        path: 'import-member-list',
+                        component: ImportMemberListComponent,
+                    }
                 ]
             }
         ]

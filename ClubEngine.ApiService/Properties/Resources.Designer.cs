@@ -61,6 +61,60 @@ namespace ClubEngine.ApiService.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alle {{count}} hinzufügen.
+        /// </summary>
+        public static string AddAllNewMembers {
+            get {
+                return ResourceManager.GetString("AddAllNewMembers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Admin.
+        /// </summary>
+        public static string Admin {
+            get {
+                return ResourceManager.GetString("Admin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Klicken zum Hochladen.
+        /// </summary>
+        public static string ClickToUpload {
+            get {
+                return ResourceManager.GetString("ClickToUpload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mitgliederliste importieren.
+        /// </summary>
+        public static string ImportMemberList {
+            get {
+                return ResourceManager.GetString("ImportMemberList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mitgliederliste.
+        /// </summary>
+        public static string Mitgliederliste {
+            get {
+                return ResourceManager.GetString("Mitgliederliste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Neue Mitglieder.
+        /// </summary>
+        public static string NewMembers {
+            get {
+                return ResourceManager.GetString("NewMembers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Öffnen.
         /// </summary>
         public static string Open {
@@ -70,11 +124,38 @@ namespace ClubEngine.ApiService.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to oder Drag &amp; Drop.
+        /// </summary>
+        public static string OrDragDrop {
+            get {
+                return ResourceManager.GetString("OrDragDrop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Übersicht.
         /// </summary>
         public static string Overview {
             get {
                 return ResourceManager.GetString("Overview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {{filename}} hochladen....
+        /// </summary>
+        public static string Uploading {
+            get {
+                return ResourceManager.GetString("Uploading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File erfolgreich hochgeladen.
+        /// </summary>
+        public static string UploadSuccessful {
+            get {
+                return ResourceManager.GetString("UploadSuccessful", resourceCulture);
             }
         }
     }
