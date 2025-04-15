@@ -33,17 +33,10 @@
                 <div class="font-medium">{{ 'NewMembers' | translate }}</div>
                 <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
 
-                <button
-                class="ml-3"
-                mat-flat-button
-                [color]="'primary'"
-                (click)="addAllNewMembers(differences.added)"
-            >
-                <mat-icon
-                    [svgIcon]="'heroicons_outline:plus'"
-                ></mat-icon>
-                <span class="ml-2 mr-1">{{ 'AddAllNewMembers' | translate:{ count: differences.added.length } }}</span>
-            </button>
+                <button class="ml-3" mat-flat-button [color]="'primary'" (click)="addAllNewMembers(differences.added)">
+                    <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                    <span class="ml-2 mr-1">{{ 'AddAllNewMembers' | translate:{ count: differences.added.length } }}</span>
+                </button>
             </div>
 
             <div
@@ -68,7 +61,40 @@
                 </fuse-card>
                 }
             </div>
-            }
+
+            <div class="flex flex-row items-baseline gap-x-2 ml-6">
+                <div class="font-medium">{{ 'RemovedMembers' | translate }}</div>
+                <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
+
+                <!-- <button class="ml-3" mat-flat-button [color]="'primary'" (click)="addAllNewMembers(differences.added)">
+                    <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                    <span class="ml-2 mr-1">{{ 'AddAllNewMembers' | translate:{ count: differences.added.length } }}</span>
+                </button> -->
+            </div>
+
+            <div
+                class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+                <!-- Removed members -->
+                @for(deleted of differences.deleted; track deleted.id)
+                {
+                <fuse-card class="flex flex-col w-80 p-4 rounded-xl">
+                    <div class="flex flex-row items-baseline gap-x-2">
+                        <div class="text-xl font-semibold leading-tight">{{ deleted.firstName }} {{ deleted.lastName }}
+                        </div>
+                        <!-- <div class="text-secondary leading-tight">{{ added.email }}</div> -->
+                    </div>
+                    <div class="flex flex-row items-baseline gap-x-2">
+                        <!-- <div class="text-xl font-semibold leading-tight">{{ added.email }}</div> -->
+                        <div class="text-secondary leading-tight">{{ deleted.email }}</div>
+                    </div>
+                    <!-- <div *ngIf="booking.message" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
+                        <span class="leading-none">{{ booking.message }}</span>
+                    </div> -->
+
+                </fuse-card>
+                }
+            </div>
+        }
         </div>
     </div>
 </div>

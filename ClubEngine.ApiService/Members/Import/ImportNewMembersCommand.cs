@@ -24,6 +24,12 @@ public class ImportNewMembersCommandHandler(IRepository<Member> members) : IRequ
                     FirstName = newMember.FirstName,
                     LastName = newMember.LastName,
                     Email = newMember.Email,
+                    Address = newMember.Address,
+                    Zip = newMember.Zip,
+                    Town = newMember.Town,
+                    Phone = newMember.Phone,
+                    MemberFrom = newMember.MemberFrom,
+                    MemberUntil = newMember.MemberUntil
                 }
             );
         }
