@@ -54,9 +54,10 @@
                         <!-- <div class="text-xl font-semibold leading-tight">{{ added.email }}</div> -->
                         <div class="text-secondary leading-tight">{{ added.email }}</div>
                     </div>
-                    <!-- <div *ngIf="booking.message" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
-                        <span class="leading-none">{{ booking.message }}</span>
-                    </div> -->
+                    <div class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
+                        <span class="leading-none">{{ added.memberFrom }} - {{added.memberUntil}}</span>
+                        <span class="leading-none">{{ added.membershipType }}</span>
+                    </div>
 
                 </fuse-card>
                 }

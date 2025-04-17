@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClubEngine.ApiService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250406221657_Initial")]
+    [Migration("20250416232257_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -439,6 +439,10 @@ namespace ClubEngine.ApiService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Address")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<Guid>("ClubId")
                         .HasColumnType("uniqueidentifier");
 
@@ -460,11 +464,36 @@ namespace ClubEngine.ApiService.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<DateOnly>("MemberFrom")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("MemberUntil")
+                        .HasColumnType("date");
+
+                    b.Property<int>("MembershipType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .IsRequired()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
+
+                    b.PrimitiveCollection<string>("Tags")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Town")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Zip")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
 

@@ -30,9 +30,9 @@ public class ImportMemberListCommandHandler(MemberListImportConfig config,
     {
         var fileType = query.File.ContentType switch
         {
-            "text/csv" => MemberListImportConfig.FileType.Csv,
+            "text/csv"                                                          => MemberListImportConfig.FileType.Csv,
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" => MemberListImportConfig.FileType.Xlsx,
-            _ => MemberListImportConfig.FileType.Unknown
+            _                                                                   => MemberListImportConfig.FileType.Unknown
         };
         var sourceConfig = config.Sources.Where(src => src.FileType == fileType);
 
@@ -61,9 +61,9 @@ public class ImportMemberListCommandHandler(MemberListImportConfig config,
     {
         return importConfig.FileType switch
         {
-            MemberListImportConfig.FileType.Csv => await ParseCsv(query, importConfig.Mappings),
+            MemberListImportConfig.FileType.Csv  => await ParseCsv(query, importConfig.Mappings),
             MemberListImportConfig.FileType.Xlsx => ParseXlsx(query, importConfig.Mappings),
-            _ => throw new ArgumentOutOfRangeException()
+            _                                    => throw new ArgumentOutOfRangeException()
         };
     }
 
@@ -90,7 +90,13 @@ public class ImportMemberListCommandHandler(MemberListImportConfig config,
                            .Select(mat => mat.Imported!);
 
         var deleted = matches.Where(mat => mat.Imported == null)
-                             .Select(mat => new ImportedMember { Id = mat.Existing!.Id, FirstName = mat.Existing.FirstName, LastName = mat.Existing.LastName, Email = mat.Existing.Email })
+                             .Select(mat => new ImportedMember
+                                            {
+                                                Id = mat.Existing!.Id,
+                                                FirstName = mat.Existing.FirstName,
+                                                LastName = mat.Existing.LastName,
+                                                Email = mat.Existing.Email
+                                            })
                              .ToList();
 
         return (added, [], deleted);
@@ -101,7 +107,7 @@ public class ImportMemberListCommandHandler(MemberListImportConfig config,
     private bool IsSame(Member existingMember, ImportedMember importedMember)
     {
         if (string.Equals(existingMember.FirstName, importedMember.FirstName, StringComparison.InvariantCultureIgnoreCase)
-            && string.Equals(existingMember.LastName, importedMember.LastName, StringComparison.InvariantCultureIgnoreCase))
+         && string.Equals(existingMember.LastName, importedMember.LastName, StringComparison.InvariantCultureIgnoreCase))
         {
             return true;
         }
@@ -125,10 +131,10 @@ public class ImportMemberListCommandHandler(MemberListImportConfig config,
                                              if (headers.TryGetValue(map.Header.ToLowerInvariant(), out var column))
                                              {
                                                  return new
-                                                 {
-                                                     Column = column,
-                                                     Mapping = map
-                                                 };
+                                                        {
+                                                            Column = column,
+                                                            Mapping = map
+                                                        };
                                              }
 
                                              return null;
@@ -141,11 +147,11 @@ public class ImportMemberListCommandHandler(MemberListImportConfig config,
         foreach (var row in worksheet.RowsUsed().Skip(1))
         {
             var member = new ImportedMember
-            {
-                Id = Guid.NewGuid(),
-                MemberFrom = DateOnly.MinValue,
-                MemberUntil = DateOnly.MaxValue
-            };
+                         {
+                             Id = Guid.NewGuid(),
+                             MemberFrom = DateOnly.MinValue,
+                             MemberUntil = DateOnly.MaxValue
+                         };
 
             foreach (var header in mappingsWithColumn)
             {
@@ -165,6 +171,11 @@ public class ImportMemberListCommandHandler(MemberListImportConfig config,
 
                     case MemberListImportConfig.OurColumn.Email:
                         member.Email = GetText(cell);
+
+                        break;
+
+                    case MemberListImportConfig.OurColumn.MembershipType:
+                        member.MembershipType = GetEnum<MembershipType>(cell.Value, header.Mapping.Mappings, header.Mapping.FallbackValue);
 
                         break;
 
@@ -200,7 +211,7 @@ public class ImportMemberListCommandHandler(MemberListImportConfig config,
 
                         break;
                     case MemberListImportConfig.OurColumn.MemberTo:
-                        member.MemberFrom = GetDate(cell, header.Mapping.Format, DateOnly.MaxValue);
+                        member.MemberUntil = GetDate(cell, header.Mapping.Format, DateOnly.MaxValue);
 
                         break;
                 }
@@ -210,6 +221,21 @@ public class ImportMemberListCommandHandler(MemberListImportConfig config,
         }
 
         return members;
+    }
+
+    private static TEnum? GetEnum<TEnum>(XLCellValue value, IDictionary<string, object>? mappings, object? fallbackValue)
+    {
+        if (value.IsText)
+        {
+            var text = value.GetText();
+
+            if (mappings?.TryGetValue(text.ToLowerInvariant(), out var lookup) == true)
+            {
+                return (TEnum)lookup;
+            }
+        }
+
+        return (TEnum?)fallbackValue;
     }
 
     private static DateOnly GetDate(IXLCell cell, string? format, DateOnly fallback)
@@ -267,11 +293,11 @@ public class ImportMemberListCommandHandler(MemberListImportConfig config,
         while (await csv.ReadAsync())
         {
             var member = new ImportedMember
-            {
-                Id = Guid.NewGuid(),
-                MemberFrom = DateOnly.MinValue,
-                MemberUntil = DateOnly.MaxValue
-            };
+                         {
+                             Id = Guid.NewGuid(),
+                             MemberFrom = DateOnly.MinValue,
+                             MemberUntil = DateOnly.MaxValue
+                         };
 
             foreach (var header in headers)
             {
@@ -343,7 +369,7 @@ public class ImportMemberListCommandHandler(MemberListImportConfig config,
         if (value != null)
         {
             if (mappingFormat != null
-                && DateOnly.TryParseExact(value, mappingFormat, out var date))
+             && DateOnly.TryParseExact(value, mappingFormat, out var date))
             {
                 return date;
             }

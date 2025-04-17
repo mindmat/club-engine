@@ -1068,11 +1068,20 @@ export interface ImportedMember {
     firstName?: string | null;
     lastName?: string | null;
     email?: string | null;
-    adresse?: string | null;
-    plz?: string | null;
-    ort?: string | null;
-    mobile?: string | null;
+    membershipType?: MembershipType;
+    address?: string | null;
+    zip?: string | null;
+    town?: string | null;
+    phone?: string | null;
     tags?: string[];
+    memberFrom?: Date;
+    memberUntil?: Date;
+}
+
+export enum MembershipType {
+    Active = 1,
+    Passive = 2,
+    Honorary = 3,
 }
 
 export interface ImportMemberListQuery {

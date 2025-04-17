@@ -3,14 +3,21 @@
 
 # ReSharper properties
 resharper_align_multiline_argument = true
+resharper_align_multiline_array_and_object_initializer = true
 resharper_align_multiline_calls_chain = true
 resharper_align_multiline_parameter = true
 resharper_blank_lines_before_control_transfer_statements = 1
 resharper_blank_lines_before_multiline_statements = 1
+resharper_braces_for_for = not_required
+resharper_braces_for_foreach = not_required
+resharper_braces_for_while = not_required
 resharper_csharp_max_line_length = 200
 resharper_csharp_wrap_arguments_style = chop_if_long
 resharper_csharp_wrap_before_binary_opsign = true
 resharper_instance_members_qualify_declared_in = base_class
+resharper_int_align_fields = true
+resharper_int_align_switch_expressions = true
+resharper_outdent_binary_ops = true
 resharper_wrap_after_primary_constructor_declaration_lpar = false
 resharper_wrap_chained_binary_expressions = chop_if_long
 

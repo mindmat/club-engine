@@ -14,6 +14,7 @@ public class Member : Entity
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Email { get; set; }
+    public MembershipType MembershipType { get; set; }
     public string? Address { get; set; }
     public string? Zip { get; set; }
     public string? Town { get; set; }
@@ -21,6 +22,13 @@ public class Member : Entity
     public List<string> Tags { get; set; } = new();
     public required DateOnly MemberFrom { get; set; }
     public required DateOnly MemberUntil { get; set; }
+}
+
+public enum MembershipType
+{
+    Active   = 1,
+    Passive  = 2,
+    Honorary = 3
 }
 
 public class MemberMap : EntityMap<Member>

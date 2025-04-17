@@ -102,6 +102,14 @@ namespace ClubEngine.ApiService.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    MembershipType = table.Column<int>(type: "int", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Zip = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Town = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Phone = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Tags = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MemberFrom = table.Column<DateOnly>(type: "date", nullable: false),
+                    MemberUntil = table.Column<DateOnly>(type: "date", nullable: false),
                     IncrementalKey = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)

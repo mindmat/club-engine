@@ -18,19 +18,19 @@ public class ImportNewMembersCommandHandler(IRepository<Member> members) : IRequ
         foreach (var newMember in command.NewMembers ?? [])
         {
             members.Insert(new Member
-                {
-                    Id = newMember.Id,
-                    ClubId = command.PartitionId,
-                    FirstName = newMember.FirstName,
-                    LastName = newMember.LastName,
-                    Email = newMember.Email,
-                    Address = newMember.Address,
-                    Zip = newMember.Zip,
-                    Town = newMember.Town,
-                    Phone = newMember.Phone,
-                    MemberFrom = newMember.MemberFrom,
-                    MemberUntil = newMember.MemberUntil
-                }
+                           {
+                               Id = newMember.Id,
+                               ClubId = command.PartitionId,
+                               FirstName = newMember.FirstName,
+                               LastName = newMember.LastName,
+                               Email = newMember.Email,
+                               Address = newMember.Address,
+                               Zip = newMember.Zip,
+                               Town = newMember.Town,
+                               Phone = newMember.Phone,
+                               MemberFrom = newMember.MemberFrom,
+                               MemberUntil = newMember.MemberUntil
+                           }
             );
         }
 

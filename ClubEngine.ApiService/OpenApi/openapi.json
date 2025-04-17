@@ -751,19 +751,22 @@
             "type": "string",
             "nullable": true
           },
-          "adresse": {
+          "membershipType": {
+            "$ref": "#/components/schemas/MembershipType"
+          },
+          "address": {
             "type": "string",
             "nullable": true
           },
-          "plz": {
+          "zip": {
             "type": "string",
             "nullable": true
           },
-          "ort": {
+          "town": {
             "type": "string",
             "nullable": true
           },
-          "mobile": {
+          "phone": {
             "type": "string",
             "nullable": true
           },
@@ -772,8 +775,30 @@
             "items": {
               "type": "string"
             }
+          },
+          "memberFrom": {
+            "type": "string",
+            "format": "date"
+          },
+          "memberUntil": {
+            "type": "string",
+            "format": "date"
           }
         }
+      },
+      "MembershipType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Active",
+          "Passive",
+          "Honorary"
+        ],
+        "enum": [
+          1,
+          2,
+          3
+        ]
       },
       "ImportMemberListQuery": {
         "type": "object",

@@ -6,6 +6,7 @@ public record ImportedMember
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Email { get; set; }
+    public MembershipType MembershipType { get; set; }
     public string? Address { get; set; }
     public string? Zip { get; set; }
     public string? Town { get; set; }
