@@ -1120,13 +1120,15 @@ export interface ImportedMember {
     lastName?: string | null;
     email?: string | null;
     membershipTypeId?: string;
+    currentMembershipTypeId?: string | null;
     address?: string | null;
     zip?: string | null;
     town?: string | null;
     phone?: string | null;
     tags?: string[];
-    memberFrom?: Date;
-    memberUntil?: Date;
+    from?: Date;
+    until?: Date;
+    plannedLeave?: string | null;
 }
 
 export interface ImportMemberListQuery {

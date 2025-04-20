@@ -94,36 +94,6 @@ namespace ClubEngine.ApiService.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Members",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ClubId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Zip = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    Town = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    Phone = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    Tags = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IncrementalKey = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Members", x => x.Id)
-                        .Annotation("SqlServer:Clustered", false);
-                    table.ForeignKey(
-                        name: "FK_Members_Clubs_ClubId",
-                        column: x => x.ClubId,
-                        principalTable: "Clubs",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "MembershipTypes",
                 columns: table => new
                 {
@@ -273,6 +243,42 @@ namespace ClubEngine.ApiService.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Members",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ClubId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Zip = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Town = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Phone = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    Tags = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CurrentMembershipTypeId_ReadModel = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IncrementalKey = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Members", x => x.Id)
+                        .Annotation("SqlServer:Clustered", false);
+                    table.ForeignKey(
+                        name: "FK_Members_Clubs_ClubId",
+                        column: x => x.ClubId,
+                        principalTable: "Clubs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Members_MembershipTypes_CurrentMembershipTypeId_ReadModel",
+                        column: x => x.CurrentMembershipTypeId_ReadModel,
+                        principalTable: "MembershipTypes",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Memberships",
                 columns: table => new
                 {
@@ -353,6 +359,11 @@ namespace ClubEngine.ApiService.Migrations
                 name: "IX_Members_ClubId",
                 table: "Members",
                 column: "ClubId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Members_CurrentMembershipTypeId_ReadModel",
+                table: "Members",
+                column: "CurrentMembershipTypeId_ReadModel");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Members_IncrementalKey",
@@ -475,10 +486,10 @@ namespace ClubEngine.ApiService.Migrations
                 name: "Members");
 
             migrationBuilder.DropTable(
-                name: "MembershipTypes");
+                name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "MembershipTypes");
 
             migrationBuilder.DropTable(
                 name: "Clubs");

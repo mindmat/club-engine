@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClubEngine.ApiService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250420000841_Initial")]
+    [Migration("20250420120756_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -446,6 +446,9 @@ namespace ClubEngine.ApiService.Migrations
                     b.Property<Guid>("ClubId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("CurrentMembershipTypeId_ReadModel")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Email")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -491,6 +494,8 @@ namespace ClubEngine.ApiService.Migrations
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
 
                     b.HasIndex("ClubId");
+
+                    b.HasIndex("CurrentMembershipTypeId_ReadModel");
 
                     b.HasIndex("IncrementalKey")
                         .IsUnique();
@@ -684,7 +689,13 @@ namespace ClubEngine.ApiService.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ClubEngine.ApiService.Members.Memberships.MembershipType", "CurrentMembershipType_ReadModel")
+                        .WithMany()
+                        .HasForeignKey("CurrentMembershipTypeId_ReadModel");
+
                     b.Navigation("Club");
+
+                    b.Navigation("CurrentMembershipType_ReadModel");
                 });
 
             modelBuilder.Entity("ClubEngine.ApiService.Members.Memberships.Membership", b =>

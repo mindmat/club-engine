@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, input, OnInit } 
 import { MembershipTypesService } from './membership-types.service';
 import { combineLatest } from 'rxjs';
 import { toObservable } from '@angular/core/rxjs-interop';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-membership-tag',
@@ -9,25 +10,27 @@ import { toObservable } from '@angular/core/rxjs-interop';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MembershipTagComponent implements OnInit {
-  readonly membershipTypeId = input<string>();
+  readonly membershipTypeId = input<string | null>();
   readonly membershipTypeId$ = toObservable(this.membershipTypeId);
   label: string;
-  style: string = "background-color:#ff6347;";
+  style: string;
+  inactiveColor: string = '#d6d3d1';
 
   constructor(private membershipTypesService: MembershipTypesService,
-    private changeDetectorRef: ChangeDetectorRef) { }
+    private changeDetectorRef: ChangeDetectorRef,
+    private translate: TranslateService) { }
 
   ngOnInit(): void {
     combineLatest([this.membershipTypesService.membershipTypes$, this.membershipTypeId$])
       .subscribe(([membershipTypes, membershipTypeId]) => {
         const membershipType = membershipTypes?.find(mst => mst.id === membershipTypeId);
         if (!membershipType) {
-          this.label = '?';
-          this.style = 'background-color:#ff6347;';
+          this.label = this.translate.instant('Inactive');
+          this.style = `background-color:${this.inactiveColor};`;
         }
         else {
           this.label = membershipType.name;
-          const color = membershipType.color ?? '#ff6347';
+          const color = membershipType.color ?? this.inactiveColor;
           this.style = `background-color:${color};`;
         }
         this.changeDetectorRef.markForCheck();

@@ -31,18 +31,18 @@ public class ChangeTrigger(CommandQueue commandQueue,
                                         QueryName = queryName,
                                         EventId = eventId.Value,
                                         RowId = rowId,
-                                        DirtyMoment = timeProvider.RequestTime
+                                        DirtyMoment = timeProvider.RequestNow
                                     },
                                     publishEvenWhenDbCommitFails,
                                     delay);
     }
-    
+
     public void QueryChanged<TQuery>(Guid partitionId, Guid? rowId = null, bool publishEvenWhenDbCommitFails = false)
         where TQuery : IPartitionBoundRequest
     {
         eventBus.Publish(new QueryChanged
                          {
-                             PartitionId= partitionId,
+                             PartitionId = partitionId,
                              QueryName = typeof(TQuery).Name,
                              RowId = rowId
                          },

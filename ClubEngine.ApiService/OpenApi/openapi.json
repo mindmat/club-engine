@@ -790,6 +790,11 @@
             "type": "string",
             "format": "guid"
           },
+          "currentMembershipTypeId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
           "address": {
             "type": "string",
             "nullable": true
@@ -812,13 +817,17 @@
               "type": "string"
             }
           },
-          "memberFrom": {
+          "from": {
             "type": "string",
             "format": "date"
           },
-          "memberUntil": {
+          "until": {
             "type": "string",
             "format": "date"
+          },
+          "plannedLeave": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

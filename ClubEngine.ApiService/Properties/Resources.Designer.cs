@@ -97,6 +97,15 @@ namespace ClubEngine.ApiService.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Inaktiv.
+        /// </summary>
+        public static string Inactive {
+            get {
+                return ResourceManager.GetString("Inactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mitgliederliste.
         /// </summary>
         public static string Mitgliederliste {

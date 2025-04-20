@@ -150,4 +150,7 @@
   <data name="UploadSuccessful" xml:space="preserve">
     <value>File erfolgreich hochgeladen</value>
   </data>
+  <data name="Inactive" xml:space="preserve">
+    <value>Inaktiv</value>
+  </data>
 </root>

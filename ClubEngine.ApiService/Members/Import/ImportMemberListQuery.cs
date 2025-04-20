@@ -1,6 +1,7 @@
 ﻿using AppEngine.Authorization;
 using AppEngine.DataAccess;
 using AppEngine.Mediator;
+using AppEngine.TimeHandling;
 
 using MediatR;
 
@@ -17,7 +18,10 @@ public class ImportMemberListQuery : IRequest<ListDifferences>, IPartitionBoundR
 public record ListDifferences(IEnumerable<ImportedMember> Added, IEnumerable<ImportedMember> Modified, IEnumerable<ImportedMember> Deleted);
 
 public class ImportMemberListCommandHandler(MemberListImportConfig config,
-                                            IRepository<Member> members) : IRequestHandler<ImportMemberListQuery, ListDifferences>
+                                            IRepository<Member> members,
+                                            RequestTimeProvider timeProvider,
+                                            DateFormatter dateFormatter)
+    : IRequestHandler<ImportMemberListQuery, ListDifferences>
 {
     public async Task<ListDifferences> Handle(ImportMemberListQuery query, CancellationToken cancellationToken)
     {
@@ -80,7 +84,16 @@ public class ImportMemberListCommandHandler(MemberListImportConfig config,
         matches.AddRange(existingMembersNotMatched.Select(exm => new Match(null, exm)));
 
         var added = matches.Where(mat => mat.Existing == null)
-                           .Select(mat => mat.Imported!);
+                           .Select(mat => mat.Imported!)
+                           .ToList();
+
+        foreach (var newMember in added)
+        {
+            newMember.CurrentMembershipTypeId = newMember.IsActiveAt(timeProvider.RequestToday)
+                ? newMember.MembershipTypeId
+                : null;
+            newMember.PlannedLeave = dateFormatter.GetEndText(newMember);
+        }
 
         var deleted = matches.Where(mat => mat.Imported == null)
                              .Select(mat => new ImportedMember

@@ -9,8 +9,8 @@ namespace AppEngine.ServiceBus;
 
 public class CommandQueue(ServiceBusSender sender, RequestTimeProvider timeProvider, Serializer serializer)
 {
-    public const string CommandQueueName = "CommandQueue";
-    private readonly List<EnqueuedCommand> _messages = [];
+    public const     string                CommandQueueName = "CommandQueue";
+    private readonly List<EnqueuedCommand> _messages        = [];
 
     public async Task Release(bool dbCommitSucceeded)
     {
@@ -28,9 +28,11 @@ public class CommandQueue(ServiceBusSender sender, RequestTimeProvider timeProvi
 
         var delayedGroups = _messages.Where(msg => msg.Delay != null)
                                      .GroupBy(msg => msg.Delay!.Value);
+
         foreach (var delayedGroup in delayedGroups)
         {
-            var scheduledAt = timeProvider.RequestTime + delayedGroup.Key;
+            var scheduledAt = timeProvider.RequestNow + delayedGroup.Key;
+
             foreach (var delayedChunk in delayedGroup.Chunk(100))
             {
                 await sender.ScheduleMessagesAsync(delayedChunk.Select(msg => new ServiceBusMessage(serializer.Serialize(msg.Message))), scheduledAt);
@@ -44,8 +46,8 @@ public class CommandQueue(ServiceBusSender sender, RequestTimeProvider timeProvi
         where T : IRequest
     {
         var commandSerialized = serializer.Serialize(command);
-        _messages.Add(new EnqueuedCommand
-                      (
+
+        _messages.Add(new EnqueuedCommand(
                           new CommandMessage(CommandType: command.GetType().FullName!, CommandSerialized: commandSerialized, Delay: delay),
                           publishEvenWhenDbCommitFails,
                           delay));

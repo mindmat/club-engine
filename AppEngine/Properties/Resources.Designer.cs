@@ -68,5 +68,14 @@ namespace AppEngine.Properties {
                 return ResourceManager.GetString("OK", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to bis {0}.
+        /// </summary>
+        public static string Until {
+            get {
+                return ResourceManager.GetString("Until", resourceCulture);
+            }
+        }
     }
 }

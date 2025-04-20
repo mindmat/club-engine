@@ -30,6 +30,7 @@ public class RequestAccessCommandHandler(IRepository<AccessToPartitionRequest> a
         var requestExpression = accessRequests.Where(req => req.PartitionId == command.PartitionId
                                                          && (req.Response == null || req.Response == RequestResponse.Granted));
         var existingUserId = await authenticatedUserProvider.GetAuthenticatedUserId();
+
         if (existingUserId != null)
         {
             requestExpression = requestExpression.Where(req => req.UserId_Requestor == existingUserId);
@@ -37,6 +38,7 @@ public class RequestAccessCommandHandler(IRepository<AccessToPartitionRequest> a
         else
         {
             var authenticatedUser = authenticatedUserProvider.GetAuthenticatedUser();
+
             if (authenticatedUser.IdentityProviderUserIdentifier == null)
             {
                 throw new ArgumentException("You are not authenticated");
@@ -51,6 +53,7 @@ public class RequestAccessCommandHandler(IRepository<AccessToPartitionRequest> a
         if (request == null)
         {
             var user = authenticatedUserProvider.GetAuthenticatedUser();
+
             request = new AccessToPartitionRequest
                       {
                           Id = Guid.NewGuid(),
@@ -63,7 +66,7 @@ public class RequestAccessCommandHandler(IRepository<AccessToPartitionRequest> a
                           AvatarUrl = user.AvatarUrl,
                           RequestText = command.RequestText,
                           PartitionId = command.PartitionId,
-                          RequestReceived = timeProvider.RequestTime
+                          RequestReceived = timeProvider.RequestNow
                       };
             accessRequests.Insert(request);
 
@@ -71,6 +74,7 @@ public class RequestAccessCommandHandler(IRepository<AccessToPartitionRequest> a
                              {
                                  QueryName = nameof(PartitionsOfUserQuery)
                              });
+
             eventBus.Publish(new QueryChanged
                              {
                                  PartitionId = command.PartitionId,

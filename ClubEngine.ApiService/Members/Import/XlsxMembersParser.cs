@@ -42,8 +42,8 @@ public class XlsxMembersParser
             var member = new ImportedMember
                          {
                              Id = Guid.NewGuid(),
-                             MemberFrom = DateOnly.MinValue,
-                             MemberUntil = DateOnly.MaxValue
+                             From = DateOnly.MinValue,
+                             Until = DateOnly.MaxValue
                          };
 
             foreach (var header in mappingsWithColumn)
@@ -100,11 +100,11 @@ public class XlsxMembersParser
 
                         break;
                     case MemberListImportConfig.OurColumn.MemberFrom:
-                        member.MemberFrom = GetDate(cell, header.Mapping.Format, DateOnly.MinValue);
+                        member.From = GetDate(cell, header.Mapping.Format, DateOnly.MinValue);
 
                         break;
                     case MemberListImportConfig.OurColumn.MemberTo:
-                        member.MemberUntil = GetDate(cell, header.Mapping.Format, DateOnly.MaxValue);
+                        member.Until = GetDate(cell, header.Mapping.Format, DateOnly.MaxValue);
 
                         break;
                 }

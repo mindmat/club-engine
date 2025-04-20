@@ -79,6 +79,7 @@ public static class AppEngineExtensions
 
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddScoped<RequestTimeProvider>();
+        builder.Services.AddScoped<DateFormatter>();
 
         builder.Services.AddSingleton<SecretReader>();
 

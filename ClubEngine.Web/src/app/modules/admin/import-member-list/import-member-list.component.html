@@ -53,11 +53,16 @@
                         <div class="text-secondary leading-tight">{{ added.email }}</div>
                     </div>
                     <div class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
-                        <span class="leading-none">{{ added.memberFrom }} - {{added.memberUntil}}</span>
+                        <span class="leading-none">{{ added.from }} - {{added.until}}</span>
                     </div>
 
                     <div class="-m-1 flex flex-wrap items-center">
-                        <app-membership-tag [membershipTypeId]="added.membershipTypeId"></app-membership-tag>
+                        <app-membership-tag [membershipTypeId]="added.currentMembershipTypeId"></app-membership-tag>
+                        @if (!!added.plannedLeave) {
+                        <div class="m-1 rounded-full bg-gray-100 px-3 py-0.5 text-sm font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-300">
+                            {{ added.plannedLeave }}
+                        </div>
+                        }
                     </div>
                 </fuse-card>
                 }

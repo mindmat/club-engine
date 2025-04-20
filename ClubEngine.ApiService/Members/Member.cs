@@ -21,6 +21,8 @@ public class Member : Entity
     public string? Phone { get; set; }
     public List<string> Tags { get; set; } = [];
     public ICollection<Membership>? Memberships { get; set; }
+    public Guid? CurrentMembershipTypeId_ReadModel { get; set; }
+    public MembershipType? CurrentMembershipType_ReadModel { get; set; }
 }
 
 public class MemberMap : EntityMap<Member>
@@ -54,5 +56,9 @@ public class MemberMap : EntityMap<Member>
         builder.HasOne(mbr => mbr.Club)
                .WithMany(clb => clb.Members)
                .HasForeignKey(mbr => mbr.ClubId);
+
+        builder.HasOne(mbr => mbr.CurrentMembershipType_ReadModel)
+               .WithMany()
+               .HasForeignKey(mbr => mbr.CurrentMembershipTypeId_ReadModel);
     }
 }

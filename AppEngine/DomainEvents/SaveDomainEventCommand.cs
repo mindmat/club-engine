@@ -29,7 +29,7 @@ public class SaveDomainEventCommandHandler(DbContext dbContext,
                                          Id = id,
                                          PartitionId = command.PartitionId,
                                          DomainEventId_Parent = command.DomainEventId_Parent,
-                                         Timestamp = timeProvider.RequestTime,
+                                         Timestamp = timeProvider.RequestNow,
                                          Type = command.EventType,
                                          Data = command.EventData
                                      },

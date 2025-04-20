@@ -35,8 +35,8 @@ public class ImportNewMembersCommandHandler(IRepository<Member> members) : IRequ
                                    new Membership
                                    {
                                        MembershipTypeId = newMember.MembershipTypeId,
-                                       From = newMember.MemberFrom,
-                                       Until = newMember.MemberUntil
+                                       From = newMember.From,
+                                       Until = newMember.Until
                                    }
                                ]
                            }

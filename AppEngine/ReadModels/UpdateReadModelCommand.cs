@@ -30,11 +30,13 @@ public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> cal
         var updater = calculators.First(rmu => rmu.QueryName == command.QueryName);
 
         var readModels = dbContext.Set<QueryReadModel>();
+
         var readModel = await readModels.AsTracking()
                                         .Where(rdm => rdm.QueryName == command.QueryName
                                                    && rdm.EventId == command.EventId
                                                    && rdm.RowId == command.RowId)
                                         .FirstOrDefaultAsync(cancellationToken);
+
         if (readModel?.LastUpdate >= command.DirtyMoment)
         {
             // Not perfect (time vs row version), but still servers as debouncing
@@ -66,10 +68,11 @@ public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> cal
                            EventId = command.EventId,
                            RowId = command.RowId,
                            ContentJson = contentJson,
-                           LastUpdate = dateTimeProvider.RequestTime
+                           LastUpdate = dateTimeProvider.RequestNow
                        };
             var entry = readModels.Attach(node);
             entry.State = EntityState.Added;
+
             changeTrigger.QueryChanged(command.QueryName,
                                        command.EventId,
                                        command.RowId);
@@ -78,13 +81,15 @@ public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> cal
         {
             existing.ContentJson = contentJson;
             var contentHasChanged = dbContext.Entry(existing).State == EntityState.Modified;
+
             if (contentHasChanged)
             {
                 changeTrigger.QueryChanged(command.QueryName,
                                            command.EventId,
                                            command.RowId);
             }
-            existing.LastUpdate = dateTimeProvider.RequestTime;
+
+            existing.LastUpdate = dateTimeProvider.RequestNow;
         }
     }
 
@@ -94,17 +99,19 @@ public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> cal
                                   .FirstOrDefaultAsync(mnr => mnr.PartitionId == partitionId
                                                            && mnr.Key == menuNodeCalculation.Key);
         var anythingChanged = false;
+
         if (node == null)
         {
             anythingChanged = true;
+
             menuNodes.Insert(new MenuNodeReadModel
-                                       {
-                                           Id = Guid.NewGuid(),
-                                           PartitionId= partitionId,
-                                           Key = menuNodeCalculation.Key,
-                                           Content = menuNodeCalculation.Content,
-                                           Hidden = menuNodeCalculation.Hidden
-                                       });
+                             {
+                                 Id = Guid.NewGuid(),
+                                 PartitionId = partitionId,
+                                 Key = menuNodeCalculation.Key,
+                                 Content = menuNodeCalculation.Content,
+                                 Hidden = menuNodeCalculation.Hidden
+                             });
         }
         else if (node.Content != menuNodeCalculation.Content
               || node.Style != menuNodeCalculation.Style

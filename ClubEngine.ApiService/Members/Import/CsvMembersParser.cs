@@ -31,8 +31,8 @@ public class CsvMembersParser
             var member = new ImportedMember
                          {
                              Id = Guid.NewGuid(),
-                             MemberFrom = DateOnly.MinValue,
-                             MemberUntil = DateOnly.MaxValue
+                             From = DateOnly.MinValue,
+                             Until = DateOnly.MaxValue
                          };
 
             foreach (var header in headers)
@@ -84,11 +84,11 @@ public class CsvMembersParser
 
                         break;
                     case MemberListImportConfig.OurColumn.MemberFrom:
-                        member.MemberFrom = csv.GetField(header).ToDate(mapping.Format, DateOnly.MinValue);
+                        member.From = csv.GetField(header).ToDate(mapping.Format, DateOnly.MinValue);
 
                         break;
                     case MemberListImportConfig.OurColumn.MemberTo:
-                        member.MemberUntil = csv.GetField(header).ToDate(mapping.Format, DateOnly.MaxValue);
+                        member.Until = csv.GetField(header).ToDate(mapping.Format, DateOnly.MaxValue);
 
                         break;
                 }
