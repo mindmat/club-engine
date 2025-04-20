@@ -58,7 +58,7 @@ public class ImportMemberListCommandHandler(MemberListImportConfig config,
     {
         return importConfig.FileType switch
         {
-            MemberListImportConfig.FileType.Csv  => await CsvMembersParser.ParseCsv(query, importConfig.Mappings),
+            MemberListImportConfig.FileType.Csv  => await CsvMembersParser.ParseCsv(query, importConfig),
             MemberListImportConfig.FileType.Xlsx => XlsxMembersParser.ParseXlsx(query, importConfig.Mappings),
             _                                    => throw new ArgumentOutOfRangeException()
         };
@@ -95,7 +95,8 @@ public class ImportMemberListCommandHandler(MemberListImportConfig config,
             newMember.PlannedLeave = dateFormatter.GetEndText(newMember);
         }
 
-        var deleted = matches.Where(mat => mat.Imported == null)
+        var deleted = matches.Where(mat => mat.Imported == null
+                                        && mat.Existing?.CurrentMembershipTypeId_ReadModel != null)
                              .Select(mat => new ImportedMember
                                             {
                                                 Id = mat.Existing!.Id,

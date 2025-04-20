@@ -46,20 +46,15 @@
                     <div class="flex flex-row items-baseline gap-x-2">
                         <div class="text-xl font-semibold leading-tight">{{ added.firstName }} {{ added.lastName }}
                         </div>
-                        <!-- <div class="text-secondary leading-tight">{{ added.email }}</div> -->
                     </div>
                     <div class="flex flex-row items-baseline gap-x-2">
-                        <!-- <div class="text-xl font-semibold leading-tight">{{ added.email }}</div> -->
                         <div class="text-secondary leading-tight">{{ added.email }}</div>
-                    </div>
-                    <div class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
-                        <span class="leading-none">{{ added.from }} - {{added.until}}</span>
                     </div>
 
                     <div class="-m-1 flex flex-wrap items-center">
                         <app-membership-tag [membershipTypeId]="added.currentMembershipTypeId"></app-membership-tag>
                         @if (!!added.plannedLeave) {
-                        <div class="m-1 rounded-full bg-gray-100 px-3 py-0.5 text-sm font-medium text-gray-500 dark:bg-gray-700 dark:text-gray-300">
+                        <div class="m-1 rounded-full bg-stone-300 px-3 py-0.5 text-sm font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
                             {{ added.plannedLeave }}
                         </div>
                         }

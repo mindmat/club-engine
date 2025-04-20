@@ -6,7 +6,7 @@ public class MemberListImportConfig : IConfigurationItem
 {
     public Source[] Sources { get; set; } = [];
 
-    public record Source(string Name, FileType FileType, ColumnMapping[] Mappings);
+    public record Source(string Name, FileType FileType, ColumnMapping[] Mappings, FixValues[]? FixValues = null);
 
     public record ColumnMapping(string Header,
                                 OurColumn OurColumn,
@@ -15,6 +15,8 @@ public class MemberListImportConfig : IConfigurationItem
                                 string? Format = null,
                                 object? FallbackValue = null,
                                 IDictionary<string, object>? Mappings = null);
+
+    public record FixValues(OurColumn OurColumn, object Value);
 
     public enum FileType
     {
@@ -54,7 +56,8 @@ public class MemberListImportDefaultConfigProvider : MemberListImportConfig, IDe
                            new ColumnMapping("Admin", OurColumn.Tag, "Admin", "Active"),
                            new ColumnMapping("Teacher", OurColumn.Tag, "Teacher", "Active"),
                            new ColumnMapping("Veranstalter", OurColumn.Tag, "Veranstalter", "Active"),
-                       ]),
+                       ],
+                       [new FixValues(OurColumn.MembershipType, "F750C7B8-4AF6-43EC-897C-38457863788A")]),
             new Source("OneDrive",
                        FileType.Xlsx,
                        [

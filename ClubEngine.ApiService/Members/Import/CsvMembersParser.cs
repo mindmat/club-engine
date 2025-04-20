@@ -9,7 +9,7 @@ namespace ClubEngine.ApiService.Members.Import;
 
 public class CsvMembersParser
 {
-    public static async Task<List<ImportedMember>> ParseCsv(ImportMemberListQuery query, MemberListImportConfig.ColumnMapping[] mappings)
+    public static async Task<List<ImportedMember>> ParseCsv(ImportMemberListQuery query, MemberListImportConfig.Source config)
     {
         using var reader = new StreamReader(query.File.FileStream);
 
@@ -19,7 +19,7 @@ public class CsvMembersParser
                                           HasHeaderRecord = true,
                                       });
 
-        var headerMappings = mappings.ToDictionary(m => m.Header, m => m);
+        var headerMappings = config.Mappings.ToDictionary(m => m.Header, m => m);
 
         var members = new List<ImportedMember>();
         await csv.ReadAsync();
@@ -37,7 +37,10 @@ public class CsvMembersParser
 
             foreach (var header in headers)
             {
-                if (!headerMappings.TryGetValue(header, out var mapping)) continue;
+                if (!headerMappings.TryGetValue(header, out var mapping))
+                {
+                    continue;
+                }
 
                 switch (mapping.OurColumn)
                 {
@@ -89,6 +92,29 @@ public class CsvMembersParser
                         break;
                     case MemberListImportConfig.OurColumn.MemberTo:
                         member.Until = csv.GetField(header).ToDate(mapping.Format, DateOnly.MaxValue);
+
+                        break;
+                }
+            }
+
+            foreach (var fixValue in config.FixValues ?? [])
+            {
+                switch (fixValue.OurColumn)
+                {
+                    case MemberListImportConfig.OurColumn.MembershipType:
+                        member.MembershipTypeId = Guid.Parse(fixValue.Value.ToString()!);
+
+                        break;
+
+                    case MemberListImportConfig.OurColumn.Tag:
+                        break;
+                    case MemberListImportConfig.OurColumn.MemberFrom:
+                        member.From = DateOnly.Parse(fixValue.Value.ToString()!);
+
+                        break;
+
+                    case MemberListImportConfig.OurColumn.MemberTo:
+                        member.Until = DateOnly.Parse(fixValue.Value.ToString()!);
 
                         break;
                 }

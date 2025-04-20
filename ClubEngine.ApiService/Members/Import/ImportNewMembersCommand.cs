@@ -1,5 +1,6 @@
 ﻿using AppEngine.Authorization;
 using AppEngine.DataAccess;
+using AppEngine.TimeHandling;
 
 using ClubEngine.ApiService.Members.Memberships;
 
@@ -13,7 +14,9 @@ public class ImportNewMembersCommand : IRequest, IPartitionBoundRequest
     public IEnumerable<ImportedMember>? NewMembers { get; set; }
 }
 
-public class ImportNewMembersCommandHandler(IRepository<Member> members) : IRequestHandler<ImportNewMembersCommand>
+public class ImportNewMembersCommandHandler(IRepository<Member> members,
+                                            RequestTimeProvider timeProvider)
+    : IRequestHandler<ImportNewMembersCommand>
 {
     public Task Handle(ImportNewMembersCommand command, CancellationToken cancellationToken)
     {
@@ -38,7 +41,10 @@ public class ImportNewMembersCommandHandler(IRepository<Member> members) : IRequ
                                        From = newMember.From,
                                        Until = newMember.Until
                                    }
-                               ]
+                               ],
+                               CurrentMembershipTypeId_ReadModel = newMember.IsActiveAt(timeProvider.RequestToday)
+                                   ? newMember.MembershipTypeId
+                                   : null
                            }
             );
         }

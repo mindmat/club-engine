@@ -28,12 +28,12 @@ export class ImportMemberListComponent implements OnInit {
   }
 
   uploadDone(changes: ListDifferences) {
-    console.log(changes);
     this.differences$.next(changes);
   }
 
   addAllNewMembers(newMembers: ImportedMember[]) {
-    this.service.importAllNewMembers(newMembers);
+    this.service.importAllNewMembers(newMembers)
+      .subscribe(() => { this.differences$.value.added = []; });
   }
 
 }
