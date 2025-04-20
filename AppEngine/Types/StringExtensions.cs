@@ -6,4 +6,23 @@ public static class StringExtensions
     {
         return string.Join(separator, strings);
     }
+
+    public static DateOnly ToDate(this string? value, string? mappingFormat, DateOnly fallback)
+    {
+        if (value != null)
+        {
+            if (mappingFormat != null
+             && DateOnly.TryParseExact(value, mappingFormat, out var date))
+            {
+                return date;
+            }
+
+            if (DateOnly.TryParse(value, out date))
+            {
+                return date;
+            }
+        }
+
+        return fallback;
+    }
 }

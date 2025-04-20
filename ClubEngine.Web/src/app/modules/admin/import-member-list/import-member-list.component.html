@@ -1,8 +1,7 @@
 <div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
 
     <!-- Header -->
-    <div
-        class="flex flex-col items-start space-x-4 sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+    <div class="flex flex-col items-start space-x-4 sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
         <!-- Title -->
         <div>
             <div class="text-4xl font-extrabold tracking-tight leading-none">{{ 'Mitgliederliste' | translate }}</div>
@@ -39,8 +38,7 @@
                 </button>
             </div>
 
-            <div
-                class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+            <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
                 <!-- New members -->
                 @for(added of differences.added; track added.id)
                 {
@@ -56,9 +54,11 @@
                     </div>
                     <div class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
                         <span class="leading-none">{{ added.memberFrom }} - {{added.memberUntil}}</span>
-                        <span class="leading-none">{{ added.membershipType }}</span>
                     </div>
 
+                    <div class="-m-1 flex flex-wrap items-center">
+                        <app-membership-tag [membershipTypeId]="added.membershipTypeId"></app-membership-tag>
+                    </div>
                 </fuse-card>
                 }
             </div>
@@ -73,8 +73,7 @@
                 </button> -->
             </div>
 
-            <div
-                class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+            <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
                 <!-- Removed members -->
                 @for(deleted of differences.deleted; track deleted.id)
                 {
@@ -95,7 +94,7 @@
                 </fuse-card>
                 }
             </div>
-        }
+            }
         </div>
     </div>
 </div>

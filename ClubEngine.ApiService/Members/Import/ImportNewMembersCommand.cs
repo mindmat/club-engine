@@ -1,6 +1,8 @@
 ﻿using AppEngine.Authorization;
 using AppEngine.DataAccess;
 
+using ClubEngine.ApiService.Members.Memberships;
+
 using MediatR;
 
 namespace ClubEngine.ApiService.Members.Import;
@@ -28,8 +30,15 @@ public class ImportNewMembersCommandHandler(IRepository<Member> members) : IRequ
                                Zip = newMember.Zip,
                                Town = newMember.Town,
                                Phone = newMember.Phone,
-                               MemberFrom = newMember.MemberFrom,
-                               MemberUntil = newMember.MemberUntil
+                               Memberships =
+                               [
+                                   new Membership
+                                   {
+                                       MembershipTypeId = newMember.MembershipTypeId,
+                                       From = newMember.MemberFrom,
+                                       Until = newMember.MemberUntil
+                                   }
+                               ]
                            }
             );
         }

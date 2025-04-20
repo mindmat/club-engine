@@ -63,8 +63,12 @@ public class MemberListImportDefaultConfigProvider : MemberListImportConfig, IDe
                            new ColumnMapping("Email", OurColumn.Email),
                            new ColumnMapping("Mitgliedschafts-Typ",
                                              OurColumn.MembershipType,
-                                             FallbackValue: MembershipType.Active,
-                                             Mappings: new Dictionary<string, object> { { "passiv", MembershipType.Passive }, { "ehrenmitglied", MembershipType.Honorary } }),
+                                             FallbackValue: "F750C7B8-4AF6-43EC-897C-38457863788A",
+                                             Mappings: new Dictionary<string, object>
+                                                       {
+                                                           { "passiv", "DADBB6D5-F1C5-4B9D-A585-CCA92BAA9E43" },
+                                                           { "ehrenmitglied", "48AF80FD-E5F0-48AA-8314-97C27C547E92" }
+                                                       }),
                            new ColumnMapping("Adresse", OurColumn.Address),
                            new ColumnMapping("PLZ", OurColumn.Zip),
                            new ColumnMapping("Ort", OurColumn.Town),

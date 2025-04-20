@@ -5,15 +5,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ImportedMember, ListDifferences } from 'app/api/api';
 import { FileUploadComponent } from 'app/app-engine/file-upload/file-upload.component';
-import { PartitionAcronymResolver } from 'app/app-engine/partitions/club-acronym.resolver';
 import { PartitionService } from 'app/app-engine/partitions/partition.service';
 import { BehaviorSubject } from 'rxjs';
 import { FuseCardComponent } from "../../../../@fuse/components/card/card.component";
 import { ImportMemberListService } from './import-member-list.service';
+import { MembershipTagComponent } from "../membership-tag/membership-tag.component";
 
 @Component({
   selector: 'app-import-member-list',
-  imports: [CommonModule, MatIconModule, MatButtonModule, FileUploadComponent, TranslatePipe, FuseCardComponent],
+  imports: [CommonModule, MatIconModule, MatButtonModule, FileUploadComponent, TranslatePipe, FuseCardComponent, MembershipTagComponent],
   templateUrl: './import-member-list.component.html'
 })
 export class ImportMemberListComponent implements OnInit {

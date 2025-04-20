@@ -37,7 +37,6 @@ export class NavigationService {
                 filter(([_, e, __]) => e?.acronym != null),
                 tap(([lang, e, nodes]) =>
                 {
-                    console.log(lang);
                     this.menu.next([
                         {
                             id: 'select-club',

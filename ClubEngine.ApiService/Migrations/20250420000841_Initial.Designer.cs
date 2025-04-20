@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClubEngine.ApiService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250416232257_Initial")]
+    [Migration("20250420000841_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -464,15 +464,6 @@ namespace ClubEngine.ApiService.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<DateOnly>("MemberFrom")
-                        .HasColumnType("date");
-
-                    b.Property<DateOnly>("MemberUntil")
-                        .HasColumnType("date");
-
-                    b.Property<int>("MembershipType")
-                        .HasColumnType("int");
-
                     b.Property<string>("Phone")
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
@@ -507,6 +498,100 @@ namespace ClubEngine.ApiService.Migrations
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("IncrementalKey"));
 
                     b.ToTable("Members", (string)null);
+                });
+
+            modelBuilder.Entity("ClubEngine.ApiService.Members.Memberships.Membership", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateOnly>("From")
+                        .HasColumnType("date");
+
+                    b.Property<int>("IncrementalKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IncrementalKey"));
+
+                    b.Property<Guid>("MemberId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("MembershipTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<DateOnly>("Until")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("IncrementalKey")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("IncrementalKey"));
+
+                    b.HasIndex("MemberId");
+
+                    b.HasIndex("MembershipTypeId");
+
+                    b.ToTable("Memberships", (string)null);
+                });
+
+            modelBuilder.Entity("ClubEngine.ApiService.Members.Memberships.MembershipType", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("AnnualFee")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("decimal(10,2)");
+
+                    b.Property<Guid>("ClubId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Color")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("FallbackName")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("IncrementalKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IncrementalKey"));
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("ClubId");
+
+                    b.HasIndex("IncrementalKey")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("IncrementalKey"));
+
+                    b.ToTable("MembershipTypes", (string)null);
                 });
 
             modelBuilder.Entity("ClubEngine.ApiService.Clubs.Club", b =>
@@ -602,6 +687,36 @@ namespace ClubEngine.ApiService.Migrations
                     b.Navigation("Club");
                 });
 
+            modelBuilder.Entity("ClubEngine.ApiService.Members.Memberships.Membership", b =>
+                {
+                    b.HasOne("ClubEngine.ApiService.Members.Member", "Member")
+                        .WithMany("Memberships")
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClubEngine.ApiService.Members.Memberships.MembershipType", "MembershipType")
+                        .WithMany()
+                        .HasForeignKey("MembershipTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Member");
+
+                    b.Navigation("MembershipType");
+                });
+
+            modelBuilder.Entity("ClubEngine.ApiService.Members.Memberships.MembershipType", b =>
+                {
+                    b.HasOne("ClubEngine.ApiService.Clubs.Club", "Club")
+                        .WithMany("MembershipTypes")
+                        .HasForeignKey("ClubId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Club");
+                });
+
             modelBuilder.Entity("AppEngine.Authentication.Users.User", b =>
                 {
                     b.Navigation("Partitions");
@@ -616,9 +731,16 @@ namespace ClubEngine.ApiService.Migrations
                     b.Navigation("Users");
                 });
 
+            modelBuilder.Entity("ClubEngine.ApiService.Members.Member", b =>
+                {
+                    b.Navigation("Memberships");
+                });
+
             modelBuilder.Entity("ClubEngine.ApiService.Clubs.Club", b =>
                 {
                     b.Navigation("Members");
+
+                    b.Navigation("MembershipTypes");
                 });
 #pragma warning restore 612, 618
         }

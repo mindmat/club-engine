@@ -173,6 +173,41 @@
         }
       }
     },
+    "/api/MembershipTypesQuery": {
+      "post": {
+        "tags": [
+          "MembershipTypes"
+        ],
+        "operationId": "MembershipTypes_Query",
+        "requestBody": {
+          "x-name": "MembershipTypesQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MembershipTypesQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MembershipTypeItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/MenuNodesQuery": {
       "post": {
         "tags": [
@@ -751,8 +786,9 @@
             "type": "string",
             "nullable": true
           },
-          "membershipType": {
-            "$ref": "#/components/schemas/MembershipType"
+          "membershipTypeId": {
+            "type": "string",
+            "format": "guid"
           },
           "address": {
             "type": "string",
@@ -785,20 +821,6 @@
             "format": "date"
           }
         }
-      },
-      "MembershipType": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "Active",
-          "Passive",
-          "Honorary"
-        ],
-        "enum": [
-          1,
-          2,
-          3
-        ]
       },
       "ImportMemberListQuery": {
         "type": "object",
@@ -889,6 +911,33 @@
             "items": {
               "$ref": "#/components/schemas/ImportedMember"
             }
+          }
+        }
+      },
+      "MembershipTypeItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "color": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "MembershipTypesQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
           }
         }
       },

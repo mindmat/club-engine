@@ -3,6 +3,7 @@ using System.Diagnostics;
 using AppEngine.DataAccess;
 
 using ClubEngine.ApiService.Clubs;
+using ClubEngine.ApiService.Members.Memberships;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -14,8 +15,8 @@ public class Worker(
     IServiceProvider serviceProvider,
     IHostApplicationLifetime hostApplicationLifetime) : BackgroundService
 {
-    public const string ActivitySourceName = "Migrations";
-    private static readonly ActivitySource ActivitySource = new(ActivitySourceName);
+    public const            string         ActivitySourceName = "Migrations";
+    private static readonly ActivitySource ActivitySource     = new(ActivitySourceName);
 
     protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
@@ -32,6 +33,7 @@ public class Worker(
         catch (Exception ex)
         {
             activity?.RecordException(ex);
+
             throw;
         }
 
@@ -41,6 +43,7 @@ public class Worker(
     private static async Task RunMigrationAsync(AppDbContext dbContext, CancellationToken cancellationToken)
     {
         var strategy = dbContext.Database.CreateExecutionStrategy();
+
         await strategy.ExecuteAsync(async () =>
         {
             // Run migration in a transaction to avoid partial migration if it fails.
