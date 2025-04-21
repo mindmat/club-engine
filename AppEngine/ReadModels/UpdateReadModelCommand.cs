@@ -11,7 +11,7 @@ namespace AppEngine.ReadModels;
 
 public class UpdateReadModelCommand : IRequest
 {
-    public Guid EventId { get; set; }
+    public Guid PartitionId { get; set; }
     public string QueryName { get; set; } = null!;
     public Guid? RowId { get; set; }
     public DateTimeOffset? DirtyMoment { get; set; }
@@ -33,7 +33,7 @@ public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> cal
 
         var readModel = await readModels.AsTracking()
                                         .Where(rdm => rdm.QueryName == command.QueryName
-                                                   && rdm.EventId == command.EventId
+                                                   && rdm.PartitionId == command.PartitionId
                                                    && rdm.RowId == command.RowId)
                                         .FirstOrDefaultAsync(cancellationToken);
 
@@ -43,13 +43,13 @@ public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> cal
             return;
         }
 
-        var result = await updater.Calculate(command.EventId, command.RowId, cancellationToken);
+        var result = await updater.Calculate(command.PartitionId, command.RowId, cancellationToken);
 
         UpsertReadModel(command, result.ReadModel, readModel, readModels);
 
         if (result.MenuNode != null)
         {
-            await UpsertMenuNode(command.EventId, result.MenuNode);
+            await UpsertMenuNode(command.PartitionId, result.MenuNode);
         }
     }
 
@@ -65,7 +65,7 @@ public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> cal
             var node = new QueryReadModel
                        {
                            QueryName = command.QueryName,
-                           EventId = command.EventId,
+                           PartitionId = command.PartitionId,
                            RowId = command.RowId,
                            ContentJson = contentJson,
                            LastUpdate = dateTimeProvider.RequestNow
@@ -74,7 +74,7 @@ public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> cal
             entry.State = EntityState.Added;
 
             changeTrigger.QueryChanged(command.QueryName,
-                                       command.EventId,
+                                       command.PartitionId,
                                        command.RowId);
         }
         else
@@ -85,7 +85,7 @@ public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> cal
             if (contentHasChanged)
             {
                 changeTrigger.QueryChanged(command.QueryName,
-                                           command.EventId,
+                                           command.PartitionId,
                                            command.RowId);
             }
 
@@ -134,7 +134,7 @@ public interface IReadModelCalculator
 {
     string QueryName { get; }
     bool IsDateDependent { get; }
-    Task<(object ReadModel, MenuNodeCalculation? MenuNode)> Calculate(Guid eventId, Guid? rowId, CancellationToken cancellationToken);
+    Task<(object ReadModel, MenuNodeCalculation? MenuNode)> Calculate(Guid partitionId, Guid? rowId, CancellationToken cancellationToken);
 }
 
 public abstract class ReadModelCalculator<T> : IReadModelCalculator
@@ -143,12 +143,12 @@ public abstract class ReadModelCalculator<T> : IReadModelCalculator
     public abstract string QueryName { get; }
     public abstract bool IsDateDependent { get; }
 
-    public async Task<(object ReadModel, MenuNodeCalculation? MenuNode)> Calculate(Guid eventId, Guid? rowId, CancellationToken cancellationToken)
+    public async Task<(object ReadModel, MenuNodeCalculation? MenuNode)> Calculate(Guid partitionId, Guid? rowId, CancellationToken cancellationToken)
     {
-        return await CalculateTyped(eventId, rowId, cancellationToken);
+        return await CalculateTyped(partitionId, rowId, cancellationToken);
     }
 
-    protected abstract Task<(T ReadModel, MenuNodeCalculation? MenuNode)> CalculateTyped(Guid eventId, Guid? rowId, CancellationToken cancellationToken);
+    protected abstract Task<(T ReadModel, MenuNodeCalculation? MenuNode)> CalculateTyped(Guid partitionId, Guid? rowId, CancellationToken cancellationToken);
 }
 
 public class MenuNodeCalculation

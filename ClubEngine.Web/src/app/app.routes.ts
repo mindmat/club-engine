@@ -8,6 +8,8 @@ import { inject } from '@angular/core';
 import { SelectClubService } from './modules/admin/select-club/select-club.service';
 import { PartitionAcronymResolver } from './app-engine/partitions/club-acronym.resolver';
 import { ImportMemberListComponent } from './modules/admin/import-member-list/import-member-list.component';
+import { MembersComponent } from './modules/admin/members/members.component';
+import { MembersService } from './modules/admin/members/members.service';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -89,11 +91,15 @@ export const appRoutes: Route[] = [
                 // canActivate: [AuthGuard],
                 // canActivateChild: [AuthGuard],
                 resolve: { initialData: PartitionAcronymResolver },
-        
+
                 children: [
-        
-                    // Redirect empty path to '/overview'
-                    { path: '', pathMatch: 'full', redirectTo: 'import-member-list' },
+
+                    { path: '', pathMatch: 'full', redirectTo: 'members' },
+                    {
+                        path: 'members',
+                        component: MembersComponent,
+                        resolve: { members: () => inject(MembersService).fetch() }
+                    },
                     {
                         path: 'import-member-list',
                         component: ImportMemberListComponent,

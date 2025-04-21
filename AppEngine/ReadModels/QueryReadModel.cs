@@ -7,7 +7,7 @@ namespace AppEngine.ReadModels;
 public class QueryReadModel
 {
     public string QueryName { get; set; } = null!;
-    public Guid EventId { get; set; }
+    public Guid PartitionId { get; set; }
     public Guid? RowId { get; set; }
     public string ContentJson { get; set; } = null!;
     public DateTimeOffset LastUpdate { get; set; }
@@ -32,7 +32,7 @@ public class QueryReadModelMap : IEntityTypeConfiguration<QueryReadModel>
         builder.HasIndex(rdm => new
                                 {
                                     rdm.QueryName,
-                                    rdm.EventId,
+                                    rdm.PartitionId,
                                     rdm.RowId
                                 })
                .IsUnique();

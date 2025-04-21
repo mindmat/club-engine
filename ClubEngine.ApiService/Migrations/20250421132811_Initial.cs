@@ -36,7 +36,7 @@ namespace ClubEngine.ApiService.Migrations
                     Sequence = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     QueryName = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PartitionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RowId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ContentJson = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastUpdate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
@@ -427,9 +427,9 @@ namespace ClubEngine.ApiService.Migrations
                 column: "PartitionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReadModels_QueryName_EventId_RowId",
+                name: "IX_ReadModels_QueryName_PartitionId_RowId",
                 table: "ReadModels",
-                columns: new[] { "QueryName", "EventId", "RowId" },
+                columns: new[] { "QueryName", "PartitionId", "RowId" },
                 unique: true,
                 filter: "[RowId] IS NOT NULL");
 

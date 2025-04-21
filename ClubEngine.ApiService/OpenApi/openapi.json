@@ -208,6 +208,73 @@
         }
       }
     },
+    "/api/MembersQuery": {
+      "post": {
+        "tags": [
+          "Members"
+        ],
+        "operationId": "Members_Query",
+        "requestBody": {
+          "x-name": "MembersQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MembersQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MemberDisplayItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/MemberStatsQuery": {
+      "post": {
+        "tags": [
+          "MemberStats"
+        ],
+        "operationId": "MemberStats_Query",
+        "requestBody": {
+          "x-name": "MemberStatsQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberStatsQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemberStats"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/MenuNodesQuery": {
       "post": {
         "tags": [
@@ -950,6 +1017,78 @@
           }
         }
       },
+      "MemberDisplayItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "membershipTypeId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          }
+        }
+      },
+      "MembersQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "MemberStats": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "currentTotal": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "memberCounts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberCount"
+            }
+          }
+        }
+      },
+      "MemberCount": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "total": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "MemberStatsQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "MenuNodeContent": {
         "type": "object",
         "additionalProperties": false,
@@ -1248,7 +1387,7 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "eventId": {
+          "partitionId": {
             "type": "string",
             "format": "guid"
           },

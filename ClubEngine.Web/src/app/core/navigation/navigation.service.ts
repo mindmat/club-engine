@@ -28,15 +28,13 @@ export class NavigationService {
      */
     constructor(eventService: PartitionService,
         translateService: TranslateService,
-        menuService: MenuService)
-    {
+        menuService: MenuService) {
         combineLatest([translateService.onLangChange.asObservable().pipe(map(e => e.lang), startWith(translateService.currentLang)),
         eventService.selected$,
         menuService.nodeContents$])
             .pipe(
                 filter(([_, e, __]) => e?.acronym != null),
-                tap(([lang, e, nodes]) =>
-                {
+                tap(([lang, e, nodes]) => {
                     this.menu.next([
                         {
                             id: 'select-club',
@@ -54,18 +52,17 @@ export class NavigationService {
                                     id: 'import-member-list',
                                     title: translateService.instant('ImportMemberList'),
                                     type: 'basic',
-                                    icon: 'heroicons_outline:clipboard-check',
+                                    icon: 'heroicons_outline:clipboard-document-list',
                                     link: `/${e.acronym}/import-member-list`,
                                 },
-                                // {
-                                //     id: 'release-mails',
-                                //     key: MenuNodeKey.PendingMails,
-                                //     title: translateService.instant('ReleaseMails'),
-                                //     type: 'basic',
-                                //     icon: 'mat_outline:mail',
-                                //     link: `/${e.acronym}/mailing/release-mails`,
-                                //     badge: this.getBadge(nodes, MenuNodeKey.PendingMails)
-                                // },
+                                {
+                                    id: 'members',
+                                    title: translateService.instant('Members'),
+                                    type: 'basic',
+                                    icon: 'heroicons_outline:users',
+                                    link: `/${e.acronym}/members`,
+                                    badge: this.getBadge(nodes, 'MembersMembersNodeKey')
+                                },
                                 // {
                                 //     id: 'search-registration',
                                 //     title: translateService.instant('SearchRegistration'),
@@ -196,11 +193,9 @@ export class NavigationService {
             .subscribe();
     }
 
-    private getBadge(contents: MenuNodeContent[] | null, key: string): { title: string, classes: string; } | null
-    {
+    private getBadge(contents: MenuNodeContent[] | null, key: string): { title: string, classes: string; } | null {
         var content = contents?.find(nct => nct.key === key);
-        if (!content)
-        {
+        if (!content) {
             return null;
         }
         return {
@@ -209,25 +204,20 @@ export class NavigationService {
         };
     }
 
-    private isHidden(contents: MenuNodeContent[] | null, key: string): boolean 
-    {
+    private isHidden(contents: MenuNodeContent[] | null, key: string): boolean {
         var content = contents?.find(nct => nct.key === key);
-        if (!content)
-        {
+        if (!content) {
             return false;
         }
         return content.hidden === true;
     }
 
-    getBadgeStyle(content: MenuNodeContent): string | null
-    {
-        if (!content.content)
-        {
+    getBadgeStyle(content: MenuNodeContent): string | null {
+        if (!content.content) {
             // avoid empty badge
             return null;
         }
-        switch (content.style)
-        {
+        switch (content.style) {
             case MenuNodeStyle.Info: return 'px-2 bg-sky-600 text-black rounded-full';
             case MenuNodeStyle.ToDo: return 'px-2 bg-yellow-500 text-black rounded-full';
             case MenuNodeStyle.Important: return 'px-2 bg-red-500 text-black rounded-full';
@@ -242,11 +232,9 @@ export class NavigationService {
     /**
      * Getter for navigation
      */
-    get navigation$(): Observable<Navigation>
-    {
+    get navigation$(): Observable<Navigation> {
         return this.menu.pipe(
-            map(menu =>
-            {
+            map(menu => {
                 return {
                     default: menu,
                     compact: menu,

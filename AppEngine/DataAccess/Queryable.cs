@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Linq.Expressions;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace AppEngine.DataAccess;
 
 public class Queryable<TEntity>(DbContext dbContext) : IQueryable<TEntity>, IAsyncEnumerable<TEntity>
-    where TEntity : Entity
+    where TEntity : class
 {
     public Type ElementType => ((IQueryable)DbSet).ElementType;
     public Expression Expression => ((IQueryable)DbSet).Expression;

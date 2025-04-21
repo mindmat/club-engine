@@ -331,6 +331,108 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    members_Query(membersQuery: MembersQuery | undefined): Observable<MemberDisplayItem[]> {
+        let url_ = this.baseUrl + "/api/MembersQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(membersQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMembers_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMembers_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<MemberDisplayItem[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<MemberDisplayItem[]>;
+        }));
+    }
+
+    protected processMembers_Query(response: HttpResponseBase): Observable<MemberDisplayItem[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as MemberDisplayItem[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    memberStats_Query(memberStatsQuery: MemberStatsQuery | undefined): Observable<MemberStats> {
+        let url_ = this.baseUrl + "/api/MemberStatsQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(memberStatsQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMemberStats_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMemberStats_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<MemberStats>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<MemberStats>;
+        }));
+    }
+
+    protected processMemberStats_Query(response: HttpResponseBase): Observable<MemberStats> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as MemberStats;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     menuNodes_Query(menuNodesQuery: MenuNodesQuery | undefined): Observable<MenuNodeContent[]> {
         let url_ = this.baseUrl + "/api/MenuNodesQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -1171,6 +1273,31 @@ export interface MembershipTypesQuery {
     partitionId?: string;
 }
 
+export interface MemberDisplayItem {
+    id?: string;
+    name?: string;
+    email?: string | null;
+    membershipTypeId?: string | null;
+}
+
+export interface MembersQuery {
+    partitionId?: string;
+}
+
+export interface MemberStats {
+    currentTotal?: number;
+    memberCounts?: MemberCount[];
+}
+
+export interface MemberCount {
+    date?: Date;
+    total?: number;
+}
+
+export interface MemberStatsQuery {
+    partitionId?: string;
+}
+
 export interface MenuNodeContent {
     key?: string;
     content?: string | null;
@@ -1278,7 +1405,7 @@ export interface TranslationQuery {
 }
 
 export interface UpdateReadModelCommand {
-    eventId?: string;
+    partitionId?: string;
     queryName?: string;
     rowId?: string | null;
     dirtyMoment?: Date | null;

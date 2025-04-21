@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClubEngine.ApiService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250420120756_Initial")]
+    [Migration("20250421132811_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -409,11 +409,11 @@ namespace ClubEngine.ApiService.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTimeOffset>("LastUpdate")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("PartitionId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("QueryName")
                         .IsRequired()
@@ -426,7 +426,7 @@ namespace ClubEngine.ApiService.Migrations
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Sequence"));
 
-                    b.HasIndex("QueryName", "EventId", "RowId")
+                    b.HasIndex("QueryName", "PartitionId", "RowId")
                         .IsUnique()
                         .HasFilter("[RowId] IS NOT NULL");
 

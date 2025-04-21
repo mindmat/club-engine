@@ -1,11 +1,12 @@
 ﻿using AppEngine.DataAccess;
+using AppEngine.TimeHandling;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ClubEngine.ApiService.Members.Memberships;
 
-public class Membership : Entity
+public class Membership : Entity, IDatePeriod
 {
     public Guid MemberId { get; set; }
     public Member? Member { get; set; }

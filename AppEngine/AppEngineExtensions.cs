@@ -76,6 +76,7 @@ public static class AppEngineExtensions
         builder.Services.AddScoped<IPartitionAcronymResolver, PartitionAcronymResolver>();
 
         builder.Services.AddScoped<ChangeTrigger>();
+        builder.Services.AddScoped<ReadModelReader>();
 
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddScoped<RequestTimeProvider>();

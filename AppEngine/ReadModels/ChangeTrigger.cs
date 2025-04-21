@@ -29,7 +29,7 @@ public class ChangeTrigger(CommandQueue commandQueue,
         commandQueue.EnqueueCommand(new UpdateReadModelCommand
                                     {
                                         QueryName = queryName,
-                                        EventId = eventId.Value,
+                                        PartitionId = eventId.Value,
                                         RowId = rowId,
                                         DirtyMoment = timeProvider.RequestNow
                                     },
