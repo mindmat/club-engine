@@ -106,6 +106,15 @@ namespace ClubEngine.ApiService.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mitglieder.
+        /// </summary>
+        public static string Members {
+            get {
+                return ResourceManager.GetString("Members", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mitgliederliste.
         /// </summary>
         public static string Mitgliederliste {

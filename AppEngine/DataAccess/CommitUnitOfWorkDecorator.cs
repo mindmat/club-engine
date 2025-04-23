@@ -1,11 +1,15 @@
-﻿using MediatR;
+﻿using AppEngine.DomainEvents;
+using AppEngine.ServiceBus;
+
+using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace AppEngine.DataAccess;
 
-public class CommitUnitOfWorkDecorator<TRequest, TResponse>(DbContext dbContext)//,
-                                                            //CommandQueue commandQueue,
-                                                            //EventBus eventBus)
+public class CommitUnitOfWorkDecorator<TRequest, TResponse>(DbContext dbContext,
+                                                            CommandQueue commandQueue,
+                                                            EventBus eventBus)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
@@ -17,20 +21,23 @@ public class CommitUnitOfWorkDecorator<TRequest, TResponse>(DbContext dbContext)
         {
             var response = await next();
             dbContext.ChangeTracker.DetectChanges();
+
             if (dbContext.ChangeTracker.HasChanges())
             {
                 await dbContext.SaveChangesAsync(cancellationToken);
             }
 
             // "transaction": only release messages to event bus if db commit succeeds
-            //await commandQueue.Release(true);
-            //eventBus.Release(true);
+            await commandQueue.Release(true);
+            eventBus.Release(true);
+
             return response;
         }
         catch
         {
-            //await commandQueue.Release(false);
-            //eventBus.Release(false);
+            await commandQueue.Release(false);
+            eventBus.Release(false);
+
             throw;
         }
     }

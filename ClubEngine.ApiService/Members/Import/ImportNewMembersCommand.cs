@@ -1,5 +1,6 @@
 ﻿using AppEngine.Authorization;
 using AppEngine.DataAccess;
+using AppEngine.ReadModels;
 using AppEngine.TimeHandling;
 
 using ClubEngine.ApiService.Members.Memberships;
@@ -15,7 +16,8 @@ public class ImportNewMembersCommand : IRequest, IPartitionBoundRequest
 }
 
 public class ImportNewMembersCommandHandler(IRepository<Member> members,
-                                            RequestTimeProvider timeProvider)
+                                            RequestTimeProvider timeProvider,
+                                            ChangeTrigger changeTrigger)
     : IRequestHandler<ImportNewMembersCommand>
 {
     public Task Handle(ImportNewMembersCommand command, CancellationToken cancellationToken)
@@ -48,6 +50,8 @@ public class ImportNewMembersCommandHandler(IRepository<Member> members,
                            }
             );
         }
+
+        changeTrigger.TriggerUpdate<MembersCalculator>(null, command.PartitionId);
 
         return Task.CompletedTask;
     }

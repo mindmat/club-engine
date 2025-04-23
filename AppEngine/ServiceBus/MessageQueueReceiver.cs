@@ -13,21 +13,18 @@ namespace AppEngine.ServiceBus;
 
 public class MessageQueueReceiver : IAsyncDisposable
 {
-    private readonly IServiceProvider _container;
-    private readonly Serializer _serializer;
-    private readonly ServiceBusClient _client;
-    private readonly ILogger _logger;
-    //private readonly IMediator _mediator;
-    private readonly MethodInfo _typedProcessMethod;
-    private ServiceBusProcessor? _processor;
+    private readonly IServiceProvider     _container;
+    private readonly Serializer           _serializer;
+    private readonly ServiceBusClient     _client;
+    private readonly ILogger              _logger;
+    private readonly MethodInfo           _typedProcessMethod;
+    private          ServiceBusProcessor? _processor;
 
-    public MessageQueueReceiver(//IMediator mediator,
-                                ILogger<MessageQueueReceiver> logger,
+    public MessageQueueReceiver(ILogger<MessageQueueReceiver> logger,
                                 IServiceProvider container,
                                 Serializer serializer,
                                 ServiceBusClient client)
     {
-        //_mediator = mediator;
         _logger = logger;
         _container = container;
         _serializer = serializer;
@@ -52,10 +49,10 @@ public class MessageQueueReceiver : IAsyncDisposable
         }
 
         var options = new ServiceBusProcessorOptions
-        {
-            MaxConcurrentCalls = 1,
-            AutoCompleteMessages = true
-        };
+                      {
+                          MaxConcurrentCalls = 1,
+                          AutoCompleteMessages = true
+                      };
         _processor = _client.CreateProcessor(CommandQueue.CommandQueueName, options);
         _processor.ProcessMessageAsync += ProcessMessage;
         _processor.ProcessErrorAsync += ProcessError;
@@ -115,8 +112,9 @@ public class MessageQueueReceiver : IAsyncDisposable
         request ??= Activator.CreateInstance<TRequest>();
 
         await using var scope = _container.CreateAsyncScope();
-        _container.GetService<SourceQueueProvider>()!.SourceQueueName = queueName;
-        //await _mediator.Send(request, cancellationToken);
+        scope.ServiceProvider.GetRequiredService<SourceQueueProvider>().SourceQueueName = queueName;
+        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+        await mediator.Send(request, cancellationToken);
     }
 
     public async ValueTask DisposeAsync()

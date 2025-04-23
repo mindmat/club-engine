@@ -153,4 +153,7 @@
   <data name="Inactive" xml:space="preserve">
     <value>Inactive</value>
   </data>
+  <data name="Members" xml:space="preserve">
+    <value>Members</value>
+  </data>
 </root>

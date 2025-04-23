@@ -17,6 +17,8 @@
             </div>
         </div>
 
+        <app-members-history></app-members-history>
+
         <!-- Items list -->
         @if ( members$ | async; as members
         && members.length > 0 )
@@ -28,8 +30,8 @@
                     @for ( member of members; track member.name) {
                     <div class="bg-card relative m-2 min-h-20 w-80 rounded-2xl p-4 shadow">
                         <a class="absolute inset-0 z-10 flex cursor-pointer flex-col p-4" [routerLink]="['/apps/file-manager/folders/', member.id]">
-                            <div class="flex flex-auto flex-col justify-center text-center text-sm font-medium">
-                                <div class="truncate">
+                            <div class="flex flex-auto flex-col justify-center text-center font-medium">
+                                <div class="truncate text-xl">
                                     {{ member.name }}
                                 </div>
                                 @if (member.email) {

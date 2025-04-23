@@ -2,7 +2,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 
 //var cs = builder.AddConnectionString("devdb");
 
-var sql = builder.AddSqlServer("sql",port: 62422)
+var sql = builder.AddSqlServer("sql", port: 62422)
                  //.WithConnectionStringRedirection(cs.Resource);
                  .WithDataBindMount(source: @"C:\SqlServer\Data")
                  .WithLifetime(ContainerLifetime.Persistent);
@@ -13,10 +13,16 @@ var migrations = builder.AddProject<Projects.ClubEngine_MigrationService>("migra
                         .WithReference(db)
                         .WaitFor(db);
 
+var serviceBus = builder.AddAzureServiceBus("service-bus")
+                        .RunAsEmulator();
+var queue = serviceBus.AddServiceBusQueue("CommandQueue");
+
 var apiService = builder.AddProject<Projects.ClubEngine_ApiService>("api")
                         .WithReference(db)
                         .WaitFor(db)
-                        .WaitFor(migrations);
+                        .WaitFor(migrations)
+                        .WithReference(serviceBus)
+                        .WaitFor(serviceBus);
 
 
 //builder.AddNpmApp()

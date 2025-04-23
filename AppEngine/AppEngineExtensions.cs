@@ -31,6 +31,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace AppEngine;
@@ -77,6 +78,7 @@ public static class AppEngineExtensions
 
         builder.Services.AddScoped<ChangeTrigger>();
         builder.Services.AddScoped<ReadModelReader>();
+        builder.Services.AddTypesImplementingAsScoped<IReadModelCalculator>(assemblyContainer.Assemblies);
 
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddScoped<RequestTimeProvider>();
@@ -121,18 +123,21 @@ public static class AppEngineExtensions
     {
         builder.Services.AddSingleton<MessageQueueReceiver>();
         builder.Services.AddScoped<CommandQueue>();
-        builder.Services.AddScoped<IEventBus, EventBus>();
+        builder.Services.AddScoped<EventBus>();
+        builder.Services.AddScoped<IEventBus>(x => x.GetRequiredService<EventBus>());
         builder.Services.AddScoped<SourceQueueProvider>();
         //builder.Services.AddScoped(typeof(IEventToUserTranslation<>), assemblies);
 
-        builder.Services.AddSingleton(_ =>
-        {
-            var cs = builder.Configuration.GetValue<string>("ServiceBus_ConnectionString");
+        builder.AddAzureServiceBusClient(connectionName: "service-bus");
 
-            return cs != null
-                ? new ServiceBusClient(cs)
-                : new ServiceBusClient(builder.Configuration.GetValue<string>("ServiceBusNamespace"), new DefaultAzureCredential());
-        });
+        //builder.Services.AddSingleton(_ =>
+        //{
+        //    var cs = builder.Configuration.GetValue<string>("service-bus");
+
+        //    return cs != null
+        //        ? new ServiceBusClient(cs)
+        //        : new ServiceBusClient(builder.Configuration.GetValue<string>("ServiceBusNamespace"), new DefaultAzureCredential());
+        //});
         builder.Services.AddSingleton(services => services.GetService<ServiceBusClient>()!.CreateSender(CommandQueue.CommandQueueName));
     }
 

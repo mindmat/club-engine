@@ -15,13 +15,13 @@ public class ChangeTrigger(CommandQueue commandQueue,
                            IEventBus eventBus)
 {
     public void TriggerUpdate<T>(Guid? rowId = null,
-                                 Guid? eventId = null,
+                                 Guid? partitionId = null,
                                  bool publishEvenWhenDbCommitFails = false,
                                  TimeSpan? delay = null)
         where T : IReadModelCalculator
     {
-        eventId ??= partitionContext.PartitionId
-                 ?? throw new ArgumentNullException(nameof(eventId));
+        partitionId ??= partitionContext.PartitionId
+                     ?? throw new ArgumentNullException(nameof(partitionId));
 
         var queryName = calculators.First(cal => cal.GetType() == typeof(T))
                                    .QueryName;
@@ -29,7 +29,7 @@ public class ChangeTrigger(CommandQueue commandQueue,
         commandQueue.EnqueueCommand(new UpdateReadModelCommand
                                     {
                                         QueryName = queryName,
-                                        PartitionId = eventId.Value,
+                                        PartitionId = partitionId.Value,
                                         RowId = rowId,
                                         DirtyMoment = timeProvider.RequestNow
                                     },

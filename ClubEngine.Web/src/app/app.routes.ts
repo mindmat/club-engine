@@ -10,6 +10,8 @@ import { PartitionAcronymResolver } from './app-engine/partitions/club-acronym.r
 import { ImportMemberListComponent } from './modules/admin/import-member-list/import-member-list.component';
 import { MembersComponent } from './modules/admin/members/members.component';
 import { MembersService } from './modules/admin/members/members.service';
+import { MembersHistoryService } from './modules/admin/members-history/members-history.service';
+import { combineLatest } from 'rxjs';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -98,7 +100,12 @@ export const appRoutes: Route[] = [
                     {
                         path: 'members',
                         component: MembersComponent,
-                        resolve: { members: () => inject(MembersService).fetch() }
+                        resolve: {
+                            members: () => {
+                                return combineLatest([inject(MembersService).fetch(),
+                                inject(MembersHistoryService).fetch()]);
+                            }
+                        }
                     },
                     {
                         path: 'import-member-list',

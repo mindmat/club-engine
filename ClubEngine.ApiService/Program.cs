@@ -1,5 +1,6 @@
 using AppEngine;
 using AppEngine.ErrorHandling;
+using AppEngine.ServiceBus;
 
 using ClubEngine.ApiService;
 using ClubEngine.ApiService.Properties;
@@ -97,6 +98,8 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.UseSwaggerUI();
 }
+
+app.Services.GetService<MessageQueueReceiver>()!.StartReceiveLoop();
 
 app.Run();
 
