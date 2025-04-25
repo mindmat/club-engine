@@ -1290,8 +1290,13 @@ export interface MemberStats {
 }
 
 export interface MemberCount {
+    membershipTypeId?: string;
+    counts?: MembershipTypeCount[];
+}
+
+export interface MembershipTypeCount {
     date?: Date;
-    total?: number;
+    count?: number;
 }
 
 export interface MemberStatsQuery {

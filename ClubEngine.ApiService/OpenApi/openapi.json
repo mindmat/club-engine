@@ -1069,11 +1069,27 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "membershipTypeId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "counts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MembershipTypeCount"
+            }
+          }
+        }
+      },
+      "MembershipTypeCount": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
           "date": {
             "type": "string",
             "format": "date"
           },
-          "total": {
+          "count": {
             "type": "integer",
             "format": "int32"
           }

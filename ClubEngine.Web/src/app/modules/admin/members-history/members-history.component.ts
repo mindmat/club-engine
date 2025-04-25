@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { MembersHistoryService } from './members-history.service';
-import { MemberStats } from 'app/api/api';
-import { Observable, tap } from 'rxjs';
+import { MemberCount, MemberStats } from 'app/api/api';
+import { combineLatest, Observable, tap, map } from 'rxjs';
 import { MatMenuModule } from '@angular/material/menu';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { ApexOptions, NgApexchartsModule } from 'ng-apexcharts';
+import { MembershipTypesService } from '../membership-tag/membership-types.service';
 
 @Component({
   selector: 'app-members-history',
@@ -14,13 +15,14 @@ import { ApexOptions, NgApexchartsModule } from 'ng-apexcharts';
 export class MembersHistoryComponent {
   accountBalanceOptions: ApexOptions;
 
-  constructor(private membersHistoryService: MembersHistoryService) {
+  constructor(private membersHistoryService: MembersHistoryService,
+    private membershipTypesService: MembershipTypesService) {
 
   }
 
   get stats$(): Observable<MemberStats> {
-    return this.membersHistoryService.stats$.pipe(
-      tap(stats => {
+    return combineLatest([this.membersHistoryService.stats$, this.membershipTypesService.membershipTypes$]).pipe(
+      tap(([stats, types]) => {
         this.accountBalanceOptions = {
           chart: {
             animations: {
@@ -38,13 +40,18 @@ export class MembersHistoryComponent {
               enabled: true,
             },
           },
-          colors: ['#A3BFFA', '#667EEA'],
+          // colors: ['#A3BFFA', '#667EEA'],
           fill: {
-            colors: ['#CED9FB', '#AECDFD'],
+            // colors: ['#CED9FB', '#AECDFD'],
             opacity: 0.5,
             type: 'solid',
           },
-          series: [{ name: 'Mitglieder', data: stats.memberCounts.map((memberCount) => { return { x: memberCount.date, y: memberCount.total } }) }],
+          series: stats.memberCounts.map(mct => ({
+            name: types?.find(typ => typ.id === mct.membershipTypeId)?.name ?? '?',
+            type: 'area',
+            color: types?.find(typ => typ.id === mct.membershipTypeId)?.color ?? '#CED9FB',
+            data: mct.counts.map(tuple => ({ x: tuple.date, y: tuple.count }))
+          })),
           stroke: {
             curve: 'straight',
             width: 2,
@@ -53,17 +60,15 @@ export class MembersHistoryComponent {
             followCursor: true,
             theme: 'dark',
             x: {
-              format: 'MMM dd, yyyy',
-            },
-            y: {
-              formatter: (value): string => value + '%',
+              format: 'dd.MM.yyyy',
             },
           },
           xaxis: {
             type: 'datetime',
           },
         };
-      })
+      }),
+      map(([stats, types]) => { return stats }),
     );
   }
 }

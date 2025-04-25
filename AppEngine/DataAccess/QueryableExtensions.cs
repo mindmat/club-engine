@@ -10,4 +10,11 @@ public static class QueryableExtensions
     {
         return condition ? source.Where(predicate) : source;
     }
+
+    public static IQueryable<TSource> WhereNotNull<TSource>(this IQueryable<TSource?> source)
+        where TSource : struct
+    {
+        return source.Where(x => x != null)
+                     .Select(x => x!.Value);
+    }
 }

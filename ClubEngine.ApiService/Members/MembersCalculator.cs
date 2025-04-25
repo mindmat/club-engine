@@ -1,6 +1,9 @@
 ﻿using AppEngine.MenuNodes;
 using AppEngine.ReadModels;
 using AppEngine.TimeHandling;
+using AppEngine.Types;
+
+using ClubEngine.ApiService.Members.Memberships;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -8,7 +11,8 @@ namespace ClubEngine.ApiService.Members;
 
 public class MembersNodeKey : IMenuNodeKey;
 
-public class MembersCalculator(IQueryable<Member> members, RequestTimeProvider timeProvider)
+public class MembersCalculator(IQueryable<Member> members,
+                               RequestTimeProvider timeProvider)
     : ReadModelCalculator<MemberStats>
 {
     public override string QueryName => nameof(MemberStatsQuery);
@@ -35,10 +39,18 @@ public class MembersCalculator(IQueryable<Member> members, RequestTimeProvider t
                                          .Distinct()
                                          .OrderBy(date => date);
 
-        var stats = datesWithChanges.Select(date => new MemberCount(date, allMembers.Count(mbr => mbr.Memberships!.Any(msp => msp.IsActiveAt(date)))))
+        var stats = datesWithChanges.SelectMany(date => allMembers.Select(mbr => mbr.Memberships!.FirstOrDefault(msp => msp.IsActiveAt(date))?.MembershipTypeId)
+                                                                  .WhereNotNull()
+                                                                  .GroupBy(mst => mst)
+                                                                  .Select(grp => new { MembershipTypeId = grp.Key, Date = date, Count = grp.Count() }))
                                     .ToList();
-        var currentTotal = stats.Single(stat => stat.Date == timeProvider.RequestToday).Total;
-        var readModel = new MemberStats(currentTotal, stats);
+
+        var currentTotal = stats.Where(stat => stat.Date == timeProvider.RequestToday)
+                                .Sum(c => c.Count);
+
+        var readModel = new MemberStats(currentTotal,
+                                        stats.GroupBy(stt => stt.MembershipTypeId)
+                                             .Select(grp => new MemberCount(grp.Key, grp.Select(stt => new MembershipTypeCount(stt.Date, stt.Count)))));
 
         return (readModel, node);
     }
@@ -46,4 +58,6 @@ public class MembersCalculator(IQueryable<Member> members, RequestTimeProvider t
 
 public record MemberStats(int CurrentTotal, IEnumerable<MemberCount> MemberCounts);
 
-public record MemberCount(DateOnly Date, int Total);
+public record MemberCount(Guid MembershipTypeId, IEnumerable<MembershipTypeCount> Counts);
+
+public record MembershipTypeCount(DateOnly Date, int Count);

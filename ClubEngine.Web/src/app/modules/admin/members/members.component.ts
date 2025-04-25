@@ -7,10 +7,11 @@ import { AsyncPipe, NgFor } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { MembersHistoryComponent } from "../members-history/members-history.component";
+import { CdkScrollable } from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'app-members',
-  imports: [TranslatePipe, AsyncPipe, MatIconModule, RouterModule, MembersHistoryComponent, MembersHistoryComponent],
+  imports: [TranslatePipe, AsyncPipe, MatIconModule, RouterModule, MembersHistoryComponent, MembersHistoryComponent, CdkScrollable],
   templateUrl: './members.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

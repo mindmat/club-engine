@@ -1,17 +1,17 @@
 @if(stats$ |async; as stats)
 {
-<div class="bg-card flex flex-auto flex-col overflow-hidden rounded-2xl shadow">
+<div class="bg-card flex flex-auto flex-col rounded-2xl shadow">
     <div class="flex flex-col p-6 pb-4">
         <div class="flex items-center justify-between">
             <div class="flex flex-col">
-                <div class="mr-4 truncate text-lg font-medium leading-6 tracking-tight">
-                    Account Balance
+                <div class="text-3xl font-semibold tracking-tighter md:text-5xl">
+                    {{ stats.currentTotal }}
                 </div>
-                <div class="text-secondary font-medium">
-                    Monthly balance growth and avg. monthly income
+                <div class="text-secondary text-sm font-medium leading-none">
+                    Total
                 </div>
             </div>
-            <div class="ml-2">
+            <!-- <div class="ml-2">
                 <button class="bg-hover h-6 min-h-6 rounded-full px-2" mat-button [matMenuTriggerFor]="accountBalanceMenu">
                     <span class="text-secondary text-sm font-medium">12 months</span>
                 </button>
@@ -21,29 +21,11 @@
                     <button mat-menu-item>9 months</button>
                     <button mat-menu-item>12 months</button>
                 </mat-menu>
-            </div>
-        </div>
-        <div class="mr-2 mt-6 flex items-start">
-            <div class="flex flex-col">
-                <div class="text-3xl font-semibold tracking-tighter md:text-5xl">
-                    {{ stats.currentTotal }}%
-                </div>
-                <div class="text-secondary text-sm font-medium leading-none">
-                    Total
-                </div>
-            </div>
-            <!-- <div class="ml-8 flex flex-col md:ml-16">
-                <div class="text-3xl font-semibold tracking-tighter md:text-5xl">
-                    {{ data.accountBalance.ami | currency: 'USD' }}
-                </div>
-                <div class="text-secondary text-sm font-medium leading-none">
-                    Average Monthly Income
-                </div>
             </div> -->
         </div>
     </div>
     <div class="flex flex-auto flex-col">
-        <apx-chart class="h-full w-full flex-auto" [chart]="accountBalanceOptions.chart" [colors]="accountBalanceOptions.colors" [fill]="accountBalanceOptions.fill"
+        <apx-chart class="h-36 w-full flex-auto" [chart]="accountBalanceOptions.chart" [colors]="accountBalanceOptions.colors" [fill]="accountBalanceOptions.fill"
             [series]="accountBalanceOptions.series" [stroke]="accountBalanceOptions.stroke" [tooltip]="accountBalanceOptions.tooltip" [xaxis]="accountBalanceOptions.xaxis"></apx-chart>
     </div>
 </div>
