@@ -117,43 +117,49 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Overview" xml:space="preserve">
-    <value>Übersicht</value>
-  </data>
-  <data name="Open" xml:space="preserve">
-    <value>Öffnen</value>
-  </data>
   <data name="AddAllNewMembers" xml:space="preserve">
     <value>Alle {{count}} hinzufügen</value>
-  </data>
-  <data name="Mitgliederliste" xml:space="preserve">
-    <value>Mitgliederliste</value>
-  </data>
-  <data name="ImportMemberList" xml:space="preserve">
-    <value>Mitgliederliste importieren</value>
   </data>
   <data name="Admin" xml:space="preserve">
     <value>Admin</value>
   </data>
-  <data name="NewMembers" xml:space="preserve">
-    <value>Neue Mitglieder</value>
-  </data>
   <data name="ClickToUpload" xml:space="preserve">
     <value>Klicken zum Hochladen</value>
   </data>
-  <data name="OrDragDrop" xml:space="preserve">
-    <value>oder Drag &amp; Drop</value>
+  <data name="History" xml:space="preserve">
+    <value>Verlauf</value>
   </data>
-  <data name="Uploading" xml:space="preserve">
-    <value>{{filename}} hochladen...</value>
-  </data>
-  <data name="UploadSuccessful" xml:space="preserve">
-    <value>File erfolgreich hochgeladen</value>
+  <data name="ImportMemberList" xml:space="preserve">
+    <value>Mitgliederliste importieren</value>
   </data>
   <data name="Inactive" xml:space="preserve">
     <value>Inaktiv</value>
   </data>
   <data name="Members" xml:space="preserve">
     <value>Mitglieder</value>
+  </data>
+  <data name="Mitgliederliste" xml:space="preserve">
+    <value>Mitgliederliste</value>
+  </data>
+  <data name="NewMembers" xml:space="preserve">
+    <value>Neue Mitglieder</value>
+  </data>
+  <data name="Open" xml:space="preserve">
+    <value>Öffnen</value>
+  </data>
+  <data name="OrDragDrop" xml:space="preserve">
+    <value>oder Drag &amp; Drop</value>
+  </data>
+  <data name="Overview" xml:space="preserve">
+    <value>Übersicht</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Uploading" xml:space="preserve">
+    <value>{{filename}} hochladen...</value>
+  </data>
+  <data name="UploadSuccessful" xml:space="preserve">
+    <value>File erfolgreich hochgeladen</value>
   </data>
 </root>

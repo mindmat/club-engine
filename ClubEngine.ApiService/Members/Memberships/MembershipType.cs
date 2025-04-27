@@ -14,6 +14,7 @@ public class MembershipType : Entity
     public string FallbackName { get; set; } = null!;
     public decimal AnnualFee { get; set; }
     public string? Color { get; set; }
+    public bool ShowInOverview { get; set; }
 }
 
 public class MembershipTypeMap : EntityMap<MembershipType>

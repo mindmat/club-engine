@@ -1,20 +1,21 @@
 import { Component } from '@angular/core';
 import { MembersHistoryService } from './members-history.service';
-import { MemberCount, MemberStats } from 'app/api/api';
+import { MemberCount, MemberCurrentCount, MembershipTypeItem, MemberStats } from 'app/api/api';
 import { combineLatest, Observable, tap, map } from 'rxjs';
 import { MatMenuModule } from '@angular/material/menu';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { ApexOptions, NgApexchartsModule } from 'ng-apexcharts';
 import { MembershipTypesService } from '../membership-tag/membership-types.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-members-history',
-  imports: [NgApexchartsModule, MatMenuModule, AsyncPipe],
+  imports: [NgApexchartsModule, MatMenuModule, AsyncPipe, TranslatePipe],
   templateUrl: './members-history.component.html'
 })
 export class MembersHistoryComponent {
   accountBalanceOptions: ApexOptions;
-
+  currentCounts: any[];
   constructor(private membersHistoryService: MembersHistoryService,
     private membershipTypesService: MembershipTypesService) {
 
@@ -39,6 +40,7 @@ export class MembersHistoryComponent {
             sparkline: {
               enabled: true,
             },
+            stacked: true,
           },
           // colors: ['#A3BFFA', '#667EEA'],
           fill: {
@@ -53,7 +55,7 @@ export class MembersHistoryComponent {
             data: mct.counts.map(tuple => ({ x: tuple.date, y: tuple.count }))
           })),
           stroke: {
-            curve: 'straight',
+            curve: 'smooth',
             width: 2,
           },
           tooltip: {
@@ -67,8 +69,17 @@ export class MembersHistoryComponent {
             type: 'datetime',
           },
         };
+        this.currentCounts = stats.currentCounts.map(mct => ({
+          name: types?.find(typ => typ.id === mct.membershipTypeId)?.name ?? '?',
+          count: mct.count
+        }))
       }),
-      map(([stats, types]) => { return stats }),
+      map(([stats, _]) => { return stats }),
     );
   }
+
+  getMembershipTypeName(membersthipTypeId: string) {
+    this.membershipTypesService.current?.find(mst => mst.id === membersthipTypeId)?.name;
+  }
+
 }

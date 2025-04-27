@@ -8,10 +8,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { MembersHistoryComponent } from "../members-history/members-history.component";
 import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MembershipTagComponent } from "../membership-tag/membership-tag.component";
 
 @Component({
   selector: 'app-members',
-  imports: [TranslatePipe, AsyncPipe, MatIconModule, RouterModule, MembersHistoryComponent, MembersHistoryComponent, CdkScrollable],
+  imports: [TranslatePipe, AsyncPipe, MatIconModule, RouterModule, MembersHistoryComponent, MembersHistoryComponent, CdkScrollable, MembershipTagComponent],
   templateUrl: './members.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

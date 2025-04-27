@@ -22,7 +22,7 @@ var apiService = builder.AddProject<Projects.ClubEngine_ApiService>("api")
                         .WaitFor(db)
                         .WaitFor(migrations)
                         .WithReference(serviceBus)
-                        .WaitFor(serviceBus);
+                        .WaitFor(queue);
 
 
 //builder.AddNpmApp()

@@ -11,14 +11,14 @@ public class MembershipTypesQuery : IRequest<IEnumerable<MembershipTypeItem>>, I
     public Guid PartitionId { get; set; }
 }
 
-public record MembershipTypeItem(Guid Id, string Name, string? Color);
+public record MembershipTypeItem(Guid Id, string Name, string? Color, bool ShowInOverview);
 
 public class MembershipTypesQueryHandler(IQueryable<MembershipType> membershipTypes) : IRequestHandler<MembershipTypesQuery, IEnumerable<MembershipTypeItem>>
 {
     public async Task<IEnumerable<MembershipTypeItem>> Handle(MembershipTypesQuery request, CancellationToken cancellationToken)
     {
         return await membershipTypes.Where(mst => mst.ClubId == request.PartitionId)
-                                    .Select(mst => new MembershipTypeItem(mst.Id, mst.FallbackName, mst.Color))
+                                    .Select(mst => new MembershipTypeItem(mst.Id, mst.FallbackName, mst.Color, mst.ShowInOverview))
                                     .ToListAsync(cancellationToken);
     }
 }

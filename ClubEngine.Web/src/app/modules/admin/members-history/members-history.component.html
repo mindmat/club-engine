@@ -4,12 +4,12 @@
     <div class="flex flex-col p-6 pb-4">
         <div class="flex items-center justify-between">
             <div class="flex flex-col">
-                <div class="text-3xl font-semibold tracking-tighter md:text-5xl">
-                    {{ stats.currentTotal }}
+                <div class="mr-4 truncate text-lg font-medium leading-6 tracking-tight">
+                    {{ 'History' | translate }}
                 </div>
-                <div class="text-secondary text-sm font-medium leading-none">
-                    Total
-                </div>
+                <!-- <div class="text-secondary font-medium">
+                    {{ 'Total' | translate }}
+                </div> -->
             </div>
             <!-- <div class="ml-2">
                 <button class="bg-hover h-6 min-h-6 rounded-full px-2" mat-button [matMenuTriggerFor]="accountBalanceMenu">
@@ -22,6 +22,27 @@
                     <button mat-menu-item>12 months</button>
                 </mat-menu>
             </div> -->
+        </div>
+        <div class="mr-2 flex items-start">
+            <div class="flex flex-col">
+                <div class="text-3xl font-semibold tracking-tighter md:text-5xl">
+                    {{ stats.currentTotal }}
+                </div>
+                <div class="text-secondary text-sm font-medium leading-none">
+                    {{ 'Total' | translate }}
+                </div>
+            </div>
+            @for (count of currentCounts; track $index)
+            {
+            <div class="ml-8 flex flex-col md:ml-16">
+                <div class="text-3xl font-semibold tracking-tighter md:text-5xl">
+                    {{ count.count }}
+                </div>
+                <div class="text-secondary text-sm font-medium leading-none">
+                    {{ count.name }}
+                </div>
+            </div>
+            }
         </div>
     </div>
     <div class="flex flex-auto flex-col">
