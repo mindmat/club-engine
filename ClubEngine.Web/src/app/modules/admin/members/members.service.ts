@@ -19,7 +19,7 @@ export class MembersService extends FetchService<MemberDisplayItem[]> {
     return this.result$;
   }
 
-  fetch() {
-    return this.fetchItems(this.api.members_Query({ partitionId: this.partitionService.selectedId }));
+  fetch(membershipTypeIds: string[] | null = null, searchString: string | null = null): Observable<MemberDisplayItem[]> {
+    return this.fetchItems(this.api.members_Query({ partitionId: this.partitionService.selectedId, membershipTypeIds, searchString }));
   }
 }

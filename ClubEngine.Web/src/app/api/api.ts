@@ -1267,6 +1267,7 @@ export interface MembershipTypeItem {
     id?: string;
     name?: string;
     color?: string | null;
+    showInOverview?: boolean;
 }
 
 export interface MembershipTypesQuery {
@@ -1282,6 +1283,8 @@ export interface MemberDisplayItem {
 
 export interface MembersQuery {
     partitionId?: string;
+    membershipTypeIds?: string[] | null;
+    searchString?: string | null;
 }
 
 export interface MemberStats {
@@ -1293,10 +1296,13 @@ export interface MemberStats {
 export interface MemberCurrentCount {
     membershipTypeId?: string;
     count?: number;
+    name?: string;
+    showInOverview?: boolean;
 }
 
 export interface MemberCount {
     membershipTypeId?: string;
+    name?: string;
     counts?: MembershipTypeCount[];
 }
 

@@ -20,6 +20,18 @@
         <div class="space-y-8 p-6 md:p-8">
             <div class="max-w-xl">
                 <app-members-history></app-members-history>
+                @if(stats$ | async; as stats)
+                {
+                <mat-chip-listbox selectable multiple (change)="onSelectionChange($event.value)">
+                    @for (count of stats.currentCounts; track $index) {
+                    <mat-chip-option [value]="count.membershipTypeId" selected>{{ count.name }}</mat-chip-option>
+                    }
+                </mat-chip-listbox>
+                }
+                <mat-form-field class="mt-4 w-full sm:ml-4 sm:mt-0 sm:w-72" [subscriptSizing]="'dynamic'">
+                    <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
+                    <input (input)="filterByQuery(query.value)" placeholder="{{'SearchByNameEmail' | translate }}" matInput #query />
+                </mat-form-field>
             </div>
 
             <!-- Items list -->

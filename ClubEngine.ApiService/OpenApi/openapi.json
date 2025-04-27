@@ -1004,6 +1004,9 @@
           "color": {
             "type": "string",
             "nullable": true
+          },
+          "showInOverview": {
+            "type": "boolean"
           }
         }
       },
@@ -1046,6 +1049,18 @@
           "partitionId": {
             "type": "string",
             "format": "guid"
+          },
+          "membershipTypeIds": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "format": "guid"
+            }
+          },
+          "searchString": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -1082,6 +1097,12 @@
           "count": {
             "type": "integer",
             "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "showInOverview": {
+            "type": "boolean"
           }
         }
       },
@@ -1092,6 +1113,9 @@
           "membershipTypeId": {
             "type": "string",
             "format": "guid"
+          },
+          "name": {
+            "type": "string"
           },
           "counts": {
             "type": "array",

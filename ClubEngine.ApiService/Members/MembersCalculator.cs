@@ -25,9 +25,8 @@ public class MembersCalculator(IQueryable<Member> members,
                                       .Include(mbr => mbr.Memberships)
                                       .ToListAsync(cancellationToken);
 
-        var typesToShow = await membershipTypes.Where(mst => mst.ShowInOverview)
-                                               .Select(mst => mst.Id)
-                                               .ToListAsync(cancellationToken);
+        var types = await membershipTypes.Where(mst => mst.ClubId == partitionId)
+                                         .ToListAsync(cancellationToken);
 
         var node = new MenuNodeCalculation
                    {
@@ -54,10 +53,24 @@ public class MembersCalculator(IQueryable<Member> members,
                                  .ToList();
 
         var readModel = new MemberStats(currentCounts.Sum(c => c.Count),
-                                        currentCounts.Where(c => typesToShow.Contains(c.MembershipTypeId)).Select(c => new MemberCurrentCount(c.MembershipTypeId, c.Count)),
+                                        currentCounts.Select(c =>
+                                        {
+                                            var type = types.Find(typ => typ.Id == c.MembershipTypeId);
+
+                                            return new MemberCurrentCount(c.MembershipTypeId,
+                                                                          c.Count,
+                                                                          type?.FallbackName ?? "?",
+                                                                          type?.ShowInOverview ?? false);
+                                        }),
                                         stats.GroupBy(stt => stt.MembershipTypeId)
-                                             .Select(grp => new MemberCount(grp.Key,
-                                                                            grp.Select(stt => new MembershipTypeCount(stt.Date, stt.Count)))));
+                                             .Select(grp =>
+                                             {
+                                                 var type = types.Find(typ => typ.Id == grp.Key);
+
+                                                 return new MemberCount(grp.Key,
+                                                                        type?.FallbackName ?? "?",
+                                                                        grp.Select(stt => new MembershipTypeCount(stt.Date, stt.Count)));
+                                             }));
 
         return (readModel, node);
     }
@@ -65,8 +78,8 @@ public class MembersCalculator(IQueryable<Member> members,
 
 public record MemberStats(int CurrentTotal, IEnumerable<MemberCurrentCount> CurrentCounts, IEnumerable<MemberCount> MemberCounts);
 
-public record MemberCount(Guid MembershipTypeId, IEnumerable<MembershipTypeCount> Counts);
+public record MemberCount(Guid MembershipTypeId, string Name, IEnumerable<MembershipTypeCount> Counts);
 
-public record MemberCurrentCount(Guid MembershipTypeId, int Count);
+public record MemberCurrentCount(Guid MembershipTypeId, int Count, string Name, bool ShowInOverview);
 
 public record MembershipTypeCount(DateOnly Date, int Count);

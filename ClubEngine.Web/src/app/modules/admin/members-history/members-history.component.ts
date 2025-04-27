@@ -14,7 +14,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   templateUrl: './members-history.component.html'
 })
 export class MembersHistoryComponent {
-  accountBalanceOptions: ApexOptions;
+  memberGraphOptions: ApexOptions;
   currentCounts: any[];
   constructor(private membersHistoryService: MembersHistoryService,
     private membershipTypesService: MembershipTypesService) {
@@ -24,13 +24,10 @@ export class MembersHistoryComponent {
   get stats$(): Observable<MemberStats> {
     return combineLatest([this.membersHistoryService.stats$, this.membershipTypesService.membershipTypes$]).pipe(
       tap(([stats, types]) => {
-        this.accountBalanceOptions = {
+        this.memberGraphOptions = {
           chart: {
             animations: {
-              speed: 400,
-              animateGradually: {
-                enabled: false,
-              },
+              enabled: false
             },
             fontFamily: 'inherit',
             foreColor: 'inherit',
@@ -69,17 +66,19 @@ export class MembersHistoryComponent {
             type: 'datetime',
           },
         };
-        this.currentCounts = stats.currentCounts.map(mct => ({
-          name: types?.find(typ => typ.id === mct.membershipTypeId)?.name ?? '?',
-          count: mct.count
-        }))
+        this.currentCounts = stats.currentCounts
+          .filter(mct => mct.showInOverview)
+          .map(mct => ({
+            name: types?.find(typ => typ.id === mct.membershipTypeId)?.name ?? '?',
+            count: mct.count
+          }))
       }),
       map(([stats, _]) => { return stats }),
     );
   }
 
-  getMembershipTypeName(membersthipTypeId: string) {
-    this.membershipTypesService.current?.find(mst => mst.id === membersthipTypeId)?.name;
+  getMembershipTypeName(membershipTypeId: string) {
+    this.membershipTypesService.current?.find(mst => mst.id === membershipTypeId)?.name;
   }
 
 }

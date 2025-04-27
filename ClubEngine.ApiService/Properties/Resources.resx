@@ -153,6 +153,9 @@
   <data name="Overview" xml:space="preserve">
     <value>Übersicht</value>
   </data>
+  <data name="SearchByNameEmail" xml:space="preserve">
+    <value>Suche nach Name, Email</value>
+  </data>
   <data name="Total" xml:space="preserve">
     <value>Total</value>
   </data>

@@ -169,6 +169,15 @@ namespace ClubEngine.ApiService.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Suche nach Name, Email.
+        /// </summary>
+        public static string SearchByNameEmail {
+            get {
+                return ResourceManager.GetString("SearchByNameEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total.
         /// </summary>
         public static string Total {
