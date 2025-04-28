@@ -43,6 +43,10 @@ export class MembersComponent {
     this.refresh();
   }
 
+  getColor(color: string) {
+    return `background-color:${color};`;
+  }
+
   refresh() {
     this.membersService.fetch(this.filterByTypeIds, this.searchString).subscribe();
   }

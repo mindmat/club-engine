@@ -1055,7 +1055,8 @@
             "nullable": true,
             "items": {
               "type": "string",
-              "format": "guid"
+              "format": "guid",
+              "nullable": true
             }
           },
           "searchString": {
@@ -1083,6 +1084,10 @@
             "items": {
               "$ref": "#/components/schemas/MemberCount"
             }
+          },
+          "inactiveCount": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -1100,6 +1105,10 @@
           },
           "name": {
             "type": "string"
+          },
+          "color": {
+            "type": "string",
+            "nullable": true
           },
           "showInOverview": {
             "type": "boolean"

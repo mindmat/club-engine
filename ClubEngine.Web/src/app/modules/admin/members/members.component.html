@@ -18,22 +18,24 @@
         </div>
 
         <div class="space-y-8 p-6 md:p-8">
-            <div class="max-w-xl">
+            <div class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 md:mt-16 lg:grid-cols-6">
                 <app-members-history></app-members-history>
-                @if(stats$ | async; as stats)
-                {
-                <mat-chip-listbox selectable multiple (change)="onSelectionChange($event.value)">
-                    @for (count of stats.currentCounts; track $index) {
-                    <mat-chip-option [value]="count.membershipTypeId" selected>{{ count.name }}</mat-chip-option>
+                <div class="flex flex-col gap-4">
+                    @if(stats$ | async; as stats)
+                    {
+                    <mat-chip-listbox class="mat-mdc-chip-set-stacked" selectable multiple (change)="onSelectionChange($event.value)">
+                        @for (count of stats.currentCounts; track $index) {
+                        <mat-chip-option [value]="count.membershipTypeId" selected [style]="getColor(count.color)">{{ count.name }} ({{count.count}})</mat-chip-option>
+                        }
+                        <mat-chip-option [value]="null" class="bg-[#d6d3d1]">{{ 'Inactive' | translate }} ({{stats.inactiveCount}})</mat-chip-option>
+                    </mat-chip-listbox>
                     }
-                </mat-chip-listbox>
-                }
-                <mat-form-field class="mt-4 w-full sm:ml-4 sm:mt-0 sm:w-72" [subscriptSizing]="'dynamic'">
-                    <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
-                    <input (input)="filterByQuery(query.value)" placeholder="{{'SearchByNameEmail' | translate }}" matInput #query />
-                </mat-form-field>
+                    <mat-form-field [subscriptSizing]="'dynamic'">
+                        <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
+                        <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByNameEmail' | translate" matInput #query />
+                    </mat-form-field>
+                </div>
             </div>
-
             <!-- Items list -->
             @if ( members$ | async; as members
             && members.length > 0 )

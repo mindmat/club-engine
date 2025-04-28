@@ -1283,7 +1283,7 @@ export interface MemberDisplayItem {
 
 export interface MembersQuery {
     partitionId?: string;
-    membershipTypeIds?: string[] | null;
+    membershipTypeIds?: (string | null)[] | null;
     searchString?: string | null;
 }
 
@@ -1291,12 +1291,14 @@ export interface MemberStats {
     currentTotal?: number;
     currentCounts?: MemberCurrentCount[];
     memberCounts?: MemberCount[];
+    inactiveCount?: number;
 }
 
 export interface MemberCurrentCount {
     membershipTypeId?: string;
     count?: number;
     name?: string;
+    color?: string | null;
     showInOverview?: boolean;
 }
 

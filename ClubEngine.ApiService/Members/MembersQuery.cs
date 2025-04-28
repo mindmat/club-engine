@@ -10,7 +10,7 @@ namespace ClubEngine.ApiService.Members;
 public class MembersQuery : IRequest<IEnumerable<MemberDisplayItem>>, IPartitionBoundRequest
 {
     public Guid PartitionId { get; set; }
-    public Guid[]? MembershipTypeIds { get; set; }
+    public Guid?[]? MembershipTypeIds { get; set; }
     public string? SearchString { get; set; }
 }
 
@@ -22,7 +22,7 @@ public class MembersQueryHandler(IQueryable<Member> members) : IRequestHandler<M
     {
         return await members.Where(mbr => mbr.ClubId == query.PartitionId)
                             .WhereIf(query.MembershipTypeIds?.Length > 0,
-                                     mbr => query.MembershipTypeIds!.Cast<Guid?>().Contains(mbr.CurrentMembershipTypeId_ReadModel))
+                                     mbr => query.MembershipTypeIds!.Contains(mbr.CurrentMembershipTypeId_ReadModel))
                             .WhereIf(!string.IsNullOrEmpty(query.SearchString),
                                      mbr => EF.Functions.Like(mbr.FirstName, $"%{query.SearchString}%")
                                          || EF.Functions.Like(mbr.LastName, $"%{query.SearchString}")

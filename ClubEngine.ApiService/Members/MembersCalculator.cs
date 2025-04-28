@@ -51,6 +51,7 @@ public class MembersCalculator(IQueryable<Member> members,
 
         var currentCounts = stats.Where(stat => stat.Date == timeProvider.RequestToday)
                                  .ToList();
+        var inactiveCount = allMembers.Count(mbr => mbr.CurrentMembershipTypeId_ReadModel == null);
 
         var readModel = new MemberStats(currentCounts.Sum(c => c.Count),
                                         currentCounts.Select(c =>
@@ -60,6 +61,7 @@ public class MembersCalculator(IQueryable<Member> members,
                                             return new MemberCurrentCount(c.MembershipTypeId,
                                                                           c.Count,
                                                                           type?.FallbackName ?? "?",
+                                                                          type?.Color,
                                                                           type?.ShowInOverview ?? false);
                                         }),
                                         stats.GroupBy(stt => stt.MembershipTypeId)
@@ -70,16 +72,17 @@ public class MembersCalculator(IQueryable<Member> members,
                                                  return new MemberCount(grp.Key,
                                                                         type?.FallbackName ?? "?",
                                                                         grp.Select(stt => new MembershipTypeCount(stt.Date, stt.Count)));
-                                             }));
+                                             }),
+                                        inactiveCount);
 
         return (readModel, node);
     }
 }
 
-public record MemberStats(int CurrentTotal, IEnumerable<MemberCurrentCount> CurrentCounts, IEnumerable<MemberCount> MemberCounts);
+public record MemberStats(int CurrentTotal, IEnumerable<MemberCurrentCount> CurrentCounts, IEnumerable<MemberCount> MemberCounts, int InactiveCount);
 
 public record MemberCount(Guid MembershipTypeId, string Name, IEnumerable<MembershipTypeCount> Counts);
 
-public record MemberCurrentCount(Guid MembershipTypeId, int Count, string Name, bool ShowInOverview);
+public record MemberCurrentCount(Guid MembershipTypeId, int Count, string Name, string? Color, bool ShowInOverview);
 
 public record MembershipTypeCount(DateOnly Date, int Count);
