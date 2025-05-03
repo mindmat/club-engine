@@ -91,4 +91,10 @@ public static class TypeExtensions
     {
         return typeof(TInterface).IsAssignableFrom(type);
     }
+
+    public static bool HasAttribute<TAttribute>(this Type type)
+        where TAttribute : Attribute
+    {
+        return type.GetCustomAttribute<TAttribute>() != null;
+    }
 }

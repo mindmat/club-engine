@@ -1,5 +1,5 @@
 import { BooleanInput } from '@angular/cdk/coercion';
-import { NgClass } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -14,6 +14,8 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
+import { AuthService } from '@auth0/auth0-angular';
+import { TranslatePipe } from '@ngx-translate/core';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
 import { Subject, takeUntil } from 'rxjs';
@@ -30,6 +32,8 @@ import { Subject, takeUntil } from 'rxjs';
         MatIconModule,
         NgClass,
         MatDividerModule,
+        TranslatePipe,
+        AsyncPipe
     ],
 })
 export class UserComponent implements OnInit, OnDestroy {
@@ -42,14 +46,12 @@ export class UserComponent implements OnInit, OnDestroy {
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    /**
-     * Constructor
-     */
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
-        private _userService: UserService
-    ) {}
+        private _userService: UserService,
+        public authService: AuthService
+    ) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -95,18 +97,19 @@ export class UserComponent implements OnInit, OnDestroy {
         }
 
         // Update the user
-        this._userService
-            .update({
-                ...this.user,
-                status,
-            })
-            .subscribe();
+        // this._userService
+        //     .update({
+        //         ...this.user,
+        //         status,
+        //     })
+        //     .subscribe();
     }
 
-    /**
-     * Sign out
-     */
-    signOut(): void {
-        this._router.navigate(['/sign-out']);
+    logout(): void {
+        this.authService.logout({});
+    }
+
+    login(): void {
+        this.authService.loginWithRedirect({ authorizationParams: { prompt: 'consent' } });
     }
 }

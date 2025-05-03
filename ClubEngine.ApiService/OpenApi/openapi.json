@@ -46,7 +46,7 @@
         }
       }
     },
-    "/api/ClubsQuery": {
+    "/public-api/ClubsQuery": {
       "post": {
         "tags": [
           "Clubs"
@@ -116,7 +116,7 @@
         }
       }
     },
-    "/api/ImportMemberListQuery": {
+    "/api/upload/ImportMemberListQuery": {
       "post": {
         "tags": [
           "ImportMemberList"
@@ -567,7 +567,7 @@
         }
       }
     },
-    "/api/TranslationQuery": {
+    "/public-api/TranslationQuery": {
       "post": {
         "tags": [
           "Translation"

@@ -1,8 +1,11 @@
 ﻿using MediatR;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClubEngine.ApiService.Clubs;
 
+[AllowAnonymous]
 public class ClubsQuery : IRequest<IEnumerable<ClubListItem>>;
 
 public class ClubsQueryHandler(IQueryable<Club> clubs) : IRequestHandler<ClubsQuery, IEnumerable<ClubListItem>>

@@ -67,7 +67,7 @@ export class AuthService {
                 this._authenticated = true;
 
                 // Store the user on the user service
-                this._userService.user = response.user;
+                // this._userService.user = response.user;
 
                 // Return a new observable with the response
                 return of(response);
@@ -105,7 +105,7 @@ export class AuthService {
                     this._authenticated = true;
 
                     // Store the user on the user service
-                    this._userService.user = response.user;
+                    // this._userService.user = response.user;
 
                     // Return true
                     return of(true);

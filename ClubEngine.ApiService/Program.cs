@@ -42,40 +42,22 @@ var app = builder.Build();
 //app.Services.GetService()
 // Configure the HTTP request pipeline.
 //app.UseExceptionHandler();
+app.UseDeveloperExceptionPage();
 app.UseMiddleware<ExceptionMiddleware>();
-
-
-string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
-
-app.MapGet("/weatherforecast",
-           () =>
-           {
-               var forecast = Enumerable.Range(1, 5).Select(index =>
-                                                                new WeatherForecast(
-                                                                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                                                                    Random.Shared.Next(-20, 55),
-                                                                    summaries[Random.Shared.Next(summaries.Length)]
-                                                                ))
-                                        .ToArray();
-
-               return forecast;
-           })
-   .WithName("GetWeatherForecast");
-
-app.MapGet("/hello", () => "Hello, World!")
-   .WithSummary("Get a greeting")
-   .WithDescription("This endpoint returns a friendly greeting.");
-
-app.UseAntiforgery();
-
-app.MapAppEngineEndpoints();
-
-
-//app.UseRouting();
+app.UseHttpsRedirection();
+app.UseRouting();
 
 app.UseCors(corsBuilder => corsBuilder.AllowAnyOrigin()
                                       .AllowAnyHeader()
                                       .AllowAnyMethod());
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+//app.UseAntiforgery();
+
+app.MapAppEngineEndpoints();
+
 
 //app.UseEndpoints(endpoints =>
 //{
@@ -102,8 +84,3 @@ if (app.Environment.IsDevelopment())
 app.Services.GetService<MessageQueueReceiver>()!.StartReceiveLoop();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

@@ -70,7 +70,7 @@ export const provideFuse = (
         importProvidersFrom(MatDialogModule),
         provideEnvironmentInitializer(() => inject(FuseConfirmationService)),
 
-        provideHttpClient(withInterceptors([fuseLoadingInterceptor])),
+        // provideHttpClient(withInterceptors([fuseLoadingInterceptor])),
         provideEnvironmentInitializer(() => inject(FuseLoadingService)),
 
         provideEnvironmentInitializer(() => inject(FuseMediaWatcherService)),

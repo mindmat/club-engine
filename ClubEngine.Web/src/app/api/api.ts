@@ -80,7 +80,7 @@ export class Api {
     }
 
     clubs_Query(clubsQuery: ClubsQuery | undefined): Observable<ClubListItem[]> {
-        let url_ = this.baseUrl + "/api/ClubsQuery";
+        let url_ = this.baseUrl + "/public-api/ClubsQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(clubsQuery);
@@ -182,7 +182,7 @@ export class Api {
     }
 
     importMemberList_Query(importMemberListQuery: ImportMemberListQuery | undefined): Observable<ListDifferences> {
-        let url_ = this.baseUrl + "/api/ImportMemberListQuery";
+        let url_ = this.baseUrl + "/api/upload/ImportMemberListQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(importMemberListQuery);
@@ -929,7 +929,7 @@ export class Api {
     }
 
     translation_Query(translationQuery: TranslationQuery | undefined): Observable<{ [key: string]: string; }> {
-        let url_ = this.baseUrl + "/api/TranslationQuery";
+        let url_ = this.baseUrl + "/public-api/TranslationQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(translationQuery);

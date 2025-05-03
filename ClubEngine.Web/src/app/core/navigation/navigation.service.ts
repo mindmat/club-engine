@@ -41,7 +41,7 @@ export class NavigationService {
                             title: e.name, // translateService.instant('SelectEvent'),
                             type: 'basic',
                             icon: 'heroicons_outline:clipboard-check',
-                            link: `/select-event`
+                            link: '/'
                         },
                         {
                             id: 'admin',

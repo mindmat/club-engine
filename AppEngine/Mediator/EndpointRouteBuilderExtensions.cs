@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.ComponentModel.Design;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -10,6 +9,7 @@ using AppEngine.Types;
 
 using MediatR;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -21,7 +21,7 @@ public static class EndpointRouteBuilderExtensions
 {
     private static readonly JsonSerializerOptions _jsonSettings;
     private static readonly JsonSerializerOptions _jsonDeserializeSettings;
-    private static readonly Type[] _exportableDataTypes = [typeof(string), typeof(int), typeof(int?), typeof(bool), typeof(bool?), typeof(decimal), typeof(decimal?)];
+    private static readonly Type[]                _exportableDataTypes = [typeof(string), typeof(int), typeof(int?), typeof(bool), typeof(bool?), typeof(decimal), typeof(decimal?)];
 
     static EndpointRouteBuilderExtensions()
     {
@@ -40,20 +40,30 @@ public static class EndpointRouteBuilderExtensions
         {
             if (request.Request.ImplementsInterface<IReceiveFileCommand>())
             {
-                app.MapPost("/api/{partition}/upload/" + request.Request.Name, CreateUploadProcessRequest(request.Request, services))
+                app.MapPost(request.Url, CreateUploadProcessRequest(request.Request, services))
                    //.RequireAuthorization()
-                   //.RequireCors(c => c.AllowAnyHeader().AllowAnyOrigin().AllowAnyHeader())
+                   .RequireCors(c => c.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod())
                    .WithDisplayName(request.Request.Name)
                    .WithMetadata(request)
                    .DisableAntiforgery();
             }
             else
             {
-                app.MapPost($"/api/{request.Request.Name}", CreateProcessRequest(request.Request, services))
-                   //.RequireAuthorization()
-                   //.RequireCors(c => c.AllowAnyHeader().AllowAnyOrigin().AllowAnyHeader())
-                   .WithDisplayName(request.Request.Name)
-                   .WithMetadata(request);
+                if (request.Request.HasAttribute<AllowAnonymousAttribute>())
+                {
+                    app.MapPost(request.Url, CreateProcessRequest(request.Request, services))
+                       .RequireCors(c => c.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod())
+                       .WithDisplayName(request.Request.Name)
+                       .WithMetadata(request);
+                }
+                else
+                {
+                    app.MapPost(request.Url, CreateProcessRequest(request.Request, services))
+                       .RequireAuthorization()
+                       //.RequireCors(c => c.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod())
+                       .WithDisplayName(request.Request.Name)
+                       .WithMetadata(request);
+                }
             }
         }
     }
@@ -89,13 +99,11 @@ public static class EndpointRouteBuilderExtensions
             partitionRequest.PartitionId = await acronymResolver.GetPartitionIdFromAcronym(partition);
         }
 
-
         //scope.ServiceProvider.GetService<IHttpContextAccessor>()!.HttpContext = context;
-        //var authorizationChecker = services.GetInstance<IAuthorizationChecker>();
-        //if (request is IEventBoundRequest eventBoundRequest)
-        //{
-        //    await authorizationChecker.ThrowIfUserHasNotRight(eventBoundRequest.PartitionId, requestType.Name);
-        //}
+        if (request is IPartitionBoundRequest partitionBoundRequest)
+        {
+            await scope.ServiceProvider.GetRequiredService<IAuthorizationChecker>().ThrowIfUserHasNotRight(partitionBoundRequest.PartitionId, requestType.Name);
+        }
 
         var mediator = scope.ServiceProvider.GetService<IMediator>()!;
         var response = await mediator.Send(request, context.RequestAborted);
@@ -262,6 +270,11 @@ public static class EndpointRouteBuilderExtensions
         //{
         //    await authorizationChecker.ThrowIfUserHasNotRight(eventBoundRequest.PartitionId, requestType.Name);
         //}
+        //scope.ServiceProvider.GetService<IHttpContextAccessor>()!.HttpContext = context;
+        if (request is IPartitionBoundRequest partitionBoundRequest)
+        {
+            //await scope.ServiceProvider.GetRequiredService<IAuthorizationChecker>().ThrowIfUserHasNotRight(partitionBoundRequest.PartitionId, requestType.Name);
+        }
 
         var mediator = scope.ServiceProvider.GetService<IMediator>()!;
         var response = await mediator.Send(request, context.RequestAborted);
@@ -341,10 +354,10 @@ public static class EndpointRouteBuilderExtensions
         return data?.GetType()
                    .GetProperties()
                    .Where(prp => prp.PropertyType.IsGenericType
-                                 && prp.PropertyType.GetGenericTypeDefinition().IsAssignableFrom(typeof(IEnumerable<>)))
+                              && prp.PropertyType.GetGenericTypeDefinition().IsAssignableFrom(typeof(IEnumerable<>)))
                    .Select(prp => (prp.Name, prp.GetValue(data) as IEnumerable, prp.PropertyType.GetGenericArguments()[0]))
                    .ToList()
-               ?? Enumerable.Empty<(string, IEnumerable?, Type)>();
+            ?? Enumerable.Empty<(string, IEnumerable?, Type)>();
     }
 
 

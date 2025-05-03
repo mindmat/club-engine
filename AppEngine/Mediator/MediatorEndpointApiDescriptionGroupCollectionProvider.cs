@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
+
 using AppEngine.Internationalization;
+
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -8,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace AppEngine.Mediator;
 
 public class MediatorEndpointApiDescriptionGroupCollectionProvider(RequestRegistry requestRegistry,
-                                                                   Translator translator) 
+                                                                   Translator translator)
     : IApiDescriptionGroupCollectionProvider
 {
     public int Order => 1;
@@ -18,9 +20,11 @@ public class MediatorEndpointApiDescriptionGroupCollectionProvider(RequestRegist
         get
         {
             var apis = new List<ApiDescription>();
+
             foreach (var requestType in requestRegistry.RequestTypes)
             {
                 var (request, suffix) = Split(requestType.Request.Name);
+
                 var controllerActionDescriptor = new ControllerActionDescriptor
                                                  {
                                                      DisplayName = translator.GetResourceString(requestType.Request.Name),
@@ -42,7 +46,7 @@ public class MediatorEndpointApiDescriptionGroupCollectionProvider(RequestRegist
                                      {
                                          GroupName = "Mediator",
                                          HttpMethod = "Post",
-                                         RelativePath = "/api/" + requestType.Request.Name,
+                                         RelativePath = requestType.Url,
                                          ActionDescriptor = controllerActionDescriptor,
                                          ParameterDescriptions =
                                          {
@@ -87,12 +91,14 @@ public class MediatorEndpointApiDescriptionGroupCollectionProvider(RequestRegist
     private static (string Request, string Suffix) Split(string requestName)
     {
         var commandIndex = requestName.LastIndexOf("Command", StringComparison.InvariantCulture);
+
         if (commandIndex > 0)
         {
             return (requestName[..commandIndex], requestName[commandIndex..]);
         }
 
         var queryIndex = requestName.LastIndexOf("Query", StringComparison.InvariantCulture);
+
         if (queryIndex > 0)
         {
             return (requestName[..queryIndex], requestName[queryIndex..]);

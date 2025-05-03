@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Resources;
+using System.Security.Claims;
 
 using AppEngine.Authentication;
 using AppEngine.Authorization;
@@ -25,6 +26,7 @@ using Azure.Messaging.ServiceBus;
 
 using MediatR;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Routing;
@@ -33,6 +35,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AppEngine;
 
@@ -40,6 +43,20 @@ public static class AppEngineExtensions
 {
     public static void AddAppEngine(this WebApplicationBuilder builder, Assembly[] appAssemblies, ResourceManager[] resourceManagers, string? databaseConnectionStringKey = null)
     {
+        builder.Services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(options =>
+        {
+            options.Authority = "https://clubengine.eu.auth0.com/";
+            options.Audience = "https://clubengine.ch/api";
+            //options.TokenValidationParameters = new TokenValidationParameters { NameClaimType = ClaimTypes.NameIdentifier };
+        });
+
+        builder.Services.AddAuthorization(o => o.AddPolicy("api", p => p.RequireAuthenticatedUser()));
+        builder.Services.AddCors();
+
         var assemblyContainer = new AppAssemblies([typeof(AppEngineExtensions).Assembly, .. appAssemblies]);
         builder.Services.AddSingleton(assemblyContainer);
 
@@ -57,7 +74,7 @@ public static class AppEngineExtensions
 
         //builder.Services.AddOpenApiDocument(document => document.DocumentName = "v1");
 
-        builder.Services.AddSingleton(_ => new Translator([Resources.ResourceManager, .. resourceManagers]));
+        builder.Services.AddSingleton(_ => new Translator([Resources.ResourceManager, ..resourceManagers]));
 
         var domainEventTypes = assemblyContainer.Assemblies.GetTypesImplementing(typeof(DomainEvent));
         builder.Services.AddSingleton(services => new DomainEventCatalog(domainEventTypes, services.GetService<Translator>()!));

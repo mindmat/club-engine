@@ -2,8 +2,11 @@
 
 using MediatR;
 
+using Microsoft.AspNetCore.Authorization;
+
 namespace AppEngine.Internationalization;
 
+[AllowAnonymous]
 public class TranslationQuery : IRequest<IDictionary<string, string>>
 {
     public string? Language { get; set; }
