@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace AppEngine.Authentication;
 
-public class Auth0IdentityProvider(Auth0TokenProvider tokenProvider) : IIdentityProvider
+public class Auth0IdentityProvider(Auth0TokenProvider tokenProvider,
+                                   Auth0Configuration config) : IIdentityProvider
 {
     public (IdentityProvider Provider, string Identifier)? GetIdentifier(IHttpContextAccessor contextAccessor)
     {
@@ -17,6 +18,7 @@ public class Auth0IdentityProvider(Auth0TokenProvider tokenProvider) : IIdentity
         {
             var identifier = claimsIdentity.Claims.FirstOrDefault(clm => clm.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")
                                            ?.Value;
+
             if (identifier != null)
             {
                 return (IdentityProvider.Auth0, identifier);
@@ -29,23 +31,38 @@ public class Auth0IdentityProvider(Auth0TokenProvider tokenProvider) : IIdentity
     public AuthenticatedUser GetUser(IHttpContextAccessor contextAccessor)
     {
         var extract = GetIdentifier(contextAccessor);
+
         return extract == null
-                   ? AuthenticatedUser.None
-                   : new AuthenticatedUser(extract.Value.Provider, extract.Value.Identifier);
+            ? AuthenticatedUser.None
+            : new AuthenticatedUser(extract.Value.Provider, extract.Value.Identifier);
     }
 
     public async Task<ExternalUserDetails?> GetUserDetails(string identifier)
     {
-        var token = await tokenProvider.GetToken();
-        if (token != null)
+        if (config.UserEndpoint == null)
         {
-            // Get user details: https://auth0.com/docs/manage-users/user-search/retrieve-users-with-get-users-by-id-endpoint
-            var client = new HttpClient();
-            var requestUser = new HttpRequestMessage(HttpMethod.Get, $"https://eventregistrar.eu.auth0.com/api/v2/users/{identifier}")
-                              {
-                                  Headers = { Authorization = new AuthenticationHeaderValue("Bearer", token) }
-                              };
-            var responseUser = await client.SendAsync(requestUser);
+            return null;
+        }
+
+        var token = await tokenProvider.GetToken();
+
+        if (token == null)
+        {
+            return null;
+        }
+
+        // Get user details: https://auth0.com/docs/manage-users/user-search/retrieve-users-with-get-users-by-id-endpoint
+        var client = new HttpClient();
+        var url = $"{config.UserEndpoint}/{identifier}";
+
+        var requestUser = new HttpRequestMessage(HttpMethod.Get, url)
+                          {
+                              Headers = { Authorization = new AuthenticationHeaderValue("Bearer", token) }
+                          };
+        var responseUser = await client.SendAsync(requestUser);
+
+        if (responseUser.IsSuccessStatusCode)
+        {
             var contentUser = await responseUser.Content.ReadFromJsonAsync<Auth0User>();
 
             return new ExternalUserDetails

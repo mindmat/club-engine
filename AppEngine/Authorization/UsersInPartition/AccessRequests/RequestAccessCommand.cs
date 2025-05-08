@@ -1,8 +1,8 @@
-﻿using AppEngine.Authentication.Users;
+﻿using System.Security.Authentication;
+
+using AppEngine.Authentication.Users;
 using AppEngine.DataAccess;
-using AppEngine.DomainEvents;
 using AppEngine.ReadModels;
-using AppEngine.ServiceBus;
 using AppEngine.TimeHandling;
 
 using MediatR;
@@ -18,22 +18,28 @@ public class RequestAccessCommand : IRequest<Guid>
 }
 
 public class RequestAccessCommandHandler(IRepository<AccessToPartitionRequest> accessRequests,
-                                         AuthenticatedUserId _user,
+                                         IRepository<User> users,
+                                         AuthenticatedUserId authenticatedUserId,
                                          IAuthenticatedUserProvider authenticatedUserProvider,
-                                         IEventBus eventBus,
-                                         CommandQueue commandQueue,
+                                         ChangeTrigger changeTrigger,
                                          RequestTimeProvider timeProvider)
     : IRequestHandler<RequestAccessCommand, Guid>
 {
     public async Task<Guid> Handle(RequestAccessCommand command, CancellationToken cancellationToken)
     {
-        var requestExpression = accessRequests.Where(req => req.PartitionId == command.PartitionId
-                                                         && (req.Response == null || req.Response == RequestResponse.Granted));
-        var existingUserId = await authenticatedUserProvider.GetAuthenticatedUserId();
+        var userId = authenticatedUserId.UserId;
 
-        if (existingUserId != null)
+        if (userId != null)
         {
-            requestExpression = requestExpression.Where(req => req.UserId_Requestor == existingUserId);
+            var existingRequest = await accessRequests.Where(req => req.PartitionId == command.PartitionId
+                                                                 && req.UserId_Requestor == userId
+                                                                 && (req.Response == null || req.Response == RequestResponse.Granted))
+                                                      .FirstOrDefaultAsync(cancellationToken);
+
+            if (existingRequest != null)
+            {
+                return existingRequest.Id;
+            }
         }
         else
         {
@@ -41,57 +47,42 @@ public class RequestAccessCommandHandler(IRepository<AccessToPartitionRequest> a
 
             if (authenticatedUser.IdentityProviderUserIdentifier == null)
             {
-                throw new ArgumentException("You are not authenticated");
+                throw new AuthenticationException("You are not authenticated");
             }
 
-            requestExpression = requestExpression.Where(req => req.IdentityProvider == authenticatedUser.IdentityProvider
-                                                            && req.Identifier == authenticatedUser.IdentityProviderUserIdentifier);
+            var newUser = new User
+                          {
+                              Id = Guid.NewGuid(),
+                              IdentityProvider = authenticatedUser.IdentityProvider,
+                              IdentityProviderUserIdentifier = authenticatedUser.IdentityProviderUserIdentifier,
+                              FirstName = authenticatedUser.FirstName,
+                              LastName = authenticatedUser.LastName,
+                              Email = authenticatedUser.Email,
+                              AvatarUrl = authenticatedUser.AvatarUrl
+                          };
+            users.Insert(newUser);
+            userId = newUser.Id;
+
+            // some user info is not present in the token, but exposed through an API
+            changeTrigger.EnqueueCommand(new UpdateUserInfoCommand
+                                         {
+                                             Provider = authenticatedUser.IdentityProvider,
+                                             Identifier = authenticatedUser.IdentityProviderUserIdentifier
+                                         });
         }
 
-        var request = await requestExpression.FirstOrDefaultAsync(cancellationToken);
-
-        if (request == null)
-        {
-            var user = authenticatedUserProvider.GetAuthenticatedUser();
-
-            request = new AccessToPartitionRequest
+        var request = new AccessToPartitionRequest
                       {
                           Id = Guid.NewGuid(),
-                          UserId_Requestor = _user.UserId,
-                          IdentityProvider = user.IdentityProvider,
-                          Identifier = user.IdentityProviderUserIdentifier,
-                          FirstName = user.FirstName,
-                          LastName = user.LastName,
-                          Email = user.Email,
-                          AvatarUrl = user.AvatarUrl,
+                          UserId_Requestor = userId.Value,
                           RequestText = command.RequestText,
                           PartitionId = command.PartitionId,
                           RequestReceived = timeProvider.RequestNow
                       };
-            accessRequests.Insert(request);
+        accessRequests.Insert(request);
 
-            eventBus.Publish(new QueryChanged
-                             {
-                                 QueryName = nameof(PartitionsOfUserQuery)
-                             });
-
-            eventBus.Publish(new QueryChanged
-                             {
-                                 PartitionId = command.PartitionId,
-                                 QueryName = nameof(AccessRequestsOfPartitionQuery)
-                             });
-
-            if (string.IsNullOrEmpty(user.FirstName)
-             || string.IsNullOrEmpty(user.LastName)
-             || string.IsNullOrEmpty(user.Email))
-            {
-                commandQueue.EnqueueCommand(new UpdateUserInfoCommand
-                                            {
-                                                Provider = request.IdentityProvider,
-                                                Identifier = request.Identifier
-                                            });
-            }
-        }
+        changeTrigger.GlobalQueryChanged<MyPartitionsQuery>(userId.Value);
+        changeTrigger.QueryChanged<AccessRequestsOfPartitionQuery>(command.PartitionId);
 
         return request.Id;
     }

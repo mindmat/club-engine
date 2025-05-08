@@ -74,8 +74,6 @@ export const appRoutes: Route[] = [
     // Admin routes
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
         component: LayoutComponent,
         resolve: {
             initialData: initialDataResolver
@@ -90,8 +88,8 @@ export const appRoutes: Route[] = [
             },
             {
                 path: ':partitionAcronym',
-                // canActivate: [AuthGuard],
-                // canActivateChild: [AuthGuard],
+                canActivate: [AuthGuard],
+                canActivateChild: [AuthGuard],
                 resolve: { initialData: PartitionAcronymResolver },
 
                 children: [

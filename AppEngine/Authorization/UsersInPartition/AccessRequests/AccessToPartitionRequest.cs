@@ -1,5 +1,4 @@
-﻿using AppEngine.Authentication;
-using AppEngine.Authentication.Users;
+﻿using AppEngine.Authentication.Users;
 using AppEngine.DataAccess;
 using AppEngine.Partitions;
 
@@ -12,18 +11,10 @@ public class AccessToPartitionRequest : Entity
 {
     public Guid PartitionId { get; set; }
     public Partition? Partition { get; set; }
-    public Guid? UserId_Requestor { get; set; }
+    public Guid UserId_Requestor { get; set; }
     public User? User_Requestor { get; set; }
     public Guid? UserId_Responder { get; set; }
     public User? User_Responder { get; set; }
-
-    public string? Identifier { get; set; }
-    public IdentityProvider IdentityProvider { get; set; }
-
-    public string? FirstName { get; set; }
-    public string? LastName { get; set; }
-    public string? Email { get; set; }
-    public string? AvatarUrl { get; set; }
 
     public DateTimeOffset RequestReceived { get; set; }
     public string? RequestText { get; set; }
@@ -48,16 +39,5 @@ public class AccessToEventRequestMap : EntityMap<AccessToPartitionRequest>
         builder.HasOne(arq => arq.User_Responder)
                .WithMany()
                .HasForeignKey(arq => arq.UserId_Responder);
-
-        builder.Property(arq => arq.Identifier)
-               .HasMaxLength(200);
-        builder.Property(arq => arq.FirstName)
-               .HasMaxLength(200);
-        builder.Property(arq => arq.LastName)
-               .HasMaxLength(200);
-        builder.Property(arq => arq.Email)
-               .HasMaxLength(200);
-        builder.Property(arq => arq.AvatarUrl)
-               .HasMaxLength(500);
     }
 }

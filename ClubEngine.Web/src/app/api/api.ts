@@ -79,57 +79,6 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    clubs_Query(clubsQuery: ClubsQuery | undefined): Observable<ClubListItem[]> {
-        let url_ = this.baseUrl + "/public-api/ClubsQuery";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(clubsQuery);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processClubs_Query(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processClubs_Query(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<ClubListItem[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<ClubListItem[]>;
-        }));
-    }
-
-    protected processClubs_Query(response: HttpResponseBase): Observable<ClubListItem[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ClubListItem[];
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
     domainEventCatalog_Query(domainEventCatalogQuery: DomainEventCatalogQuery | undefined): Observable<DomainEventCatalogItem[]> {
         let url_ = this.baseUrl + "/api/DomainEventCatalogQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -484,6 +433,108 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    myPartitions_Query(myPartitionsQuery: MyPartitionsQuery | undefined): Observable<MyPartitions> {
+        let url_ = this.baseUrl + "/api/MyPartitionsQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(myPartitionsQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMyPartitions_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMyPartitions_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<MyPartitions>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<MyPartitions>;
+        }));
+    }
+
+    protected processMyPartitions_Query(response: HttpResponseBase): Observable<MyPartitions> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as MyPartitions;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    myRightsInPartition_Query(myRightsInPartitionQuery: MyRightsInPartitionQuery | undefined): Observable<string[]> {
+        let url_ = this.baseUrl + "/api/MyRightsInPartitionQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(myRightsInPartitionQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMyRightsInPartition_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMyRightsInPartition_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<string[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<string[]>;
+        }));
+    }
+
+    protected processMyRightsInPartition_Query(response: HttpResponseBase): Observable<string[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as string[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     partitionByAcronym_Query(partitionByAcronymQuery: PartitionByAcronymQuery | undefined): Observable<PartitionDetails> {
         let url_ = this.baseUrl + "/api/PartitionByAcronymQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -525,57 +576,6 @@ export class Api {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PartitionDetails;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    partitionsOfUser_Query(partitionsOfUserQuery: PartitionsOfUserQuery | undefined): Observable<PartitionsOfUser> {
-        let url_ = this.baseUrl + "/api/PartitionsOfUserQuery";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(partitionsOfUserQuery);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPartitionsOfUser_Query(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPartitionsOfUser_Query(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<PartitionsOfUser>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<PartitionsOfUser>;
-        }));
-    }
-
-    protected processPartitionsOfUser_Query(response: HttpResponseBase): Observable<PartitionsOfUser> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PartitionsOfUser;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -733,11 +733,11 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    rightsOfUserInPartition_Query(rightsOfUserInPartitionQuery: RightsOfUserInPartitionQuery | undefined): Observable<string[]> {
-        let url_ = this.baseUrl + "/api/RightsOfUserInPartitionQuery";
+    roles_Query(rolesQuery: RolesQuery | undefined): Observable<RoleDescription[]> {
+        let url_ = this.baseUrl + "/api/RolesQuery";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(rightsOfUserInPartitionQuery);
+        const content_ = JSON.stringify(rolesQuery);
 
         let options_ : any = {
             body: content_,
@@ -750,20 +750,20 @@ export class Api {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRightsOfUserInPartition_Query(response_);
+            return this.processRoles_Query(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processRightsOfUserInPartition_Query(response_ as any);
+                    return this.processRoles_Query(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<string[]>;
+                    return _observableThrow(e) as any as Observable<RoleDescription[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<string[]>;
+                return _observableThrow(response_) as any as Observable<RoleDescription[]>;
         }));
     }
 
-    protected processRightsOfUserInPartition_Query(response: HttpResponseBase): Observable<string[]> {
+    protected processRoles_Query(response: HttpResponseBase): Observable<RoleDescription[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -773,7 +773,7 @@ export class Api {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as string[];
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as RoleDescription[];
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1075,57 +1075,6 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    userInPartitionRoles_Query(userInPartitionRolesQuery: UserInPartitionRolesQuery | undefined): Observable<RoleDescription[]> {
-        let url_ = this.baseUrl + "/api/UserInPartitionRolesQuery";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(userInPartitionRolesQuery);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUserInPartitionRoles_Query(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processUserInPartitionRoles_Query(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<RoleDescription[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<RoleDescription[]>;
-        }));
-    }
-
-    protected processUserInPartitionRoles_Query(response: HttpResponseBase): Observable<RoleDescription[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as RoleDescription[];
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
     usersOfPartition_Query(usersOfPartitionQuery: UsersOfPartitionQuery | undefined): Observable<UserInPartitionDisplayItem[]> {
         let url_ = this.baseUrl + "/api/UsersOfPartitionQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -1191,15 +1140,6 @@ export interface AccessRequestOfPartition {
 export interface AccessRequestsOfPartitionQuery {
     partitionId?: string;
     includeDeniedRequests?: boolean;
-}
-
-export interface ClubListItem {
-    id?: string;
-    name?: string;
-    acronym?: string;
-}
-
-export interface ClubsQuery {
 }
 
 export interface DomainEventCatalogItem {
@@ -1335,25 +1275,16 @@ export interface MenuNodesQuery {
     partitionId?: string;
 }
 
-export interface PartitionDetails {
-    id?: string;
-    name?: string;
-    acronym?: string;
-}
-
-export interface PartitionByAcronymQuery {
-    acronym?: string | null;
-}
-
-export interface PartitionsOfUser {
-    authorizedPartitions?: PartitionOfUser[];
+export interface MyPartitions {
+    authorized?: PartitionOfUser[];
     requests?: AccessRequest[];
+    other?: PartitionDisplayItem[];
 }
 
 export interface PartitionOfUser {
-    eventId?: string;
-    eventName?: string;
-    eventAcronym?: string;
+    id?: string;
+    name?: string;
+    acronym?: string;
     role?: UserInPartitionRole;
     roleText?: string;
 }
@@ -1372,7 +1303,29 @@ export interface AccessRequest {
     requestSent?: Date;
 }
 
-export interface PartitionsOfUserQuery {
+export interface PartitionDisplayItem {
+    id?: string;
+    name?: string;
+    acronym?: string;
+}
+
+export interface MyPartitionsQuery {
+    searchString?: string | null;
+    showArchived?: boolean;
+}
+
+export interface MyRightsInPartitionQuery {
+    partitionId?: string;
+}
+
+export interface PartitionDetails {
+    id?: string;
+    name?: string;
+    acronym?: string;
+}
+
+export interface PartitionByAcronymQuery {
+    acronym?: string | null;
 }
 
 export interface RemoveUserFromPartitionCommand {
@@ -1396,8 +1349,13 @@ export enum RequestResponse {
     Denied = 2,
 }
 
-export interface RightsOfUserInPartitionQuery {
-    partitionId?: string;
+export interface RoleDescription {
+    role?: UserInPartitionRole;
+    name?: string;
+    description?: string;
+}
+
+export interface RolesQuery {
 }
 
 export interface SaveDomainEventCommand {
@@ -1439,15 +1397,6 @@ export enum IdentityProvider {
     Google = 1,
     Microsoft = 2,
     Auth0 = 3,
-}
-
-export interface RoleDescription {
-    role?: UserInPartitionRole;
-    name?: string;
-    description?: string;
-}
-
-export interface UserInPartitionRolesQuery {
 }
 
 export interface UserInPartitionDisplayItem {

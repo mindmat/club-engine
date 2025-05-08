@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using System.Resources;
-using System.Security.Claims;
 
 using AppEngine.Authentication;
 using AppEngine.Authorization;
@@ -21,7 +20,6 @@ using AppEngine.ServiceBus;
 using AppEngine.TimeHandling;
 using AppEngine.Types;
 
-using Azure.Identity;
 using Azure.Messaging.ServiceBus;
 
 using MediatR;
@@ -29,13 +27,11 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 
 namespace AppEngine;
 
@@ -57,7 +53,7 @@ public static class AppEngineExtensions
         builder.Services.AddAuthorization(o => o.AddPolicy("api", p => p.RequireAuthenticatedUser()));
         builder.Services.AddCors();
 
-        var assemblyContainer = new AppAssemblies([typeof(AppEngineExtensions).Assembly, .. appAssemblies]);
+        var assemblyContainer = new AppAssemblies([typeof(AppEngineExtensions).Assembly, ..appAssemblies]);
         builder.Services.AddSingleton(assemblyContainer);
 
         builder.Services.AddDbContext<DbContext, AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString(databaseConnectionStringKey ?? "database"),
@@ -70,7 +66,7 @@ public static class AppEngineExtensions
         builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
         RegisterMediator(builder, assemblyContainer);
-        RegisterIam(builder);
+        RegisterIam(builder, assemblyContainer);
 
         //builder.Services.AddOpenApiDocument(document => document.DocumentName = "v1");
 
@@ -106,6 +102,8 @@ public static class AppEngineExtensions
         builder.Services.AddSingleton<Serializer>();
         builder.Services.AddMemoryCache();
         builder.Services.AddHttpContextAccessor();
+
+        //builder.Configuration.AddAzureKeyVaultSecrets("key-vault");
 
         RegisterCommandQueue(builder);
         RegisterConfigurations(builder, assemblyContainer);
@@ -158,7 +156,7 @@ public static class AppEngineExtensions
         builder.Services.AddSingleton(services => services.GetService<ServiceBusClient>()!.CreateSender(CommandQueue.CommandQueueName));
     }
 
-    private static void RegisterIam(WebApplicationBuilder builder)
+    private static void RegisterIam(WebApplicationBuilder builder, AppAssemblies assemblyContainer)
     {
         builder.Services.AddScoped<IIdentityProvider, Auth0IdentityProvider>();
         builder.Services.AddSingleton<Auth0TokenProvider>();
@@ -170,7 +168,7 @@ public static class AppEngineExtensions
         builder.Services.AddScoped(services => services.GetService<IAuthenticatedUserProvider>()!
                                                        .GetAuthenticatedUser());
 
-        builder.Services.AddScoped<IRightsOfPartitionRoleProvider, RightsOfPartitionRoleProvider>();
+        builder.Services.AddTypesImplementingAsScoped<IRightsOfPartitionRoleProvider>(assemblyContainer.Assemblies);
         builder.Services.AddScoped<IAuthorizationChecker, AuthorizationChecker>();
         builder.Services.AddScoped<IAuthenticatedUserProvider, AuthenticatedUserProvider>();
         builder.Services.AddScoped<RightsOfUserInPartitionCache>();

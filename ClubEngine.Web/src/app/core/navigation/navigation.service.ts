@@ -1,5 +1,4 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { FuseNavigationItem } from '@fuse/components/navigation';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuNodeContent, MenuNodeStyle } from 'app/api/api';
@@ -18,7 +17,7 @@ export class NavigationService {
                 id: 'select-event',
                 title: 'Verein auswählen',
                 type: 'basic',
-                icon: 'heroicons_outline:clipboard-check',
+                icon: 'heroicons_outline:list-bullet',
                 link: `/select-event`,
             }
         ]);

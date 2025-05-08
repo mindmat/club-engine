@@ -14,9 +14,11 @@ namespace AppEngine.Secrets;
 
 public class SecretReader
 {
-    private const string KeyVaultConfigKey = "KeyVaultUri";
-    private readonly ILogger _logger;
+    private const    string             KeyVaultConfigKey = "KeyVaultUri";
+    private readonly IConfiguration     _configuration;
+    private readonly ILogger            _logger;
     private readonly Lazy<SecretClient> _secretClient;
+
     private readonly IDictionary<string, string> _cache = new ConcurrentDictionary<string, string>();
     //const string SendGridApiKey = "SendGridApiKey";
     //const string PostmarkTokenKey = "PostmarkToken";
@@ -24,6 +26,7 @@ public class SecretReader
     public SecretReader(IConfiguration configuration,
                         ILogger<SecretReader> logger)
     {
+        _configuration = configuration;
         _logger = logger;
         _secretClient = new Lazy<SecretClient>(() => CreateSecretClient(configuration));
     }
@@ -35,9 +38,10 @@ public class SecretReader
             return cachedSecret;
         }
 
-        var response = await _secretClient.Value.GetSecretAsync(key, null, cancellationToken);
-        var secret = response.Value.Value;
+        var secret = _configuration.GetValue<string>(key)
+                  ?? (await _secretClient.Value.GetSecretAsync(key, null, cancellationToken)).Value.Value;
         _cache[key] = secret;
+
         return secret;
     }
 
@@ -55,9 +59,10 @@ public class SecretReader
     {
         var keyVaultUri = configuration.GetValue<string>(KeyVaultConfigKey)
                        ?? throw new ConfigurationException(KeyVaultConfigKey);
+
         TokenCredential credentials = Debugger.IsAttached
-                              ? new InteractiveBrowserCredential()
-                              : new DefaultAzureCredential();
+            ? new InteractiveBrowserCredential()
+            : new DefaultAzureCredential();
         var client = new SecretClient(new Uri(keyVaultUri), credentials);
 
         try

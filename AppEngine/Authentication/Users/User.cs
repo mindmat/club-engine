@@ -10,8 +10,8 @@ public class User : Entity
 {
     public ICollection<UserInPartition>? Partitions { get; set; }
 
-    public IdentityProvider IdentityProvider { get; set; }
-    public string? IdentityProviderUserIdentifier { get; set; }
+    public required IdentityProvider IdentityProvider { get; set; }
+    public required string IdentityProviderUserIdentifier { get; set; }
 
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
@@ -27,12 +27,16 @@ public class UserMap : EntityMap<User>
 
         builder.Property(usr => usr.IdentityProviderUserIdentifier)
                .HasMaxLength(200);
+
         builder.Property(usr => usr.FirstName)
                .HasMaxLength(200);
+
         builder.Property(usr => usr.LastName)
                .HasMaxLength(200);
+
         builder.Property(usr => usr.Email)
                .HasMaxLength(200);
+
         builder.Property(usr => usr.AvatarUrl)
                .HasMaxLength(500);
     }

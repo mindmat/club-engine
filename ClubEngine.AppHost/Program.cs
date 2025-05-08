@@ -17,12 +17,16 @@ var serviceBus = builder.AddAzureServiceBus("service-bus")
                         .RunAsEmulator();
 var queue = serviceBus.AddServiceBusQueue("CommandQueue");
 
+//var keyVault = builder.AddAzureKeyVault("key-vault");
+
 var apiService = builder.AddProject<Projects.ClubEngine_ApiService>("api")
                         .WithReference(db)
                         .WaitFor(db)
                         .WaitFor(migrations)
                         .WithReference(serviceBus)
                         .WaitFor(queue);
+//.WithReference(keyVault)
+//.WaitFor(keyVault);
 
 
 //builder.AddNpmApp()

@@ -2,20 +2,13 @@
 
 namespace AppEngine.Authorization.UsersInPartition;
 
-public class AuthenticatedUser(IdentityProvider identityProvider,
-                               string identityProviderUserIdentifier,
-                               string? firstName = null,
-                               string? lastName = null,
-                               string? email = null,
-                               string? avatarUrl = null)
+public record AuthenticatedUser(IdentityProvider IdentityProvider,
+                                string IdentityProviderUserIdentifier,
+                                string? FirstName = null,
+                                string? LastName = null,
+                                string? Email = null,
+                                string? AvatarUrl = null)
 {
-    public IdentityProvider IdentityProvider { get; } = identityProvider;
-    public string IdentityProviderUserIdentifier { get; } = identityProviderUserIdentifier;
-    public string? FirstName { get; } = firstName;
-    public string? LastName { get; } = lastName;
-    public string? Email { get; } = email;
-    public string? AvatarUrl { get; } = avatarUrl;
-
     public string GetText()
     {
         if (!string.IsNullOrWhiteSpace(FirstName)

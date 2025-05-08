@@ -18,6 +18,7 @@ namespace ClubEngine.ApiService.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     Acronym = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    IsArchived = table.Column<bool>(type: "bit", nullable: false),
                     Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
                     IncrementalKey = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
@@ -53,7 +54,7 @@ namespace ClubEngine.ApiService.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IdentityProvider = table.Column<int>(type: "int", nullable: false),
-                    IdentityProviderUserIdentifier = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    IdentityProviderUserIdentifier = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
@@ -102,6 +103,7 @@ namespace ClubEngine.ApiService.Migrations
                     FallbackName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     AnnualFee = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false),
                     Color = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    ShowInOverview = table.Column<bool>(type: "bit", nullable: false),
                     IncrementalKey = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
@@ -174,14 +176,8 @@ namespace ClubEngine.ApiService.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PartitionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId_Requestor = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UserId_Requestor = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserId_Responder = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Identifier = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    IdentityProvider = table.Column<int>(type: "int", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    AvatarUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     RequestReceived = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     RequestText = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Response = table.Column<int>(type: "int", nullable: true),
@@ -204,7 +200,8 @@ namespace ClubEngine.ApiService.Migrations
                         name: "FK_AccessToPartitionsRequests_Users_UserId_Requestor",
                         column: x => x.UserId_Requestor,
                         principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AccessToPartitionsRequests_Users_UserId_Responder",
                         column: x => x.UserId_Responder,

@@ -4,8 +4,7 @@
         <!-- Background -->
         <!-- Rings -->
         <!-- prettier-ignore -->
-        <svg class="absolute inset-0 pointer-events-none" viewBox="0 0 960 540" width="100%" height="100%"
-            preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+        <svg class="absolute inset-0 pointer-events-none" viewBox="0 0 960 540" width="100%" height="100%" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
             <g class="text-gray-700 opacity-25" fill="none" stroke="currentColor" stroke-width="100">
                 <circle r="234" cx="196" cy="23"></circle>
                 <circle r="234" cx="790" cy="491"></circle>
@@ -44,42 +43,39 @@
                 </mat-form-field> -->
                 <mat-form-field class="mt-4 w-full sm:ml-4 sm:mt-0 sm:w-72" [subscriptSizing]="'dynamic'">
                     <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
-                    <input (input)="filterByQuery(query.value)" placeholder="Search by title or description" matInput
-                        #query />
+                    <input (input)="filterByQuery(query.value)" placeholder="Search by title or description" matInput #query />
                 </mat-form-field>
                 <mat-slide-toggle class="mt-8 sm:ml-auto sm:mt-0" [color]="'primary'" (change)="toggleInactive($event)">
                     Hide completed
                 </mat-slide-toggle>
             </div>
             <!-- Clubs -->
-            @if (this.filteredClubs.length) {
-            <div class="mt-8 grid grid-cols-1 gap-8 sm:mt-10 sm:grid-cols-2 lg:grid-cols-3">
+            @if (this.partitions) {
+            @if(this.partitions.authorized?.length > 0) {
+            <div class="font-medium mt-4">{{ 'Authorized' | translate }}</div>
+            <div class="mt-2 grid grid-cols-1 gap-8 sm:mt-4 sm:grid-cols-2 lg:grid-cols-3">
                 @for (
-                club of filteredClubs;
-                track trackByFn($index, club)
+                partition of partitions.authorized;
+                track trackByFn($index, partition)
                 ) {
-                <!-- Clubs -->
                 <div class="bg-card flex h-72 flex-col overflow-hidden rounded-2xl shadow">
                     <div class="flex flex-col p-6">
-                        <!-- Clubs title & description -->
+                        <!-- title & description -->
                         <div class="mt-4 text-lg font-medium">
-                            {{ club.name }}
+                            {{ partition.name }}
                         </div>
                         <div class="text-secondary mt-0.5 line-clamp-2">
-                            <!-- {{ club.description }} -->
+                            <!-- {{ partition.description }} -->
                         </div>
                         <div class="my-6 h-1 w-12 border-t-2"></div>
                     </div>
                     <!-- Footer -->
                     <div class="mt-auto flex w-full flex-col">
-                        <!-- Club navigation button -->
+                        <!-- navigation button -->
                         <div class="bg-gray-50 px-6 py-4 text-right dark:bg-transparent">
-                            <a mat-stroked-button [routerLink]="['/', club.acronym]">
+                            <a mat-stroked-button [routerLink]="['/', partition.acronym]">
                                 <span class="inline-flex items-center">
-                                    <!-- Not started -->
-
                                     <span>{{ 'Open' | translate }}</span>
-
                                     <mat-icon class="ml-1.5 icon-size-5" [svgIcon]="
                                                     'heroicons_solid:arrow-small-right'"></mat-icon>
                                 </span>
@@ -89,6 +85,68 @@
                 </div>
                 }
             </div>
+            }
+            <!-- Access requested -->
+            @if(this.partitions.requests?.length > 0) {
+            <div class="font-medium mt-4">{{ 'AccessRequested' | translate }}</div>
+            <div class="mt-2 grid grid-cols-1 gap-8 sm:mt-4 sm:grid-cols-2 lg:grid-cols-3">
+                @for (
+                partition of partitions.requests;
+                track trackByFn($index, partition)
+                ) {
+                <div class="bg-card flex h-72 flex-col overflow-hidden rounded-2xl shadow">
+                    <div class="flex flex-col p-6">
+                        <!-- Clubs title & description -->
+                        <div class="mt-4 text-lg font-medium">
+                            {{ partition.partitionName }}
+                        </div>
+                        <div class="text-secondary mt-0.5 line-clamp-2">
+                            <!-- {{ partition.description }} -->
+                        </div>
+                        <div class="my-6 h-1 w-12 border-t-2"></div>
+                    </div>
+                </div>
+                }
+            </div>
+            }
+            <!-- Other partitions -->
+            @if(this.partitions.other) {
+            <div class="font-medium mt-4">{{ 'Other' | translate }}</div>
+            <div class="mt-2 grid grid-cols-1 gap-8 sm:mt-4 sm:grid-cols-2 lg:grid-cols-3">
+                @for (
+                partition of partitions.other;
+                track trackByFn($index, partition)
+                ) {
+                <div class="bg-card flex h-72 flex-col overflow-hidden rounded-2xl shadow">
+                    <div class="flex flex-col p-6">
+                        <!-- title & description -->
+                        <div class="mt-4 text-lg font-medium">
+                            {{ partition.name }}
+                        </div>
+                        <div class="text-secondary mt-0.5 line-clamp-2">
+                            <!-- {{ partition.description }} -->
+                        </div>
+                        <div class="my-6 h-1 w-12 border-t-2"></div>
+                        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                            <textarea [placeholder]="'InsertRequestText' | translate" matInput #requestText></textarea>
+                        </mat-form-field>
+                    </div>
+                    <div class="mt-auto flex w-full flex-col">
+                        <!-- Request access -->
+                        <div class="bg-gray-50 px-6 py-4 text-right dark:bg-transparent">
+                            <a mat-stroked-button (click)="requestAccess(partition.id, requestText.value)">
+                                <span class="inline-flex items-center">
+                                    <span>{{ 'RequestAccess' | translate }}</span>
+                                    <mat-icon class="ml-1.5 icon-size-5" [svgIcon]="
+                                                                        'heroicons_solid:arrow-small-right'"></mat-icon>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+            }
             } @else {
             <div class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent">
                 <mat-icon class="icon-size-24" [svgIcon]="'heroicons_outline:document-search'"></mat-icon>

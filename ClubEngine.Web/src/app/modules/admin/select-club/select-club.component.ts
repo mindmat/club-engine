@@ -1,5 +1,4 @@
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { I18nPluralPipe, NgClass, PercentPipe } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -14,18 +13,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';
-import {
-    MatSlideToggleChange,
-    MatSlideToggleModule,
-} from '@angular/material/slide-toggle';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleChange, MatSlideToggleModule, } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { FuseFindByKeyPipe } from '@fuse/pipes/find-by-key/find-by-key.pipe';
-import { ClubListItem } from 'app/api/api';
-import { BehaviorSubject, Subject, combineLatest, takeUntil } from 'rxjs';
-import { SelectClubService } from './select-club.service';
+import { BehaviorSubject, Subject, combineLatest, debounceTime, switchMap, takeUntil } from 'rxjs';
+import { SelectClubService as PartitionService } from './select-club.service';
 import { TranslatePipe } from '@ngx-translate/core';
+import { MyPartitions } from 'app/api/api';
 
 @Component({
     selector: 'select-club',
@@ -33,33 +28,33 @@ import { TranslatePipe } from '@ngx-translate/core';
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
-    CdkScrollable,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatOptionModule,
-    MatIconModule,
-    MatInputModule,
-    MatSlideToggleModule,
-    MatTooltipModule,
-    MatProgressBarModule,
-    MatButtonModule,
-    RouterLink,
-    TranslatePipe
-],
+        CdkScrollable,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatOptionModule,
+        MatIconModule,
+        MatInputModule,
+        MatSlideToggleModule,
+        MatTooltipModule,
+        MatProgressBarModule,
+        MatButtonModule,
+        RouterLink,
+        TranslatePipe
+    ],
 })
 export class SelectClubComponent implements OnInit, OnDestroy {
+    public partitions: MyPartitions | null = null;
+
     // categories: Category[];
-    clubs: ClubListItem[];
-    filteredClubs: ClubListItem[];
     filters: {
         // categorySlug$: BehaviorSubject<string>;
         query$: BehaviorSubject<string>;
         showInactive$: BehaviorSubject<boolean>;
     } = {
-        // categorySlug$: new BehaviorSubject('all'),
-        query$: new BehaviorSubject(''),
-        showInactive$: new BehaviorSubject(false),
-    };
+            // categorySlug$: new BehaviorSubject('all'),
+            query$: new BehaviorSubject(''),
+            showInactive$: new BehaviorSubject(false),
+        };
 
     private unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -70,8 +65,8 @@ export class SelectClubComponent implements OnInit, OnDestroy {
         private _activatedRoute: ActivatedRoute,
         private changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
-        private selectClubService: SelectClubService
-    ) {}
+        private partitionService: PartitionService
+    ) { }
 
     ngOnInit(): void {
         // Get the categories
@@ -84,37 +79,30 @@ export class SelectClubComponent implements OnInit, OnDestroy {
         //         this._changeDetectorRef.markForCheck();
         //     });
 
+        combineLatest([this.filters.query$, this.filters.showInactive$])
+            .pipe(
+                takeUntil(this.unsubscribeAll),
+                debounceTime(300),
+                switchMap(([query, showInactive]) => this.partitionService.fetch(query, showInactive)))
+            .subscribe();
+
         // Get the courses
-        combineLatest([this.selectClubService.clubs$, this.filters.query$, this.filters.showInactive$])
-        .pipe(takeUntil(this.unsubscribeAll))
-        .subscribe(([clubs, query, showInactive]) =>
-        {
-          this.clubs = clubs;
-          this.filteredClubs = clubs;
-        //   this.requests = events.requests;
-        //   this.filteredRequests = events.requests;
-  
-          if (query != null && query !== '')
-          {
-            this.filteredClubs  = this.filteredClubs.filter(clb => clb.name?.toLowerCase().includes(query.toLowerCase()));
-            // this.filteredRequests = this.filteredRequests.filter(evt => evt.eventName?.toLowerCase().includes(query.toLowerCase()));
-          }
-  
-        //   this.inactiveClubsInList = this.filteredClubs.some(evt => evt.eventState === EventState.Finished);
-        //   if (!showInactive && this.inactiveClubsInList)
-        //   {
-        //     this.filteredClubs = this.filteredClubs.filter(evt => evt.eventState !== EventState.Finished);
-        //   }
-  
-          // Mark for check
-          this.changeDetectorRef.markForCheck();
-        });
+        this.partitionService.clubs$
+            .pipe(takeUntil(this.unsubscribeAll))
+            .subscribe(partitions => {
+                this.partitions = partitions;
+                this.changeDetectorRef.markForCheck();
+            });
     }
 
     ngOnDestroy(): void {
         // Unsubscribe from all subscriptions
         this.unsubscribeAll.next(null);
         this.unsubscribeAll.complete();
+    }
+
+    requestAccess(partitionId: string, requestText: string) {
+        this.partitionService.requestAccess(partitionId, requestText);
     }
 
     filterByQuery(query: string): void {

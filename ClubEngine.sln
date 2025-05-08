@@ -49,8 +49,9 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		RESX_CultureCountyOverrides = en=en-150
-		RESX_NeutralResourcesLanguage = de-CH
+		RESX_SortFileContentOnSave = True
 		SolutionGuid = {6589E1ED-0A88-4C26-BEE8-D5414BEDE31B}
+		RESX_NeutralResourcesLanguage = de-CH
+		RESX_CultureCountyOverrides = en=en-150
 	EndGlobalSection
 EndGlobal

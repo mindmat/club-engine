@@ -21,37 +21,27 @@ public class UpdateUserInfoCommandHandler(IIdentityProvider identityProvider,
 {
     public async Task Handle(UpdateUserInfoCommand command, CancellationToken cancellationToken)
     {
-        var requests = await accessRequests.Where(arq => arq.IdentityProvider == command.Provider
-                                                      && (arq.FirstName == null || arq.LastName == null || arq.Email == null || arq.AvatarUrl == null))
-                                           .WhereIf(command.Identifier != null, arq => arq.Identifier == command.Identifier)
-                                           .AsTracking()
-                                           .ToListAsync(cancellationToken);
-        var users = await _users.Where(usr => usr.IdentityProvider == command.Provider
+        var users = await _users.AsTracking()
+                                .Where(usr => usr.IdentityProvider == command.Provider
                                            && (usr.FirstName == null || usr.LastName == null || usr.Email == null || usr.AvatarUrl == null))
                                 .WhereIf(command.Identifier != null, usr => usr.IdentityProviderUserIdentifier == command.Identifier)
-                                .AsTracking()
                                 .ToListAsync(cancellationToken);
-        if (!requests.Any() && !users.Any())
+
+        if (users.Count == 0)
         {
             return;
         }
 
-        var identifiers = requests.Select(arq => arq.Identifier)
-                                  .Concat(users.Select(usr => usr.IdentityProviderUserIdentifier))
-                                  .Distinct();
-        foreach (var identifier in identifiers.Where(id => id != null))
+        var identifiers = users.Select(usr => usr.IdentityProviderUserIdentifier)
+                               .WhereNotNull()
+                               .Distinct();
+
+        foreach (var identifier in identifiers)
         {
             var userDetails = await identityProvider.GetUserDetails(identifier!);
+
             if (userDetails != null)
             {
-                requests.Where(arq => arq.Identifier == identifier)
-                        .ForEach(arq =>
-                        {
-                            arq.FirstName = userDetails.FirstName ?? arq.FirstName;
-                            arq.LastName = userDetails.LastName ?? arq.LastName;
-                            arq.Email = userDetails.Email ?? arq.Email;
-                            arq.AvatarUrl = userDetails.AvatarUrl ?? arq.AvatarUrl;
-                        });
                 users.Where(usr => usr.IdentityProviderUserIdentifier == identifier)
                      .ForEach(usr =>
                      {

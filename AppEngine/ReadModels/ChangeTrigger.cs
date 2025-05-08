@@ -37,6 +37,16 @@ public class ChangeTrigger(CommandQueue commandQueue,
                                     delay);
     }
 
+    public void GlobalQueryChanged<TQuery>(Guid rowId, bool publishEvenWhenDbCommitFails = false)
+    {
+        eventBus.Publish(new QueryChanged
+                         {
+                             QueryName = typeof(TQuery).Name,
+                             RowId = rowId
+                         },
+                         publishEvenWhenDbCommitFails);
+    }
+
     public void QueryChanged<TQuery>(Guid partitionId, Guid? rowId = null, bool publishEvenWhenDbCommitFails = false)
         where TQuery : IPartitionBoundRequest
     {

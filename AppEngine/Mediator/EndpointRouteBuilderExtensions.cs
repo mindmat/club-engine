@@ -265,15 +265,9 @@ public static class EndpointRouteBuilderExtensions
         using var scope = container.CreateScope();
 
         //scope.ServiceProvider.GetService<IHttpContextAccessor>()!.HttpContext = context;
-        //var authorizationChecker = container.GetInstance<IAuthorizationChecker>();
-        //if (request is IEventBoundRequest eventBoundRequest)
-        //{
-        //    await authorizationChecker.ThrowIfUserHasNotRight(eventBoundRequest.PartitionId, requestType.Name);
-        //}
-        //scope.ServiceProvider.GetService<IHttpContextAccessor>()!.HttpContext = context;
         if (request is IPartitionBoundRequest partitionBoundRequest)
         {
-            //await scope.ServiceProvider.GetRequiredService<IAuthorizationChecker>().ThrowIfUserHasNotRight(partitionBoundRequest.PartitionId, requestType.Name);
+            await scope.ServiceProvider.GetRequiredService<IAuthorizationChecker>().ThrowIfUserHasNotRight(partitionBoundRequest.PartitionId, requestType.Name);
         }
 
         var mediator = scope.ServiceProvider.GetService<IMediator>()!;

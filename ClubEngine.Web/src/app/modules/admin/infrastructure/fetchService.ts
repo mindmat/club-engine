@@ -1,17 +1,14 @@
 import { BehaviorSubject, filter, map, Observable, of, switchMap, throwError } from 'rxjs';
 import { NotificationService } from './notification.service';
 
-export class FetchService<TItem>
-{
+export class FetchService<TItem> {
     private result: BehaviorSubject<TItem | null> = new BehaviorSubject(null);
     private fetch$: Observable<TItem>;
     private rowId?: string;
     private partitionId?: string;
 
-    constructor(queryName: string | null = null, notificationService: NotificationService | null = null)
-    {
-        if (queryName !== null && notificationService !== null)
-        {
+    constructor(queryName: string | null = null, notificationService: NotificationService | null = null) {
+        if (queryName !== null && notificationService !== null) {
             notificationService.subscribe(queryName)
                 .pipe(
                     filter(e => (e.rowId === this.rowId || e.rowId?.toLowerCase() === this.rowId?.toLowerCase())
@@ -21,43 +18,35 @@ export class FetchService<TItem>
         }
     }
 
-    refresh(): void
-    {
-        if (!this.fetch$)
-        {
+    refresh(): void {
+        if (!this.fetch$) {
             return;
         }
         this.fetch$.subscribe(result => this.result.next(result));
     }
 
-    protected get result$(): Observable<TItem>
-    {
+    protected get result$(): Observable<TItem> {
         return this.result.asObservable();
     }
 
-    public get current(): TItem | null
-    {
+    public get current(): TItem | null {
         return this.result.getValue();
     }
 
-    protected fetchItems(fetch: Observable<TItem>, rowId: string | null = null, partitionId: string | null = null): Observable<TItem>
-    {
+    protected fetchItems(fetch: Observable<TItem>, rowId: string | null = null, partitionId: string | null = null): Observable<TItem> {
         this.rowId = rowId;
         this.partitionId = partitionId;
         this.fetch$ = fetch;
         return this.fetch$.pipe(
-            map(newItems =>
-            {
+            map(newItems => {
                 // Update the item
                 this.result.next(newItems);
 
                 // Return the item
                 return newItems;
             }),
-            switchMap(newItems =>
-            {
-                if (!newItems)
-                {
+            switchMap(newItems => {
+                if (!newItems) {
                     return throwError(() => 'Could not find any items!');
                 }
 

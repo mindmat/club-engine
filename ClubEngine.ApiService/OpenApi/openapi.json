@@ -46,41 +46,6 @@
         }
       }
     },
-    "/public-api/ClubsQuery": {
-      "post": {
-        "tags": [
-          "Clubs"
-        ],
-        "operationId": "Clubs_Query",
-        "requestBody": {
-          "x-name": "ClubsQuery",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ClubsQuery"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ClubListItem"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/DomainEventCatalogQuery": {
       "post": {
         "tags": [
@@ -310,6 +275,73 @@
         }
       }
     },
+    "/api/MyPartitionsQuery": {
+      "post": {
+        "tags": [
+          "MyPartitions"
+        ],
+        "operationId": "MyPartitions_Query",
+        "requestBody": {
+          "x-name": "MyPartitionsQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MyPartitionsQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyPartitions"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/MyRightsInPartitionQuery": {
+      "post": {
+        "tags": [
+          "MyRightsInPartition"
+        ],
+        "operationId": "MyRightsInPartition_Query",
+        "requestBody": {
+          "x-name": "MyRightsInPartitionQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MyRightsInPartitionQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/PartitionByAcronymQuery": {
       "post": {
         "tags": [
@@ -335,38 +367,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PartitionDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/PartitionsOfUserQuery": {
-      "post": {
-        "tags": [
-          "PartitionsOfUser"
-        ],
-        "operationId": "PartitionsOfUser_Query",
-        "requestBody": {
-          "x-name": "PartitionsOfUserQuery",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PartitionsOfUserQuery"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PartitionsOfUser"
                 }
               }
             }
@@ -457,19 +457,19 @@
         }
       }
     },
-    "/api/RightsOfUserInPartitionQuery": {
+    "/api/RolesQuery": {
       "post": {
         "tags": [
-          "RightsOfUserInPartition"
+          "Roles"
         ],
-        "operationId": "RightsOfUserInPartition_Query",
+        "operationId": "Roles_Query",
         "requestBody": {
-          "x-name": "RightsOfUserInPartitionQuery",
+          "x-name": "RolesQuery",
           "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RightsOfUserInPartitionQuery"
+                "$ref": "#/components/schemas/RolesQuery"
               }
             }
           },
@@ -483,7 +483,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "string"
+                    "$ref": "#/components/schemas/RoleDescription"
                   }
                 }
               }
@@ -652,41 +652,6 @@
         }
       }
     },
-    "/api/UserInPartitionRolesQuery": {
-      "post": {
-        "tags": [
-          "UserInPartitionRoles"
-        ],
-        "operationId": "UserInPartitionRoles_Query",
-        "requestBody": {
-          "x-name": "UserInPartitionRolesQuery",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserInPartitionRolesQuery"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RoleDescription"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/UsersOfPartitionQuery": {
       "post": {
         "tags": [
@@ -771,26 +736,6 @@
             "type": "boolean"
           }
         }
-      },
-      "ClubListItem": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "acronym": {
-            "type": "string"
-          }
-        }
-      },
-      "ClubsQuery": {
-        "type": "object",
-        "additionalProperties": false
       },
       "DomainEventCatalogItem": {
         "type": "object",
@@ -1208,7 +1153,31 @@
           }
         }
       },
-      "PartitionDetails": {
+      "MyPartitions": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "authorized": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PartitionOfUser"
+            }
+          },
+          "requests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccessRequest"
+            }
+          },
+          "other": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PartitionDisplayItem"
+            }
+          }
+        }
+      },
+      "PartitionOfUser": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -1220,50 +1189,6 @@
             "type": "string"
           },
           "acronym": {
-            "type": "string"
-          }
-        }
-      },
-      "PartitionByAcronymQuery": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "acronym": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "PartitionsOfUser": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "authorizedPartitions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PartitionOfUser"
-            }
-          },
-          "requests": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/AccessRequest"
-            }
-          }
-        }
-      },
-      "PartitionOfUser": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "eventName": {
-            "type": "string"
-          },
-          "eventAcronym": {
             "type": "string"
           },
           "role": {
@@ -1310,9 +1235,70 @@
           }
         }
       },
-      "PartitionsOfUserQuery": {
+      "PartitionDisplayItem": {
         "type": "object",
-        "additionalProperties": false
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "acronym": {
+            "type": "string"
+          }
+        }
+      },
+      "MyPartitionsQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "searchString": {
+            "type": "string",
+            "nullable": true
+          },
+          "showArchived": {
+            "type": "boolean"
+          }
+        }
+      },
+      "MyRightsInPartitionQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "PartitionDetails": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "acronym": {
+            "type": "string"
+          }
+        }
+      },
+      "PartitionByAcronymQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "acronym": {
+            "type": "string",
+            "nullable": true
+          }
+        }
       },
       "RemoveUserFromPartitionCommand": {
         "type": "object",
@@ -1371,15 +1357,24 @@
           2
         ]
       },
-      "RightsOfUserInPartitionQuery": {
+      "RoleDescription": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "partitionId": {
-            "type": "string",
-            "format": "guid"
+          "role": {
+            "$ref": "#/components/schemas/UserInPartitionRole"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
           }
         }
+      },
+      "RolesQuery": {
+        "type": "object",
+        "additionalProperties": false
       },
       "SaveDomainEventCommand": {
         "type": "object",
@@ -1501,25 +1496,6 @@
           2,
           3
         ]
-      },
-      "RoleDescription": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "role": {
-            "$ref": "#/components/schemas/UserInPartitionRole"
-          },
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          }
-        }
-      },
-      "UserInPartitionRolesQuery": {
-        "type": "object",
-        "additionalProperties": false
       },
       "UserInPartitionDisplayItem": {
         "type": "object",

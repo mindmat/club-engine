@@ -25,4 +25,10 @@ public static class StringExtensions
 
         return fallback;
     }
+
+    public static IEnumerable<string> WhereNotNull(this IEnumerable<string?> source)
+    {
+        return source.Where(x => x != null)
+                     .Select(x => x!);
+    }
 }

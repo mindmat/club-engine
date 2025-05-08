@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClubEngine.ApiService.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250421132811_Initial")]
+    [Migration("20250508000854_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace ClubEngine.ApiService.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.3")
+                .HasAnnotation("ProductVersion", "9.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -47,6 +47,7 @@ namespace ClubEngine.ApiService.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("IdentityProviderUserIdentifier")
+                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
@@ -84,34 +85,11 @@ namespace ClubEngine.ApiService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AvatarUrl")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("FirstName")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("Identifier")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("IdentityProvider")
-                        .HasColumnType("int");
-
                     b.Property<int>("IncrementalKey")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IncrementalKey"));
-
-                    b.Property<string>("LastName")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
 
                     b.Property<Guid>("PartitionId")
                         .HasColumnType("uniqueidentifier");
@@ -134,7 +112,7 @@ namespace ClubEngine.ApiService.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.Property<Guid?>("UserId_Requestor")
+                    b.Property<Guid>("UserId_Requestor")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("UserId_Responder")
@@ -370,6 +348,9 @@ namespace ClubEngine.ApiService.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IncrementalKey"));
 
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(300)
@@ -585,6 +566,9 @@ namespace ClubEngine.ApiService.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
+                    b.Property<bool>("ShowInOverview")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
@@ -618,7 +602,9 @@ namespace ClubEngine.ApiService.Migrations
 
                     b.HasOne("AppEngine.Authentication.Users.User", "User_Requestor")
                         .WithMany()
-                        .HasForeignKey("UserId_Requestor");
+                        .HasForeignKey("UserId_Requestor")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("AppEngine.Authentication.Users.User", "User_Responder")
                         .WithMany()

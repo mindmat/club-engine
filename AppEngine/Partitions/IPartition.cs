@@ -13,17 +13,20 @@ public interface IPartition
     public Guid Id { get; set; }
     public string Name { get; set; }
     public string Acronym { get; set; }
+    public bool IsArchived { get; set; }
+    public ICollection<UserInPartition>? Users { get; set; }
+    public ICollection<AccessToPartitionRequest>? AccessRequests { get; set; }
 }
 
 public abstract class Partition : Entity, IPartition
 {
     public string Name { get; set; } = null!;
     public string Acronym { get; set; } = null!;
+    public bool IsArchived { get; set; }
     public ICollection<UserInPartition>? Users { get; set; }
     public ICollection<AccessToPartitionRequest>? AccessRequests { get; set; }
     public ICollection<PartitionConfiguration>? Configurations { get; set; }
 }
-
 
 public class PartitionMap : EntityMap<Partition>
 {
@@ -33,6 +36,7 @@ public class PartitionMap : EntityMap<Partition>
 
         builder.Property(ent => ent.Name)
                .HasMaxLength(300);
+
         builder.Property(ent => ent.Acronym)
                .HasMaxLength(20);
     }
