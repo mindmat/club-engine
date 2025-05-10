@@ -374,6 +374,38 @@
         }
       }
     },
+    "/public-api/PartitionsQuery": {
+      "post": {
+        "tags": [
+          "Partitions"
+        ],
+        "operationId": "Partitions_Query",
+        "requestBody": {
+          "x-name": "PartitionsQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PartitionsQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyPartitions"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/RemoveUserFromPartitionCommand": {
       "post": {
         "tags": [
@@ -1297,6 +1329,19 @@
           "acronym": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "PartitionsQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "searchString": {
+            "type": "string",
+            "nullable": true
+          },
+          "showArchived": {
+            "type": "boolean"
           }
         }
       },

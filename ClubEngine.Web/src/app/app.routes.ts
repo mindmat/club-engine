@@ -1,7 +1,5 @@
 import { Route } from '@angular/router';
 import { initialDataResolver } from 'app/app.resolvers';
-import { AuthGuard } from 'app/core/auth/guards/auth.guard';
-import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 import { SelectClubComponent } from './modules/admin/select-club/select-club.component';
 import { inject } from '@angular/core';
@@ -12,6 +10,7 @@ import { MembersComponent } from './modules/admin/members/members.component';
 import { MembersService } from './modules/admin/members/members.service';
 import { MembersHistoryService } from './modules/admin/members-history/members-history.service';
 import { combineLatest } from 'rxjs';
+import { AuthGuard } from '@auth0/auth0-angular';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -27,37 +26,6 @@ export const appRoutes: Route[] = [
     // path. Below is another redirection for that path to redirect the user to the desired
     // location. This is a small convenience to keep all main routes together here on this file.
     { path: 'signed-in-redirect', pathMatch: 'full', redirectTo: 'select-club' },
-
-    // Auth routes for guests
-    {
-        path: '',
-        canActivate: [NoAuthGuard],
-        canActivateChild: [NoAuthGuard],
-        component: LayoutComponent,
-        data: {
-            layout: 'empty'
-        },
-        children: [
-            { path: 'confirmation-required', loadChildren: () => import('app/modules/auth/confirmation-required/confirmation-required.routes') },
-            { path: 'sign-in', loadChildren: () => import('app/modules/auth/sign-in/sign-in.routes') },
-            { path: 'sign-up', loadChildren: () => import('app/modules/auth/sign-up/sign-up.routes') }
-        ]
-    },
-
-    // Auth routes for authenticated users
-    {
-        path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
-        component: LayoutComponent,
-        data: {
-            layout: 'empty'
-        },
-        children: [
-            { path: 'sign-out', loadChildren: () => import('app/modules/auth/sign-out/sign-out.routes') },
-            { path: 'unlock-session', loadChildren: () => import('app/modules/auth/unlock-session/unlock-session.routes') }
-        ]
-    },
 
     // Landing routes
     {

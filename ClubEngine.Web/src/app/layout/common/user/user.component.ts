@@ -110,6 +110,6 @@ export class UserComponent implements OnInit, OnDestroy {
     }
 
     login(): void {
-        this.authService.loginWithRedirect({ authorizationParams: { prompt: 'consent' } });
+        this.authService.loginWithRedirect();
     }
 }

@@ -15,8 +15,13 @@ export class SelectClubService extends FetchService<MyPartitions> {
         return this.result$;
     }
 
-    fetch(searchString: string | null = null, showArchived: boolean = false) {
-        return this.fetchItems(this.api.myPartitions_Query({ searchString, showArchived }));
+    fetch(searchString: string | null = null, showArchived: boolean = false, isAuthenticated: boolean = false): Observable<MyPartitions> {
+        if (isAuthenticated) {
+            return this.fetchItems(this.api.myPartitions_Query({ searchString, showArchived }));
+        }
+        else {
+            return this.fetchItems(this.api.partitions_Query({ searchString, showArchived }));
+        }
     }
 
     requestAccess(partitionId: string, requestText: string | null = null) {

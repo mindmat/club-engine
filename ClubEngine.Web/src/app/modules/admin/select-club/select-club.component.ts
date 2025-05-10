@@ -16,11 +16,13 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleChange, MatSlideToggleModule, } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { BehaviorSubject, Subject, combineLatest, debounceTime, switchMap, takeUntil } from 'rxjs';
 import { SelectClubService as PartitionService } from './select-club.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MyPartitions } from 'app/api/api';
+import { AuthService, AuthState } from '@auth0/auth0-angular';
+import { UserService } from 'app/core/user/user.service';
 
 @Component({
     selector: 'select-club',
@@ -58,14 +60,11 @@ export class SelectClubComponent implements OnInit, OnDestroy {
 
     private unsubscribeAll: Subject<any> = new Subject<any>();
 
-    /**
-     * Constructor
-     */
     constructor(
-        private _activatedRoute: ActivatedRoute,
         private changeDetectorRef: ChangeDetectorRef,
-        private _router: Router,
-        private partitionService: PartitionService
+        private partitionService: PartitionService,
+        public userService: UserService,
+        private authService: AuthService
     ) { }
 
     ngOnInit(): void {
@@ -79,11 +78,11 @@ export class SelectClubComponent implements OnInit, OnDestroy {
         //         this._changeDetectorRef.markForCheck();
         //     });
 
-        combineLatest([this.filters.query$, this.filters.showInactive$])
+        combineLatest([this.filters.query$, this.filters.showInactive$, this.authService.isAuthenticated$])
             .pipe(
                 takeUntil(this.unsubscribeAll),
                 debounceTime(300),
-                switchMap(([query, showInactive]) => this.partitionService.fetch(query, showInactive)))
+                switchMap(([query, showInactive, isAuthenticated]) => this.partitionService.fetch(query, showInactive, isAuthenticated)))
             .subscribe();
 
         // Get the courses
@@ -102,7 +101,12 @@ export class SelectClubComponent implements OnInit, OnDestroy {
     }
 
     requestAccess(partitionId: string, requestText: string) {
-        this.partitionService.requestAccess(partitionId, requestText);
+        if (this.userService.isAuthenticated) {
+            this.partitionService.requestAccess(partitionId, requestText);
+        }
+        else {
+            this.authService.loginWithRedirect();
+        }
     }
 
     filterByQuery(query: string): void {
