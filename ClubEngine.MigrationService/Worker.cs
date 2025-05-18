@@ -1,5 +1,8 @@
 using System.Diagnostics;
 
+using AppEngine.Authentication;
+using AppEngine.Authentication.Users;
+using AppEngine.Authorization.UsersInPartition;
 using AppEngine.DataAccess;
 
 using ClubEngine.ApiService.Clubs;

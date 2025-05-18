@@ -106,7 +106,7 @@ export class UserComponent implements OnInit, OnDestroy {
     }
 
     logout(): void {
-        this.authService.logout({});
+        this.authService.logout();
     }
 
     login(): void {

@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Authorized" xml:space="preserve">
+    <value>Authorized</value>
+  </data>
+  <data name="InsertRequestText" xml:space="preserve">
+    <value>Message</value>
+  </data>
   <data name="LoggedInAs" xml:space="preserve">
     <value>Logged in as</value>
   </data>
@@ -126,8 +132,23 @@
   <data name="Logout" xml:space="preserve">
     <value>Log out</value>
   </data>
+  <data name="MembersWithoutSlackAccount" xml:space="preserve">
+    <value>Members without slack account</value>
+  </data>
   <data name="OK" xml:space="preserve">
     <value>OK</value>
+  </data>
+  <data name="Other" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="RequestAccess" xml:space="preserve">
+    <value>Request access</value>
+  </data>
+  <data name="SlackMatching" xml:space="preserve">
+    <value>Slack matching</value>
+  </data>
+  <data name="UnmatchedSlackAccount" xml:space="preserve">
+    <value>Unmatched slack accounts</value>
   </data>
   <data name="Until" xml:space="preserve">
     <value>until {0}</value>

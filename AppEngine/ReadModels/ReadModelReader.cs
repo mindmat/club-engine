@@ -1,10 +1,15 @@
 ﻿using AppEngine.Json;
+using AppEngine.ServiceBus;
+using AppEngine.TimeHandling;
 
 using Microsoft.EntityFrameworkCore;
 
 namespace AppEngine.ReadModels;
 
-public class ReadModelReader(IQueryable<QueryReadModel> _readModels, Serializer _serializer)
+public class ReadModelReader(IQueryable<QueryReadModel> _readModels,
+                             Serializer serializer,
+                             CommandQueue commandQueue,
+                             RequestTimeProvider timeProvider)
 {
     public async Task<SerializedJson<T>> Get<T>(string queryName,
                                                 Guid partitionId,
@@ -16,7 +21,21 @@ public class ReadModelReader(IQueryable<QueryReadModel> _readModels, Serializer 
                                                     && rdm.PartitionId == partitionId
                                                     && rdm.RowId == rowId)
                                          .Select(rdm => rdm.ContentJson)
-                                         .FirstAsync(cancellationToken);
+                                         .FirstOrDefaultAsync(cancellationToken);
+
+        if (readModel == null)
+        {
+            commandQueue.EnqueueCommand(new UpdateReadModelCommand
+                                        {
+                                            QueryName = queryName,
+                                            PartitionId = partitionId,
+                                            RowId = rowId,
+                                            DirtyMoment = timeProvider.RequestNow
+                                        },
+                                        true);
+
+            throw new InvalidOperationException($"Read model {queryName} not found for partition {partitionId} and row {rowId}");
+        }
 
         return new SerializedJson<T>(readModel);
     }
@@ -32,7 +51,7 @@ public class ReadModelReader(IQueryable<QueryReadModel> _readModels, Serializer 
                                          .Select(rdm => rdm.ContentJson)
                                          .FirstAsync(cancellationToken);
 
-        return _serializer.Deserialize<T>(readModel)!;
+        return serializer.Deserialize<T>(readModel)!;
     }
 
     public async Task<IEnumerable<T>> GetDeserialized<T>(string queryName,
@@ -47,6 +66,6 @@ public class ReadModelReader(IQueryable<QueryReadModel> _readModels, Serializer 
                                           .Select(rdm => rdm.ContentJson)
                                           .ToListAsync(cancellationToken);
 
-        return readModels.Select(rmd => _serializer.Deserialize<T>(rmd)!);
+        return readModels.Select(rmd => serializer.Deserialize<T>(rmd)!);
     }
 }

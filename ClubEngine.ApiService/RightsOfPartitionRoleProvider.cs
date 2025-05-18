@@ -4,6 +4,7 @@ using AppEngine.Authorization.UsersInPartition;
 using ClubEngine.ApiService.Members;
 using ClubEngine.ApiService.Members.Import;
 using ClubEngine.ApiService.Members.Memberships;
+using ClubEngine.ApiService.Slack;
 
 namespace ClubEngine.ApiService;
 
@@ -30,6 +31,7 @@ internal class RightsOfPartitionRoleProvider : IRightsOfPartitionRoleProvider
         {
             yield return nameof(ImportMemberListQuery);
             yield return nameof(ImportNewMembersCommand);
+            yield return nameof(SlackUserDifferencesQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInPartitionRole.Admin))

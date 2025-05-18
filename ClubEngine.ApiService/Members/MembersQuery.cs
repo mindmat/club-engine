@@ -25,8 +25,8 @@ public class MembersQueryHandler(IQueryable<Member> members) : IRequestHandler<M
                                      mbr => query.MembershipTypeIds!.Contains(mbr.CurrentMembershipTypeId_ReadModel))
                             .WhereIf(!string.IsNullOrEmpty(query.SearchString),
                                      mbr => EF.Functions.Like(mbr.FirstName, $"%{query.SearchString}%")
-                                         || EF.Functions.Like(mbr.LastName, $"%{query.SearchString}")
-                                         || EF.Functions.Like(mbr.Email, $"%{query.SearchString}"))
+                                         || EF.Functions.Like(mbr.LastName, $"%{query.SearchString}%")
+                                         || EF.Functions.Like(mbr.Email, $"%{query.SearchString}%"))
                             .OrderBy(mbr => mbr.FirstName)
                             .ThenBy(mbr => mbr.LastName)
                             .Select(mbr => new MemberDisplayItem(mbr.Id, $"{mbr.FirstName} {mbr.LastName}", mbr.Email, mbr.CurrentMembershipTypeId_ReadModel))

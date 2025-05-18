@@ -25,7 +25,7 @@ export class FetchService<TItem> {
         this.fetch$.subscribe(result => this.result.next(result));
     }
 
-    protected get result$(): Observable<TItem> {
+    public get result$(): Observable<TItem> {
         return this.result.asObservable();
     }
 

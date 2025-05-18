@@ -37,7 +37,8 @@ public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> cal
                                                    && rdm.RowId == command.RowId)
                                         .FirstOrDefaultAsync(cancellationToken);
 
-        if (readModel?.LastUpdate >= command.DirtyMoment)
+        if (command.DirtyMoment != null
+         && command.DirtyMoment < readModel?.LastUpdate)
         {
             // Not perfect (time vs row version), but still servers as debouncing
             return;

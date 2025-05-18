@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using AppEngine.ReadModels;
+
+using MediatR;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -10,13 +13,15 @@ internal class ApiResponseTypeProvider
     public ICollection<ApiResponseType> GetApiResponseTypes(ApiDescription action, Type requestType)
     {
         var declaredReturnType = requestType.GetInterface(typeof(IRequest<>).Name)?.GetGenericArguments()[0]!;
-        //var serializedJsonType = declaredReturnType.IsGenericType
-        //                             ? declaredReturnType?.GetGenericTypeDefinition()
-        //                             : declaredReturnType;
-        //if (serializedJsonType == typeof(SerializedJson<>))
-        //{
-        //    declaredReturnType = declaredReturnType!.GetGenericArguments()[0];
-        //}
+
+        var serializedJsonType = declaredReturnType.IsGenericType
+            ? declaredReturnType?.GetGenericTypeDefinition()
+            : declaredReturnType;
+
+        if (serializedJsonType == typeof(SerializedJson<>))
+        {
+            declaredReturnType = declaredReturnType!.GetGenericArguments()[0];
+        }
 
         //if (declaredReturnType == typeof(DownloadResult))
         //{
@@ -73,6 +78,7 @@ internal class ApiResponseTypeProvider
 
         var responseTypes = results.Values;
         CalculateResponseFormats(responseTypes, contentTypes);
+
         return responseTypes;
     }
 
@@ -81,11 +87,12 @@ internal class ApiResponseTypeProvider
         foreach (var apiResponse in responseTypes)
         {
             var responseType = apiResponse.Type;
+
             if (responseType == null || responseType == typeof(void))
             {
                 continue;
             }
-            
+
             foreach (var contentType in declaredContentTypes)
             {
                 apiResponse.ApiResponseFormats.Add(new ApiResponseFormat { MediaType = "application/json" });

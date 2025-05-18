@@ -574,6 +574,38 @@
         }
       }
     },
+    "/api/SlackUserDifferencesQuery": {
+      "post": {
+        "tags": [
+          "SlackUserDifferences"
+        ],
+        "operationId": "SlackUserDifferences_Query",
+        "requestBody": {
+          "x-name": "SlackUserDifferencesQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SlackUserDifferencesQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SlackDifferences"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/StartUpdateReadModelsOfEventCommand": {
       "post": {
         "tags": [
@@ -1461,6 +1493,104 @@
           },
           "role": {
             "$ref": "#/components/schemas/UserInPartitionRole"
+          }
+        }
+      },
+      "SlackDifferences": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "onlyMember": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MemberDto"
+            }
+          },
+          "onlySlack": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SlackUser"
+            }
+          },
+          "matches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SlackMatch"
+            }
+          }
+        }
+      },
+      "MemberDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "currentMembershipTypeId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          }
+        }
+      },
+      "SlackUser": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "isInvitedUser": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SlackMatch": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "member": {
+            "$ref": "#/components/schemas/MemberDto"
+          },
+          "slack": {
+            "$ref": "#/components/schemas/SlackUser"
+          }
+        }
+      },
+      "SlackUserDifferencesQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "searchString": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

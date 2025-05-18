@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 
 using AppEngine.Authorization;
 using AppEngine.Partitions;
+using AppEngine.ReadModels;
 using AppEngine.Types;
 
 using MediatR;
@@ -132,11 +133,11 @@ public static class EndpointRouteBuilderExtensions
     {
         context.Response.Headers["content-type"] = "application/json";
 
-        //if (response is ISerializedJson serializedJson)
-        //{
-        //    await context.Response.WriteAsync(serializedJson.Content, context.RequestAborted);
-        //}
-        //else
+        if (response is ISerializedJson serializedJson)
+        {
+            await context.Response.WriteAsync(serializedJson.Content, context.RequestAborted);
+        }
+        else
         {
             var objectType = response?.GetType() ?? requestType;
             await JsonSerializer.SerializeAsync(context.Response.Body, response, objectType, _jsonSettings, context.RequestAborted);

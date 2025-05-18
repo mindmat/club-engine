@@ -60,7 +60,15 @@ export class NavigationService {
                                     type: 'basic',
                                     icon: 'heroicons_outline:users',
                                     link: `/${e.acronym}/members`,
-                                    badge: this.getBadge(nodes, 'MembersMembersNodeKey')
+                                    badge: this.getBadge(nodes, 'MembersNodeKey')
+                                },
+                                {
+                                    id: 'slack-matching',
+                                    title: translateService.instant('SlackMatching'),
+                                    type: 'basic',
+                                    icon: 'feather:slack',
+                                    link: `/${e.acronym}/slack-matching`,
+                                    badge: this.getBadge(nodes, 'SlackMatchingNodeKey')
                                 },
                                 // {
                                 //     id: 'search-registration',

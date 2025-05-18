@@ -61,6 +61,24 @@ namespace AppEngine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Berechtigt.
+        /// </summary>
+        public static string Authorized {
+            get {
+                return ResourceManager.GetString("Authorized", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mitteilung.
+        /// </summary>
+        public static string InsertRequestText {
+            get {
+                return ResourceManager.GetString("InsertRequestText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Eingeloggt als.
         /// </summary>
         public static string LoggedInAs {
@@ -88,11 +106,56 @@ namespace AppEngine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mitglieder ohne Slack-Account.
+        /// </summary>
+        public static string MembersWithoutSlackAccount {
+            get {
+                return ResourceManager.GetString("MembersWithoutSlackAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OK.
         /// </summary>
         public static string OK {
             get {
                 return ResourceManager.GetString("OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Andere.
+        /// </summary>
+        public static string Other {
+            get {
+                return ResourceManager.GetString("Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zugriff anfragen.
+        /// </summary>
+        public static string RequestAccess {
+            get {
+                return ResourceManager.GetString("RequestAccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Slack-Zuordnung.
+        /// </summary>
+        public static string SlackMatching {
+            get {
+                return ResourceManager.GetString("SlackMatching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nicht zuordenbare Slack-Accounts.
+        /// </summary>
+        public static string UnmatchedSlackAccount {
+            get {
+                return ResourceManager.GetString("UnmatchedSlackAccount", resourceCulture);
             }
         }
         

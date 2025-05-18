@@ -11,6 +11,8 @@ import { MembersService } from './modules/admin/members/members.service';
 import { MembersHistoryService } from './modules/admin/members-history/members-history.service';
 import { combineLatest } from 'rxjs';
 import { AuthGuard } from '@auth0/auth0-angular';
+import { SlackMatchingComponent } from './modules/admin/slack-matching/slack-matching.component';
+import { SlackMatchingService } from './modules/admin/slack-matching/slack-matching.service';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -76,6 +78,13 @@ export const appRoutes: Route[] = [
                     {
                         path: 'import-member-list',
                         component: ImportMemberListComponent,
+                    },
+                    {
+                        path: 'slack-matching',
+                        component: SlackMatchingComponent,
+                        resolve: {
+                            differences: () => inject(SlackMatchingService).fetch()
+                        }
                     }
                 ]
             }

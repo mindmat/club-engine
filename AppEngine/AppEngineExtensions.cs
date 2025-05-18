@@ -17,6 +17,7 @@ using AppEngine.Properties;
 using AppEngine.ReadModels;
 using AppEngine.Secrets;
 using AppEngine.ServiceBus;
+using AppEngine.Slack;
 using AppEngine.TimeHandling;
 using AppEngine.Types;
 
@@ -102,6 +103,9 @@ public static class AppEngineExtensions
         builder.Services.AddSingleton<Serializer>();
         builder.Services.AddMemoryCache();
         builder.Services.AddHttpContextAccessor();
+
+        builder.Services.AddScoped<SlackTokenProvider>();
+        builder.Services.AddScoped<SlackClient>();
 
         //builder.Configuration.AddAzureKeyVaultSecrets("key-vault");
 

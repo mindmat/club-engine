@@ -25,6 +25,7 @@ public class ExceptionMiddleware(ExceptionTranslator exceptionTranslator) : IMid
     private async Task HandleException(HttpContext context, Exception exception)
     {
         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
         if (exception is AggregateException aggregateException)
         {
             var errors = aggregateException
@@ -39,11 +40,13 @@ public class ExceptionMiddleware(ExceptionTranslator exceptionTranslator) : IMid
         {
             var (result, httpCode) = exceptionTranslator.TranslateExceptionToUserText(exception);
             context.Response.StatusCode = (int)(httpCode ?? HttpStatusCode.InternalServerError);
+
             switch (result)
             {
                 case string msg:
                     context.Response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
                     await context.Response.WriteAsync(msg).ConfigureAwait(false);
+
                     //_telemetryClient.TrackException(exception, new Dictionary<string, string> { { TranslatedExceptionKey, msg } });
                     break;
             }
