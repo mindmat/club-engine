@@ -39,6 +39,7 @@ public class ImportNewMembersCommandHandler(IRepository<Member> members,
                                [
                                    new Membership
                                    {
+                                       Id = Guid.NewGuid(),
                                        MembershipTypeId = newMember.MembershipTypeId,
                                        From = newMember.From,
                                        Until = newMember.Until

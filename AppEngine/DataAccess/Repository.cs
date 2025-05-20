@@ -11,6 +11,7 @@ public interface IRepository<TEntity> : IQueryable<TEntity>
     Task<TEntity?> Get(Expression<Func<TEntity, bool>> predicate);
     Task<TEntity?> GetById(Guid id);
     Task Upsert(TEntity entity, CancellationToken cancellationToken = default);
+    Task<TEntity> Upsert(Expression<Func<TEntity, bool>> findExisting, Func<TEntity> createNew, Action<TEntity> update, CancellationToken cancellationToken = default);
     TEntity Insert(TEntity rootEntity);
     EntityEntry<TEntity> Remove(TEntity entity);
     void Remove(Expression<Func<TEntity, bool>> predicate);
@@ -29,9 +30,20 @@ public class Repository<TEntity>(DbContext dbContext) : Queryable<TEntity>(dbCon
         return DbSet.FirstOrDefaultAsync(entity => entity.Id == id);
     }
 
+    public async Task<TEntity> Upsert(Expression<Func<TEntity, bool>> findExisting, Func<TEntity> createNew, Action<TEntity> update, CancellationToken cancellationToken = default)
+    {
+        var entity = await DbSet.AsTracking()
+                                .FirstOrDefaultAsync(findExisting, cancellationToken)
+                  ?? Insert(createNew());
+        update(entity);
+
+        return entity;
+    }
+
     public TEntity Insert(TEntity rootEntity)
     {
         var entry = DbSet.Add(rootEntity);
+
         return entry.Entity;
     }
 
@@ -48,6 +60,7 @@ public class Repository<TEntity>(DbContext dbContext) : Queryable<TEntity>(dbCon
 
         var entry = dbContext.Entry(entity);
         var dbValues = await entry.GetDatabaseValuesAsync(cancellationToken);
+
         if (dbValues == null)
         {
             // new entity, INSERT
@@ -79,6 +92,7 @@ public class Repository<TEntity>(DbContext dbContext) : Queryable<TEntity>(dbCon
     public void Remove(Expression<Func<TEntity, bool>> predicate)
     {
         var entitiesToDelete = DbSet.Where(predicate);
+
         foreach (var entityToDelete in entitiesToDelete)
         {
             DbSet.Remove(entityToDelete);

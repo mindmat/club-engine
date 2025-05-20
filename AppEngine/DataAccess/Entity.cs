@@ -6,7 +6,7 @@ namespace AppEngine.DataAccess;
 
 public abstract class Entity
 {
-    public Guid Id { get; set; }
+    public required Guid Id { get; set; }
     public byte[] RowVersion { get; set; } = null!;
 }
 

@@ -306,6 +306,29 @@ namespace ClubEngine.ApiService.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "SlackUserMapping",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MemberId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    SlackUserId = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    IncrementalKey = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SlackUserMapping", x => x.Id)
+                        .Annotation("SqlServer:Clustered", false);
+                    table.ForeignKey(
+                        name: "FK_SlackUserMapping_Members_MemberId",
+                        column: x => x.MemberId,
+                        principalTable: "Members",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AccessToPartitionsRequests_IncrementalKey",
                 table: "AccessToPartitionsRequests",
@@ -431,6 +454,18 @@ namespace ClubEngine.ApiService.Migrations
                 filter: "[RowId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SlackUserMapping_IncrementalKey",
+                table: "SlackUserMapping",
+                column: "IncrementalKey",
+                unique: true)
+                .Annotation("SqlServer:Clustered", true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SlackUserMapping_MemberId",
+                table: "SlackUserMapping",
+                column: "MemberId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_IncrementalKey",
                 table: "Users",
                 column: "IncrementalKey",
@@ -475,6 +510,9 @@ namespace ClubEngine.ApiService.Migrations
 
             migrationBuilder.DropTable(
                 name: "ReadModels");
+
+            migrationBuilder.DropTable(
+                name: "SlackUserMapping");
 
             migrationBuilder.DropTable(
                 name: "UsersInPartitions");

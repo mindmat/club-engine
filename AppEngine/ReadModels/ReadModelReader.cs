@@ -1,4 +1,6 @@
-﻿using AppEngine.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using AppEngine.Json;
 using AppEngine.ServiceBus;
 using AppEngine.TimeHandling;
 
@@ -23,19 +25,7 @@ public class ReadModelReader(IQueryable<QueryReadModel> _readModels,
                                          .Select(rdm => rdm.ContentJson)
                                          .FirstOrDefaultAsync(cancellationToken);
 
-        if (readModel == null)
-        {
-            commandQueue.EnqueueCommand(new UpdateReadModelCommand
-                                        {
-                                            QueryName = queryName,
-                                            PartitionId = partitionId,
-                                            RowId = rowId,
-                                            DirtyMoment = timeProvider.RequestNow
-                                        },
-                                        true);
-
-            throw new InvalidOperationException($"Read model {queryName} not found for partition {partitionId} and row {rowId}");
-        }
+        HandleReadModelNotCreated(readModel, queryName, partitionId, rowId);
 
         return new SerializedJson<T>(readModel);
     }
@@ -49,7 +39,9 @@ public class ReadModelReader(IQueryable<QueryReadModel> _readModels,
                                                     && rdm.PartitionId == partitionId
                                                     && rdm.RowId == rowId)
                                          .Select(rdm => rdm.ContentJson)
-                                         .FirstAsync(cancellationToken);
+                                         .FirstOrDefaultAsync(cancellationToken);
+
+        HandleReadModelNotCreated(readModel, queryName, partitionId, rowId);
 
         return serializer.Deserialize<T>(readModel)!;
     }
@@ -67,5 +59,22 @@ public class ReadModelReader(IQueryable<QueryReadModel> _readModels,
                                           .ToListAsync(cancellationToken);
 
         return readModels.Select(rmd => serializer.Deserialize<T>(rmd)!);
+    }
+
+    private void HandleReadModelNotCreated([NotNull] string? readModel, string queryName, Guid partitionId, Guid? rowId)
+    {
+        if (readModel == null)
+        {
+            commandQueue.EnqueueCommand(new UpdateReadModelCommand
+                                        {
+                                            QueryName = queryName,
+                                            PartitionId = partitionId,
+                                            RowId = rowId,
+                                            DirtyMoment = timeProvider.RequestNow
+                                        },
+                                        true);
+
+            throw new InvalidOperationException($"Read model {queryName} not found for partition {partitionId} and row {rowId}");
+        }
     }
 }

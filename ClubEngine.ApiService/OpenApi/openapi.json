@@ -1,5 +1,5 @@
 {
-  "x-generator": "NSwag v14.3.0.0 (NJsonSchema v11.2.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "x-generator": "NSwag v14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "My Title",
@@ -126,6 +126,31 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ImportNewMembersCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/MapSlackUserCommand": {
+      "post": {
+        "tags": [
+          "MapSlackUser"
+        ],
+        "operationId": "MapSlackUser_Command",
+        "requestBody": {
+          "x-name": "MapSlackUserCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MapSlackUserCommand"
               }
             }
           },
@@ -402,6 +427,31 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/RemoveSlackUserMappingCommand": {
+      "post": {
+        "tags": [
+          "RemoveSlackUserMapping"
+        ],
+        "operationId": "RemoveSlackUserMapping_Command",
+        "requestBody": {
+          "x-name": "RemoveSlackUserMappingCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoveSlackUserMappingCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
           }
         }
       }
@@ -999,6 +1049,23 @@
           }
         }
       },
+      "MapSlackUserCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "slackUserId": {
+            "type": "string"
+          },
+          "memberId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "MembershipTypeItem": {
         "type": "object",
         "additionalProperties": false,
@@ -1374,6 +1441,23 @@
           },
           "showArchived": {
             "type": "boolean"
+          }
+        }
+      },
+      "RemoveSlackUserMappingCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "slackUserId": {
+            "type": "string"
+          },
+          "memberId": {
+            "type": "string",
+            "format": "guid"
           }
         }
       },
