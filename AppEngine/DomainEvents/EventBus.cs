@@ -60,8 +60,8 @@ public class EventBus(IServiceProvider services,
         {
             if (notification.Event.PartitionId != null)
             {
-                hub.Clients.Group(notification.Event.PartitionId!.ToString()!)
-                   .Process(notification.Event.PartitionId!.Value, notification.Event.QueryName, notification.Event.RowId);
+                hub.Clients.Group(notification.Event.PartitionId.ToString()!)
+                   .Process(notification.Event.PartitionId, notification.Event.QueryName, notification.Event.RowId);
             }
             else
             {

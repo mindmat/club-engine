@@ -52,7 +52,7 @@ public class ImportNewMembersCommandHandler(IRepository<Member> members,
             );
         }
 
-        changeTrigger.TriggerUpdate<MembersCalculator>(null, command.PartitionId);
+        changeTrigger.TriggerUpdate<MembersCalculator>(command.PartitionId);
 
         return Task.CompletedTask;
     }

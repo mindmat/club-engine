@@ -25,7 +25,7 @@ export class NotificationService
             .withAutomaticReconnect()
             .build();
 
-        this.hubConnection.on('Process', (queryName: string, partitionId: string, rowId: string) =>
+        this.hubConnection.on('Process', (partitionId: string, queryName: string, rowId: string) =>
         {
             const notification = {
                 partitionId,
@@ -50,9 +50,9 @@ export class NotificationService
         this.initializeSubscriptions();
         this.startConnection();
 
-        this.serverEvents$.subscribe(
-            ntf => console.log(`notification ${ntf.queryName}`)
-        );
+        // this.serverEvents$.subscribe(
+        //     ntf => console.log(`notification ${ntf.queryName}`)
+        // );
     }
 
     public subscribe(queryName: string): Observable<QueryChanged>
@@ -116,7 +116,7 @@ export class NotificationService
 
 export const RECONNECTED = Symbol('reconnected');
 
-export class QueryChanged 
+export class QueryChanged
 {
     public queryName: string;
     public partitionId: string;

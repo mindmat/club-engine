@@ -1,0 +1,48 @@
+@if(member$ | async; as member)
+{
+<fuse-card class="flex flex-col w-80 p-4 rounded-xl shadow">
+    <div class="flex flex-row items-baseline gap-x-2">
+        <div class="text-xl font-semibold leading-tight">{{ member.firstName }} {{ member.lastName }}</div>
+    </div>
+    <div class="flex flex-row items-baseline gap-x-2">
+        <div class="text-secondary leading-tight">{{ member.email }}</div>
+    </div>
+
+    <div class="mt-2 flex flex-wrap items-center">
+        <app-membership-tag [membershipTypeId]="member.currentMembershipTypeId"></app-membership-tag>
+    </div>
+</fuse-card>
+}
+
+<!-- <fuse-card class="flex flex-col w-80 p-4 rounded-xl">
+    <div class="flex flex-row items-baseline gap-x-2">
+        <div class="text-xl font-semibold leading-tight">{{ memberOnly.firstName }} {{ memberOnly.lastName }}
+        </div>
+    </div>
+    <div class="flex flex-row items-baseline gap-x-2">
+        <div class="text-secondary leading-tight">{{ memberOnly.email }}</div>
+    </div>
+
+    <div class="mt-2 flex flex-wrap items-center">
+        <app-membership-tag [membershipTypeId]="memberOnly.currentMembershipTypeId"></app-membership-tag>
+    </div>
+</fuse-card> -->
+
+
+<!-- <div class="bg-card relative m-2 min-h-24 w-80 rounded-2xl p-4 shadow">
+    <a class="absolute inset-0 z-10 flex cursor-pointer flex-col p-4" [routerLink]="['/member/', member.id]">
+        <div class="flex flex-auto flex-col justify-center text-center font-medium">
+            <div class="truncate text-xl">
+                {{ member.name }}
+            </div>
+            @if (member.email) {
+            <div class="text-secondary truncate">
+                {{ member.email }}
+            </div>
+            }
+            <div class="flex flex-col items-start">
+                <app-membership-tag [membershipTypeId]="member.currentMembershipTypeId"></app-membership-tag>
+            </div>
+        </div>
+    </a>
+</div> -->

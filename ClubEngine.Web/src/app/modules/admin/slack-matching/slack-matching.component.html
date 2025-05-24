@@ -3,18 +3,54 @@
     <!-- Header -->
     <div class="flex flex-col items-start space-x-4 sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
         <!-- Title -->
-        <div>
+        <div class="flex flex-row">
             <div class="text-4xl font-extrabold tracking-tight leading-none">{{ 'SlackMatching' | translate }}</div>
             <app-update-readmodel queryName="SlackUserDifferencesQuery"></app-update-readmodel>
             <!-- <div class="mt-1.5 text-lg text-secondary">{{ filteredBookingDays.length }}</div> -->
         </div>
+        @if(!!selectedMember || !!selectedSlackUser)
+        {
+        <div class="p-2 rounded-xl bg-default gap-2">
+            @if(!!selectedMember)
+            {
+            <app-member [member]="selectedMember"></app-member>
+            }
+            @if (!!selectedSlackUser)
+            {
+            <fuse-card class="flex flex-col w-80 p-4 rounded-xl" [ngClass]="{ 'bg-gray-100': selectedSlackUser.isInvitedUser }">
+                <div class="flex flex-row items-baseline gap-x-2">
+                    <div class="text-xl font-semibold leading-tight">{{selectedSlackUser.firstName }} {{ selectedSlackUser.lastName }}
+                    </div>
+                </div>
+                <div class="flex flex-row items-baseline gap-x-2">
+                    <div class="text-secondary leading-tight">{{ selectedSlackUser.email }}</div>
+                </div>
+            </fuse-card>
+            }
+            <div class="flex flex-row items-center gap-x-2">
+                <button mat-stroked-button type="button" (click)="cancel()">{{ 'Cancel' | translate }}</button>
 
+                @if(!!selectedMember && !!selectedSlackUser && !isMatch)
+                {
+                <button class="ml-auto" mat-flat-button [color]="'primary'" (click)="assign(selectedMember, selectedSlackUser)">
+                    <mat-icon [svgIcon]="'mat_outline:add_link'"></mat-icon>
+                </button>
+                }
+                @if(!!selectedMember && !!selectedSlackUser && isMatch)
+                {
+                <button class="ml-3" mat-flat-button [color]="'primary'" (click)="unassign(selectedMember, selectedSlackUser)">
+                    <mat-icon [svgIcon]="'mat_outline:link_off'"></mat-icon>
+                </button>
+                }
+            </div>
+        </div>
+        }
         <!-- Filters -->
         <!-- <mat-form-field class="fuse-mat-no-subscript w-full ml-auto sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
             <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
             <input (input)="filterByQuery(query.value)" placeholder="{{ 'SearchByNameIbanMessage' | translate }}" matInput #query>
         </mat-form-field> -->
-        <mat-form-field [subscriptSizing]="'dynamic'">
+        <mat-form-field [subscriptSizing]="'dynamic'" class="fuse-mat-no-subscript w-full ml-auto sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
             <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
             <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByNameEmail' | translate" matInput #query />
         </mat-form-field>
@@ -32,7 +68,7 @@
             {
             <div class="flex flex-row items-baseline gap-x-2 ml-6">
                 <div class="font-medium">{{ 'MembersWithoutSlackAccount' | translate }}</div>
-                <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
+                <div class="text-secondary leading-tight">{{ differences.onlyMember.length }}</div>
                 <!-- 
                 <button class="ml-3" mat-flat-button [color]="'primary'" (click)="addAllNewMembers(differences.added)">
                     <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
@@ -41,28 +77,16 @@
             </div>
 
             <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
-                <!-- New members -->
-                @for(added of differences.onlyMember; track added.id)
+                <!-- Members w/o slack account -->
+                @for(memberOnly of differences.onlyMember; track memberOnly.id)
                 {
-                <fuse-card class="flex flex-col w-80 p-4 rounded-xl">
-                    <div class="flex flex-row items-baseline gap-x-2">
-                        <div class="text-xl font-semibold leading-tight">{{ added.firstName }} {{ added.lastName }}
-                        </div>
-                    </div>
-                    <div class="flex flex-row items-baseline gap-x-2">
-                        <div class="text-secondary leading-tight">{{ added.email }}</div>
-                    </div>
-
-                    <div class="mt-2 flex flex-wrap items-center">
-                        <app-membership-tag [membershipTypeId]="added.currentMembershipTypeId"></app-membership-tag>
-                    </div>
-                </fuse-card>
+                <app-member [member]="memberOnly" (click)="selectMember(memberOnly)"></app-member>
                 }
             </div>
 
             <div class="flex flex-row items-baseline gap-x-2 ml-6">
                 <div class="font-medium">{{ 'UnmatchedSlackAccount' | translate }}</div>
-                <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
+                <div class="text-secondary leading-tight">{{ differences.onlySlack.length }}</div>
 
                 <!-- <button class="ml-3" mat-flat-button [color]="'primary'" (click)="addAllNewMembers(differences.added)">
                     <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
@@ -72,43 +96,32 @@
 
             <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
                 <!-- Removed members -->
-                @for(deleted of differences.onlySlack; track deleted.id)
+                @for(onlySlack of differences.onlySlack; track onlySlack.id)
                 {
-                <fuse-card class="flex flex-col w-80 p-4 rounded-xl" [ngClass]="{ 'bg-gray-100': deleted.isInvitedUser }">
+                <fuse-card class="flex flex-col w-80 p-4 rounded-xl" [ngClass]="{ 'bg-gray-100': onlySlack.isInvitedUser }" (click)="selectSlackUser(onlySlack)">
                     <div class="flex flex-row items-baseline gap-x-2">
-                        <div class="text-xl font-semibold leading-tight">{{ deleted.firstName }} {{ deleted.lastName }}
+                        <div class="text-xl font-semibold leading-tight">{{ onlySlack.firstName }} {{ onlySlack.lastName }}
                         </div>
                     </div>
                     <div class="flex flex-row items-baseline gap-x-2">
-                        <div class="text-secondary leading-tight">{{ deleted.email }}</div>
+                        <div class="text-secondary leading-tight">{{ onlySlack.email }}</div>
                     </div>
-                    <!-- <div *ngIf="booking.message" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
-                        <span class="leading-none">{{ booking.message }}</span>
-                    </div> -->
-
                 </fuse-card>
                 }
+            </div>
+
+            <div class="flex flex-row items-baseline gap-x-2 ml-6">
+                <div class="font-medium">{{ 'Matches' | translate }}</div>
+                <div class="text-secondary leading-tight">{{ differences.matches.length }}</div>
             </div>
 
             <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
                 <!-- matches -->
                 @for(match of differences.matches; track match.member.id)
                 {
-                <div class="flex flex-col">
-                    <fuse-card class="flex flex-col w-80 p-4 rounded-xl">
-                        <div class="flex flex-row items-baseline gap-x-2">
-                            <div class="text-xl font-semibold leading-tight">{{ match.member.firstName }} {{ match.member.lastName }}
-                            </div>
-                        </div>
-                        <div class="flex flex-row items-baseline gap-x-2">
-                            <div class="text-secondary leading-tight">{{ match.member.email }}</div>
-                        </div>
-
-                        <div class="mt-2 flex flex-wrap items-center">
-                            <app-membership-tag [membershipTypeId]="match.member.currentMembershipTypeId"></app-membership-tag>
-                        </div>
-                    </fuse-card>
-                    <fuse-card class="flex flex-col w-80 p-4 rounded-xl" [ngClass]="{ 'bg-gray-100': match.slack.isInvitedUser }">
+                <div class="flex flex-col gap-1" (click)="selectMatch(match)">
+                    <app-member [member]="match.member"></app-member>
+                    <fuse-card class="flex flex-col w-80 p-4 rounded-xl" [ngClass]="{ 'bg-gray-100': match.slack.isInvitedUser }" (click)="selectSlackUser(match.slack)">
                         <div class="flex flex-row items-baseline gap-x-2">
                             <div class="text-xl font-semibold leading-tight">{{ match.slack.firstName }} {{ match.slack.lastName }}
                             </div>
@@ -116,10 +129,6 @@
                         <div class="flex flex-row items-baseline gap-x-2">
                             <div class="text-secondary leading-tight">{{ match.slack.email }}</div>
                         </div>
-                        <!-- <div *ngIf="booking.message" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
-                                        <span class="leading-none">{{ booking.message }}</span>
-                                    </div> -->
-
                     </fuse-card>
                 </div>
                 }

@@ -1,4 +1,6 @@
-﻿using AppEngine.Authorization;
+﻿using System.Diagnostics;
+
+using AppEngine.Authorization;
 using AppEngine.DataAccess;
 
 using MediatR;
@@ -14,7 +16,8 @@ public class MembersQuery : IRequest<IEnumerable<MemberDisplayItem>>, IPartition
     public string? SearchString { get; set; }
 }
 
-public record MemberDisplayItem(Guid Id, string Name, string? Email, Guid? MembershipTypeId);
+[DebuggerDisplay("{FirstName,nq} {LastName,nq} - {Email,nq}")]
+public record MemberDisplayItem(Guid Id, string? FirstName, string? LastName, string? Email, Guid? CurrentMembershipTypeId);
 
 public class MembersQueryHandler(IQueryable<Member> members) : IRequestHandler<MembersQuery, IEnumerable<MemberDisplayItem>>
 {
@@ -29,7 +32,7 @@ public class MembersQueryHandler(IQueryable<Member> members) : IRequestHandler<M
                                          || EF.Functions.Like(mbr.Email, $"%{query.SearchString}%"))
                             .OrderBy(mbr => mbr.FirstName)
                             .ThenBy(mbr => mbr.LastName)
-                            .Select(mbr => new MemberDisplayItem(mbr.Id, $"{mbr.FirstName} {mbr.LastName}", mbr.Email, mbr.CurrentMembershipTypeId_ReadModel))
+                            .Select(mbr => new MemberDisplayItem(mbr.Id, mbr.FirstName, mbr.LastName, mbr.Email, mbr.CurrentMembershipTypeId_ReadModel))
                             .ToListAsync(cancellationToken);
     }
 }

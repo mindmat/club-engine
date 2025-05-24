@@ -120,6 +120,9 @@
   <data name="Authorized" xml:space="preserve">
     <value>Authorized</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
   <data name="InsertRequestText" xml:space="preserve">
     <value>Message</value>
   </data>

@@ -70,6 +70,15 @@ namespace AppEngine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Abbrechen.
+        /// </summary>
+        public static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mitteilung.
         /// </summary>
         public static string InsertRequestText {

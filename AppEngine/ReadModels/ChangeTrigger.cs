@@ -14,8 +14,8 @@ public class ChangeTrigger(CommandQueue commandQueue,
                            IEnumerable<IReadModelCalculator> calculators,
                            IEventBus eventBus)
 {
-    public void TriggerUpdate<T>(Guid? rowId = null,
-                                 Guid? partitionId = null,
+    public void TriggerUpdate<T>(Guid? partitionId = null,
+                                 Guid? rowId = null,
                                  bool publishEvenWhenDbCommitFails = false,
                                  TimeSpan? delay = null)
         where T : IReadModelCalculator

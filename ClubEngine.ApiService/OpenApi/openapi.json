@@ -1104,14 +1104,19 @@
             "type": "string",
             "format": "guid"
           },
-          "name": {
-            "type": "string"
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
           },
           "email": {
             "type": "string",
             "nullable": true
           },
-          "membershipTypeId": {
+          "currentMembershipTypeId": {
             "type": "string",
             "format": "guid",
             "nullable": true
@@ -1587,7 +1592,7 @@
           "onlyMember": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/MemberDto"
+              "$ref": "#/components/schemas/MemberDisplayItem"
             }
           },
           "onlySlack": {
@@ -1601,33 +1606,6 @@
             "items": {
               "$ref": "#/components/schemas/SlackMatch"
             }
-          }
-        }
-      },
-      "MemberDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "email": {
-            "type": "string",
-            "nullable": true
-          },
-          "firstName": {
-            "type": "string",
-            "nullable": true
-          },
-          "lastName": {
-            "type": "string",
-            "nullable": true
-          },
-          "currentMembershipTypeId": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
           }
         }
       },
@@ -1657,7 +1635,7 @@
         "additionalProperties": false,
         "properties": {
           "member": {
-            "$ref": "#/components/schemas/MemberDto"
+            "$ref": "#/components/schemas/MemberDisplayItem"
           },
           "slack": {
             "$ref": "#/components/schemas/SlackUser"

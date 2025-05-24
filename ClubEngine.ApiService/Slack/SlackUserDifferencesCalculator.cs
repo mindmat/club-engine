@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-
-using AppEngine.Helpers;
+﻿using AppEngine.Helpers;
 using AppEngine.MenuNodes;
 using AppEngine.ReadModels;
 using AppEngine.Slack;
@@ -13,16 +11,15 @@ namespace ClubEngine.ApiService.Slack;
 
 public class SlackMatchingNodeKey : IMenuNodeKey;
 
-public record SlackDifferences(IEnumerable<MemberDto> OnlyMember,
+public record SlackDifferences(IEnumerable<MemberDisplayItem> OnlyMember,
                                IEnumerable<SlackUser> OnlySlack,
                                IEnumerable<SlackMatch> Matches);
 
-public record SlackMatch(MemberDto Member, SlackUser Slack);
+public record SlackMatch(MemberDisplayItem Member, SlackUser Slack);
 
-[DebuggerDisplay("{FirstName,nq} {LastName,nq} - {Email,nq}")]
-public record MemberDto(Guid Id, string? Email, string? FirstName, string? LastName, Guid? CurrentMembershipTypeId);
-
-public class SlackUserDifferencesCalculator(SlackClient client, IQueryable<Member> members)
+public class SlackUserDifferencesCalculator(SlackClient client,
+                                            IQueryable<Member> members,
+                                            IQueryable<SlackUserMapping> slackMappings)
     : ReadModelCalculator<SlackDifferences>
 {
     public override string QueryName => nameof(SlackUserDifferencesQuery);
@@ -32,17 +29,22 @@ public class SlackUserDifferencesCalculator(SlackClient client, IQueryable<Membe
     {
         var slackUsers = await client.GetAllMembers();
 
+        var mappings = await slackMappings.Where(sum => sum.Member!.ClubId == partitionId)
+                                          .ToListAsync(cancellationToken);
+
         var activeMembers = await members.Where(mbr => mbr.ClubId == partitionId
                                                     && mbr.CurrentMembershipTypeId_ReadModel != null)
-                                         .Select(usr => new MemberDto(usr.Id,
-                                                                      usr.Email,
-                                                                      usr.FirstName,
-                                                                      usr.LastName,
-                                                                      usr.CurrentMembershipTypeId_ReadModel))
+                                         .Select(usr => new MemberDisplayItem(usr.Id,
+                                                                              usr.FirstName,
+                                                                              usr.LastName,
+                                                                              usr.Email,
+                                                                              usr.CurrentMembershipTypeId_ReadModel))
                                          .ToListAsync(cancellationToken);
 
-        var compare = ListComparer.Compare(activeMembers, slackUsers, HasSameEmail);
-        //var (extraMembers2, extraSlack2) = ListComparer.Compare(extraMembers, extraSlack, HasSameFirstName);
+        var compare = ListComparer.Compare(activeMembers,
+                                           slackUsers,
+                                           (item, user) => IsManuallyMapped(item, user, mappings),
+                                           HasSameEmail);
 
         var node = new MenuNodeCalculation
                    {
@@ -57,13 +59,13 @@ public class SlackUserDifferencesCalculator(SlackClient client, IQueryable<Membe
             node);
     }
 
-    private static bool HasSameFirstName(MemberDto member, SlackUser slackUser)
+    private static bool IsManuallyMapped(MemberDisplayItem member, SlackUser slackUser, List<SlackUserMapping> mappings)
     {
-        return member.FirstName != null
-            && member.FirstName.Equals(slackUser.FirstName, StringComparison.InvariantCultureIgnoreCase);
+        return mappings.Any(sum => sum.MemberId == member.Id
+                                && sum.SlackUserId == slackUser.Id);
     }
 
-    private static bool HasSameEmail(MemberDto member, SlackUser slackUser)
+    private static bool HasSameEmail(MemberDisplayItem member, SlackUser slackUser)
     {
         return member.Email != null
             && member.Email.Equals(slackUser.Email, StringComparison.InvariantCultureIgnoreCase);

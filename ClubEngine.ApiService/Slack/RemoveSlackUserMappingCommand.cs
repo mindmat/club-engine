@@ -1,5 +1,6 @@
 ﻿using AppEngine.Authorization;
 using AppEngine.DataAccess;
+using AppEngine.ReadModels;
 
 using MediatR;
 
@@ -12,7 +13,8 @@ public class RemoveSlackUserMappingCommand : IRequest, IPartitionBoundRequest
     public Guid MemberId { get; set; }
 }
 
-public class RemoveSlackUserMappingCommandHandler(IRepository<SlackUserMapping> slackUserMappings)
+public class RemoveSlackUserMappingCommandHandler(IRepository<SlackUserMapping> slackUserMappings,
+                                                  ChangeTrigger changeTrigger)
     : IRequestHandler<RemoveSlackUserMappingCommand>
 {
     public Task Handle(RemoveSlackUserMappingCommand command, CancellationToken cancellationToken)
@@ -20,6 +22,8 @@ public class RemoveSlackUserMappingCommandHandler(IRepository<SlackUserMapping> 
         slackUserMappings.Remove(sum => sum.Member!.ClubId == command.PartitionId
                                      && sum.SlackUserId == command.SlackUserId
                                      && sum.MemberId == command.MemberId);
+
+        changeTrigger.TriggerUpdate<SlackUserDifferencesCalculator>(command.PartitionId);
 
         return Task.CompletedTask;
     }

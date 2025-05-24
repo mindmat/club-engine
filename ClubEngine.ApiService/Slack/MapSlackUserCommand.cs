@@ -1,5 +1,6 @@
 ﻿using AppEngine.Authorization;
 using AppEngine.DataAccess;
+using AppEngine.ReadModels;
 
 using MediatR;
 
@@ -14,7 +15,8 @@ public class MapSlackUserCommand : IRequest, IPartitionBoundRequest
     public Guid MemberId { get; set; }
 }
 
-public class MapSlackUserCommandHandler(IRepository<SlackUserMapping> slackUserMappings)
+public class MapSlackUserCommandHandler(IRepository<SlackUserMapping> slackUserMappings,
+                                        ChangeTrigger changeTrigger)
     : IRequestHandler<MapSlackUserCommand>
 {
     public async Task Handle(MapSlackUserCommand command, CancellationToken cancellationToken)
@@ -28,5 +30,7 @@ public class MapSlackUserCommandHandler(IRepository<SlackUserMapping> slackUserM
                                              },
                                        mapping => mapping.MemberId = command.MemberId,
                                        cancellationToken);
+
+        changeTrigger.TriggerUpdate<SlackUserDifferencesCalculator>(command.PartitionId);
     }
 }

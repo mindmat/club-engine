@@ -1420,9 +1420,10 @@ export interface MembershipTypesQuery {
 
 export interface MemberDisplayItem {
     id?: string;
-    name?: string;
+    firstName?: string | null;
+    lastName?: string | null;
     email?: string | null;
-    membershipTypeId?: string | null;
+    currentMembershipTypeId?: string | null;
 }
 
 export interface MembersQuery {
@@ -1588,17 +1589,9 @@ export interface SetRoleOfUserInPartitionCommand {
 }
 
 export interface SlackDifferences {
-    onlyMember?: MemberDto[];
+    onlyMember?: MemberDisplayItem[];
     onlySlack?: SlackUser[];
     matches?: SlackMatch[];
-}
-
-export interface MemberDto {
-    id?: string;
-    email?: string | null;
-    firstName?: string | null;
-    lastName?: string | null;
-    currentMembershipTypeId?: string | null;
 }
 
 export interface SlackUser {
@@ -1610,7 +1603,7 @@ export interface SlackUser {
 }
 
 export interface SlackMatch {
-    member?: MemberDto;
+    member?: MemberDisplayItem;
     slack?: SlackUser;
 }
 

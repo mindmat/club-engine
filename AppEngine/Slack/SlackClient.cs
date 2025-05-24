@@ -39,7 +39,7 @@ public class SlackClient(SlackTokenProvider tokenProvider,
         }
 
         return slackUsers.members
-                         .Where(usr => usr is { is_bot: false, deleted: false })
+                         .Where(usr => usr is { is_bot: false, deleted: false, IsSlackBot: false })
                          .Select(usr => new SlackUser(usr.id,
                                                       usr.profile.email,
                                                       usr.profile.first_name,

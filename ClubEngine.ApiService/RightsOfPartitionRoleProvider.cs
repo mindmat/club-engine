@@ -32,6 +32,8 @@ internal class RightsOfPartitionRoleProvider : IRightsOfPartitionRoleProvider
             yield return nameof(ImportMemberListQuery);
             yield return nameof(ImportNewMembersCommand);
             yield return nameof(SlackUserDifferencesQuery);
+            yield return nameof(MapSlackUserCommand);
+            yield return nameof(RemoveSlackUserMappingCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInPartitionRole.Admin))

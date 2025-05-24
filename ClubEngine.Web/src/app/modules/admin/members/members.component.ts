@@ -3,20 +3,20 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { MembersService } from './members.service';
 import { MemberDisplayItem, MemberStats } from 'app/api/api';
 import { Observable } from 'rxjs';
-import { AsyncPipe, NgFor } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { MembersHistoryComponent } from "../members-history/members-history.component";
 import { CdkScrollable } from '@angular/cdk/scrolling';
-import { MembershipTagComponent } from "../membership-tag/membership-tag.component";
-import { MatChipListboxChange, MatChipOption, MatChipsModule } from '@angular/material/chips';
+import { MatChipsModule } from '@angular/material/chips';
 import { MembersHistoryService } from '../members-history/members-history.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MemberComponent } from "../member/member.component";
 
 @Component({
   selector: 'app-members',
-  imports: [TranslatePipe, AsyncPipe, MatIconModule, MatInputModule, RouterModule, MembersHistoryComponent, MembersHistoryComponent, CdkScrollable, MembershipTagComponent, MatChipsModule, MatFormFieldModule],
+  imports: [TranslatePipe, AsyncPipe, MatIconModule, MatInputModule, RouterModule, MemberComponent, MembersHistoryComponent, MembersHistoryComponent, CdkScrollable, MatChipsModule, MatFormFieldModule, MemberComponent],
   templateUrl: './members.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
