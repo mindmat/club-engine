@@ -38,7 +38,11 @@ namespace AppEngine;
 
 public static class AppEngineExtensions
 {
-    public static void AddAppEngine(this WebApplicationBuilder builder, Assembly[] appAssemblies, ResourceManager[] resourceManagers, string? databaseConnectionStringKey = null)
+    public static void AddAppEngine(this WebApplicationBuilder builder,
+                                    Assembly[] appAssemblies,
+                                    ResourceManager[] resourceManagers,
+                                    string? databaseConnectionStringKey = null,
+                                    string? messagingConnectionStringKey = null)
     {
         builder.Services.AddAuthentication(options =>
         {
@@ -109,7 +113,7 @@ public static class AppEngineExtensions
 
         //builder.Configuration.AddAzureKeyVaultSecrets("key-vault");
 
-        RegisterCommandQueue(builder);
+        RegisterCommandQueue(builder, messagingConnectionStringKey);
         RegisterConfigurations(builder, assemblyContainer);
     }
 
@@ -138,7 +142,7 @@ public static class AppEngineExtensions
         }
     }
 
-    private static void RegisterCommandQueue(WebApplicationBuilder builder)
+    private static void RegisterCommandQueue(WebApplicationBuilder builder, string? messagingConnectionStringKey)
     {
         builder.Services.AddSingleton<MessageQueueReceiver>();
         builder.Services.AddScoped<CommandQueue>();
@@ -147,7 +151,7 @@ public static class AppEngineExtensions
         builder.Services.AddScoped<SourceQueueProvider>();
         //builder.Services.AddScoped(typeof(IEventToUserTranslation<>), assemblies);
 
-        builder.AddAzureServiceBusClient(connectionName: "service-bus");
+        builder.AddAzureServiceBusClient(connectionName: messagingConnectionStringKey ?? "messaging");
 
         //builder.Services.AddSingleton(_ =>
         //{
