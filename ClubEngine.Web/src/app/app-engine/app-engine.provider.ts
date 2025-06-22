@@ -65,6 +65,19 @@ export const provideAppEngine = (
                                 // scope: 'read:current_user'
                             }
                         }
+                    },
+                    {
+                        // Match any request that starts {uri} (note the asterisk)
+                        uri: 'https://api.clubengine.ch/*',
+                        tokenOptions: {
+                            authorizationParams: {
+                                // The attached token should target this audience
+                                audience: 'https://clubengine.ch/api',
+
+                                // The attached token should have these scopes
+                                // scope: 'read:current_user'
+                            }
+                        }
                     }
                 ]
             }
@@ -76,6 +89,7 @@ export const provideAppEngine = (
 };
 
 
-export function TranslationLoaderFactory(service: TranslationLoaderService): TranslateLoader {
+export function TranslationLoaderFactory(service: TranslationLoaderService): TranslateLoader
+{
     return service.createLoader();
 }
