@@ -12,6 +12,7 @@ public class Club : Partition
 {
     public ICollection<Member>? Members { get; set; }
     public ICollection<MembershipType>? MembershipTypes { get; set; }
+    public ICollection<Period>? Periods { get; set; }
 }
 
 public class ClubMap : IEntityTypeConfiguration<Club>

@@ -14,6 +14,7 @@ public class Membership : Entity, IDatePeriod
     public MembershipType? MembershipType { get; set; }
     public DateOnly From { get; set; }
     public DateOnly Until { get; set; }
+    public decimal? AnnualFeeOverride { get; set; }
 }
 
 public class MembershipMap : EntityMap<Membership>

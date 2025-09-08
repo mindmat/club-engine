@@ -61,6 +61,33 @@ namespace AppEngine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kontoinhaber.
+        /// </summary>
+        public static string AccountHolder {
+            get {
+                return ResourceManager.GetString("AccountHolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Buchhaltung.
+        /// </summary>
+        public static string Accounting {
+            get {
+                return ResourceManager.GetString("Accounting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mail-Import hinzufügen.
+        /// </summary>
+        public static string AddImap {
+            get {
+                return ResourceManager.GetString("AddImap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Berechtigt.
         /// </summary>
         public static string Authorized {
@@ -70,11 +97,65 @@ namespace AppEngine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bankkonto hinterlegen, das für den QR-Code verwendet wird.
+        /// </summary>
+        public static string BankAccountConfigExplanation {
+            get {
+                return ResourceManager.GetString("BankAccountConfigExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kontobewegungen.
+        /// </summary>
+        public static string BankStatements {
+            get {
+                return ResourceManager.GetString("BankStatements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Abbrechen.
         /// </summary>
         public static string Cancel {
             get {
                 return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Land (ISO2).
+        /// </summary>
+        public static string CountryCode {
+            get {
+                return ResourceManager.GetString("CountryCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hausnr..
+        /// </summary>
+        public static string HouseNo {
+            get {
+                return ResourceManager.GetString("HouseNo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IBAN.
+        /// </summary>
+        public static string Iban {
+            get {
+                return ResourceManager.GetString("Iban", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IMAP-Postfächer konfigurieren, deren eingehende Mails fortlaufend importiert werden sollen..
+        /// </summary>
+        public static string ImapConfigExplanation {
+            get {
+                return ResourceManager.GetString("ImapConfigExplanation", resourceCulture);
             }
         }
         
@@ -142,6 +223,33 @@ namespace AppEngine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to von {{debitor}}.
+        /// </summary>
+        public static string PaymentFrom {
+            get {
+                return ResourceManager.GetString("PaymentFrom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to an {{creditor}}.
+        /// </summary>
+        public static string PaymentTo {
+            get {
+                return ResourceManager.GetString("PaymentTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PLZ.
+        /// </summary>
+        public static string Plz {
+            get {
+                return ResourceManager.GetString("Plz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zugriff anfragen.
         /// </summary>
         public static string RequestAccess {
@@ -151,11 +259,74 @@ namespace AppEngine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rolle.
+        /// </summary>
+        public static string Role {
+            get {
+                return ResourceManager.GetString("Role", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Speichern.
+        /// </summary>
+        public static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Einstellungen.
+        /// </summary>
+        public static string Settings {
+            get {
+                return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Event vorbereiten.
+        /// </summary>
+        public static string Setup {
+            get {
+                return ResourceManager.GetString("Setup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Slack-Zuordnung.
         /// </summary>
         public static string SlackMatching {
             get {
                 return ResourceManager.GetString("SlackMatching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Strasse.
+        /// </summary>
+        public static string Street {
+            get {
+                return ResourceManager.GetString("Street", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teammitglieder.
+        /// </summary>
+        public static string TeamMembers {
+            get {
+                return ResourceManager.GetString("TeamMembers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wohnort.
+        /// </summary>
+        public static string Town {
+            get {
+                return ResourceManager.GetString("Town", resourceCulture);
             }
         }
         

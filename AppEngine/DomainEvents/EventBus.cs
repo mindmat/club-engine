@@ -36,6 +36,12 @@ public class EventBus(IServiceProvider services,
         //{
         //    commandQueue.EnqueueCommand(command);
         //}
+        var translations = services.GetServices<IEventToQueryChangedTranslation<TEvent>>().ToList();
+
+        foreach (var queryChanged in translations.SelectMany(trn => trn.Translate(@event)))
+        {
+            _notifications.Add((queryChanged, publishEvenWhenDbCommitFails));
+        }
 
         if (@event is QueryChanged queryChangedEvent)
         {

@@ -15,7 +15,7 @@ public class PartitionConfiguration : Entity
     public string ValueJson { get; set; } = null!;
 }
 
-public class EventConfigurationMap : EntityMap<PartitionConfiguration>
+public class PartitionConfigurationMap : EntityMap<PartitionConfiguration>
 {
     protected override void ConfigureEntity(EntityTypeBuilder<PartitionConfiguration> builder)
     {

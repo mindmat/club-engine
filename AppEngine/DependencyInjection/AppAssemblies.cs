@@ -2,6 +2,4 @@
 
 namespace AppEngine.DependencyInjection;
 
-public record AppAssemblies(Assembly[] Assemblies)
-{
-}
+public record AppAssemblies(Assembly[] Assemblies);

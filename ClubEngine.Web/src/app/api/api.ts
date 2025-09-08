@@ -79,6 +79,105 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    bankAccountConfiguration_Query(bankAccountConfigurationQuery: BankAccountConfigurationQuery | undefined): Observable<BankAccountConfiguration> {
+        let url_ = this.baseUrl + "/api/BankAccountConfigurationQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(bankAccountConfigurationQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processBankAccountConfiguration_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processBankAccountConfiguration_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<BankAccountConfiguration>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<BankAccountConfiguration>;
+        }));
+    }
+
+    protected processBankAccountConfiguration_Query(response: HttpResponseBase): Observable<BankAccountConfiguration> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as BankAccountConfiguration;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    checkExternalMailConfiguration_Command(checkExternalMailConfigurationCommand: CheckExternalMailConfigurationCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/CheckExternalMailConfigurationCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(checkExternalMailConfigurationCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCheckExternalMailConfiguration_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCheckExternalMailConfiguration_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processCheckExternalMailConfiguration_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     domainEventCatalog_Query(domainEventCatalogQuery: DomainEventCatalogQuery | undefined): Observable<DomainEventCatalogItem[]> {
         let url_ = this.baseUrl + "/api/DomainEventCatalogQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -120,6 +219,57 @@ export class Api {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as DomainEventCatalogItem[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    externalMailConfiguration_Query(externalMailConfigurationQuery: ExternalMailConfigurationQuery | undefined): Observable<ExternalMailConfigurationDisplayItem[]> {
+        let url_ = this.baseUrl + "/api/ExternalMailConfigurationQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(externalMailConfigurationQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processExternalMailConfiguration_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processExternalMailConfiguration_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ExternalMailConfigurationDisplayItem[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ExternalMailConfigurationDisplayItem[]>;
+        }));
+    }
+
+    protected processExternalMailConfiguration_Query(response: HttpResponseBase): Observable<ExternalMailConfigurationDisplayItem[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ExternalMailConfigurationDisplayItem[];
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -685,6 +835,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    paymentsByDay_Query(paymentsByDayQuery: PaymentsByDayQuery | undefined): Observable<BookingsOfDay[]> {
+        let url_ = this.baseUrl + "/api/PaymentsByDayQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(paymentsByDayQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPaymentsByDay_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPaymentsByDay_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<BookingsOfDay[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<BookingsOfDay[]>;
+        }));
+    }
+
+    protected processPaymentsByDay_Query(response: HttpResponseBase): Observable<BookingsOfDay[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as BookingsOfDay[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     removeSlackUserMapping_Command(removeSlackUserMappingCommand: RemoveSlackUserMappingCommand | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/RemoveSlackUserMappingCommand";
         url_ = url_.replace(/[?&]$/, "");
@@ -931,6 +1132,54 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    saveBankAccountConfiguration_Command(saveBankAccountConfigurationCommand: SaveBankAccountConfigurationCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/SaveBankAccountConfigurationCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(saveBankAccountConfigurationCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSaveBankAccountConfiguration_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSaveBankAccountConfiguration_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processSaveBankAccountConfiguration_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     saveDomainEvent_Command(saveDomainEventCommand: SaveDomainEventCommand | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/SaveDomainEventCommand";
         url_ = url_.replace(/[?&]$/, "");
@@ -961,6 +1210,102 @@ export class Api {
     }
 
     protected processSaveDomainEvent_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    saveExternalMailConfiguration_Command(saveExternalMailConfigurationCommand: SaveExternalMailConfigurationCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/SaveExternalMailConfigurationCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(saveExternalMailConfigurationCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSaveExternalMailConfiguration_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSaveExternalMailConfiguration_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processSaveExternalMailConfiguration_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    savePaymentFile_Command(savePaymentFileCommand: SavePaymentFileCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/upload/SavePaymentFileCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(savePaymentFileCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSavePaymentFile_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSavePaymentFile_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processSavePaymentFile_Command(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1273,6 +1618,54 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    upsertMembershipFeesForPeriod_Command(upsertMembershipFeesForPeriodCommand: UpsertMembershipFeesForPeriodCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/UpsertMembershipFeesForPeriodCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(upsertMembershipFeesForPeriodCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpsertMembershipFeesForPeriod_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpsertMembershipFeesForPeriod_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpsertMembershipFeesForPeriod_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     usersOfPartition_Query(usersOfPartitionQuery: UsersOfPartitionQuery | undefined): Observable<UserInPartitionDisplayItem[]> {
         let url_ = this.baseUrl + "/api/UsersOfPartitionQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -1340,12 +1733,48 @@ export interface AccessRequestsOfPartitionQuery {
     includeDeniedRequests?: boolean;
 }
 
+export interface BankAccountConfiguration {
+    iban?: string | null;
+    accountHolderName?: string | null;
+    accountHolderStreet?: string | null;
+    accountHolderHouseNo?: string | null;
+    accountHolderPostalCode?: string | null;
+    accountHolderTown?: string | null;
+    accountHolderCountryCode?: string | null;
+}
+
+export interface BankAccountConfigurationQuery {
+    partitionId?: string;
+}
+
+export interface CheckExternalMailConfigurationCommand {
+    partitionId?: string;
+    externalMailConfigurationId?: string;
+}
+
 export interface DomainEventCatalogItem {
     typeName?: string | null;
     userText?: string;
 }
 
 export interface DomainEventCatalogQuery {
+}
+
+export interface ExternalMailConfigurationDisplayItem {
+    id?: string;
+    imapHost?: string | null;
+    imapPort?: number;
+    username?: string | null;
+    passwordSet?: boolean;
+    importMailsSince?: Date | null;
+    checkSuccessful?: boolean | null;
+    checkError?: string | null;
+    totalImportedMails?: number;
+    totalAssignedMails?: number;
+}
+
+export interface ExternalMailConfigurationQuery {
+    partitionId?: string;
 }
 
 export interface ListDifferences {
@@ -1538,6 +1967,46 @@ export interface PartitionsQuery {
     showArchived?: boolean;
 }
 
+export interface BookingsOfDay {
+    bookingDate?: Date;
+    bookings?: PaymentDisplayItem[];
+    balanceAfter?: number | null;
+}
+
+export interface PaymentDisplayItem {
+    id?: string;
+    typ?: CreditDebit | null;
+    amount?: number;
+    charges?: number | null;
+    amountAssigned?: number;
+    bookingDate?: Date;
+    currency?: string | null;
+    reference?: string | null;
+    amountRepaid?: number | null;
+    settled?: boolean;
+    ignore?: boolean;
+    message?: string | null;
+    debitorName?: string | null;
+    creditorName?: string | null;
+    creditorIban?: string | null;
+    balance?: number | null;
+}
+
+export enum CreditDebit {
+    CRDT = 1,
+    DBIT = 2,
+}
+
+export interface PaymentsByDayQuery {
+    partitionId?: string;
+    hideIgnored?: boolean;
+    hideSettled?: boolean;
+    hideIncoming?: boolean;
+    hideOutgoing?: boolean;
+    searchString?: string | null;
+    showAll?: boolean;
+}
+
 export interface RemoveSlackUserMappingCommand {
     partitionId?: string;
     slackUserId?: string;
@@ -1574,12 +2043,36 @@ export interface RoleDescription {
 export interface RolesQuery {
 }
 
+export interface SaveBankAccountConfigurationCommand {
+    partitionId?: string;
+    config?: BankAccountConfiguration | null;
+}
+
 export interface SaveDomainEventCommand {
     domainEventId?: string;
     domainEventId_Parent?: string | null;
     eventData?: string;
     partitionId?: string | null;
     eventType?: string;
+}
+
+export interface SaveExternalMailConfigurationCommand {
+    partitionId?: string;
+    configs?: ExternalMailConfigurationUpdateItem[] | null;
+}
+
+export interface ExternalMailConfigurationUpdateItem {
+    id?: string;
+    imapHost?: string | null;
+    imapPort?: number;
+    username?: string | null;
+    password?: string | null;
+    importMailsSince?: Date | null;
+}
+
+export interface SavePaymentFileCommand {
+    partitionId?: string;
+    file?: FileUpload;
 }
 
 export interface SetRoleOfUserInPartitionCommand {
@@ -1637,6 +2130,11 @@ export enum IdentityProvider {
     Google = 1,
     Microsoft = 2,
     Auth0 = 3,
+}
+
+export interface UpsertMembershipFeesForPeriodCommand {
+    partitionId?: string;
+    periodId?: string;
 }
 
 export interface UserInPartitionDisplayItem {

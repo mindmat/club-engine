@@ -15,7 +15,7 @@ public class Translator
 
         if (baseNameProperty == null)
         {
-            throw new ArgumentNullException("ResourceManager does not have a BaseName anymore");
+            throw new ArgumentNullException("BaseName property of ResourceManager not found");
         }
 
         _namespaceToResources = resourceManagers.Select(rem => new { BaseName = (string?)baseNameProperty.GetValue(rem), ResourceManager = rem })
@@ -74,13 +74,13 @@ public class Translator
 
             return resourceManager.Select(rsm => rsm.GetString(key, cultureInfo))
                                   .FirstOrDefault(val => val != null)
-                   ?? key;
+                ?? key;
         }
 
         return _namespaceToResources.Values
                                     .Select(rsm => rsm.GetString(key))
                                     .FirstOrDefault(str => str != null)
-               ?? key;
+            ?? key;
     }
 
     private IEnumerable<ResourceManager> GetResourceManagersForType(Type type)
@@ -108,6 +108,7 @@ public class Translator
     public IDictionary<string, string> GetAllTranslations(CultureInfo culture)
     {
         var dict = new Dictionary<string, string>();
+
         foreach (var resourceManager in _namespaceToResources.Values)
         {
             var keys = resourceManager.GetResourceSet(CultureInfo.InvariantCulture, false, true)
@@ -115,7 +116,7 @@ public class Translator
                                       .ToDictionary(entry => entry.Key, entry => entry.Value)
                                       .Select(entry => entry.Key)
                                       .OfType<string>()
-                       ?? [];
+                    ?? [];
 
             foreach (var key in keys)
             {

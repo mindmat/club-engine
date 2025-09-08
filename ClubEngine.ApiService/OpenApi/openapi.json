@@ -46,6 +46,63 @@
         }
       }
     },
+    "/api/BankAccountConfigurationQuery": {
+      "post": {
+        "tags": [
+          "BankAccountConfiguration"
+        ],
+        "operationId": "BankAccountConfiguration_Query",
+        "requestBody": {
+          "x-name": "BankAccountConfigurationQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BankAccountConfigurationQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BankAccountConfiguration"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/CheckExternalMailConfigurationCommand": {
+      "post": {
+        "tags": [
+          "CheckExternalMailConfiguration"
+        ],
+        "operationId": "CheckExternalMailConfiguration_Command",
+        "requestBody": {
+          "x-name": "CheckExternalMailConfigurationCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckExternalMailConfigurationCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/DomainEventCatalogQuery": {
       "post": {
         "tags": [
@@ -73,6 +130,41 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/DomainEventCatalogItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ExternalMailConfigurationQuery": {
+      "post": {
+        "tags": [
+          "ExternalMailConfiguration"
+        ],
+        "operationId": "ExternalMailConfiguration_Query",
+        "requestBody": {
+          "x-name": "ExternalMailConfigurationQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExternalMailConfigurationQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExternalMailConfigurationDisplayItem"
                   }
                 }
               }
@@ -431,6 +523,41 @@
         }
       }
     },
+    "/api/PaymentsByDayQuery": {
+      "post": {
+        "tags": [
+          "PaymentsByDay"
+        ],
+        "operationId": "PaymentsByDay_Query",
+        "requestBody": {
+          "x-name": "PaymentsByDayQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentsByDayQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BookingsOfDay"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/RemoveSlackUserMappingCommand": {
       "post": {
         "tags": [
@@ -574,6 +701,31 @@
         }
       }
     },
+    "/api/SaveBankAccountConfigurationCommand": {
+      "post": {
+        "tags": [
+          "SaveBankAccountConfiguration"
+        ],
+        "operationId": "SaveBankAccountConfiguration_Command",
+        "requestBody": {
+          "x-name": "SaveBankAccountConfigurationCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveBankAccountConfigurationCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/SaveDomainEventCommand": {
       "post": {
         "tags": [
@@ -587,6 +739,56 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SaveDomainEventCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/SaveExternalMailConfigurationCommand": {
+      "post": {
+        "tags": [
+          "SaveExternalMailConfiguration"
+        ],
+        "operationId": "SaveExternalMailConfiguration_Command",
+        "requestBody": {
+          "x-name": "SaveExternalMailConfigurationCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveExternalMailConfigurationCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/upload/SavePaymentFileCommand": {
+      "post": {
+        "tags": [
+          "SavePaymentFile"
+        ],
+        "operationId": "SavePaymentFile_Command",
+        "requestBody": {
+          "x-name": "SavePaymentFileCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SavePaymentFileCommand"
               }
             }
           },
@@ -766,6 +968,31 @@
         }
       }
     },
+    "/api/UpsertMembershipFeesForPeriodCommand": {
+      "post": {
+        "tags": [
+          "UpsertMembershipFeesForPeriod"
+        ],
+        "operationId": "UpsertMembershipFeesForPeriod_Command",
+        "requestBody": {
+          "x-name": "UpsertMembershipFeesForPeriodCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertMembershipFeesForPeriodCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/UsersOfPartitionQuery": {
       "post": {
         "tags": [
@@ -851,6 +1078,64 @@
           }
         }
       },
+      "BankAccountConfiguration": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "iban": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountHolderName": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountHolderStreet": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountHolderHouseNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountHolderPostalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountHolderTown": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountHolderCountryCode": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "BankAccountConfigurationQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "CheckExternalMailConfigurationCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "externalMailConfigurationId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "DomainEventCatalogItem": {
         "type": "object",
         "additionalProperties": false,
@@ -867,6 +1152,62 @@
       "DomainEventCatalogQuery": {
         "type": "object",
         "additionalProperties": false
+      },
+      "ExternalMailConfigurationDisplayItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "imapHost": {
+            "type": "string",
+            "nullable": true
+          },
+          "imapPort": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "passwordSet": {
+            "type": "boolean"
+          },
+          "importMailsSince": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "checkSuccessful": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "checkError": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalImportedMails": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalAssignedMails": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ExternalMailConfigurationQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
       },
       "ListDifferences": {
         "type": "object",
@@ -1449,6 +1790,143 @@
           }
         }
       },
+      "BookingsOfDay": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "bookingDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "bookings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentDisplayItem"
+            }
+          },
+          "balanceAfter": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          }
+        }
+      },
+      "PaymentDisplayItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "typ": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CreditDebit"
+              }
+            ]
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "charges": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "amountAssigned": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "bookingDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference": {
+            "type": "string",
+            "nullable": true
+          },
+          "amountRepaid": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "settled": {
+            "type": "boolean"
+          },
+          "ignore": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "debitorName": {
+            "type": "string",
+            "nullable": true
+          },
+          "creditorName": {
+            "type": "string",
+            "nullable": true
+          },
+          "creditorIban": {
+            "type": "string",
+            "nullable": true
+          },
+          "balance": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          }
+        }
+      },
+      "CreditDebit": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "CRDT",
+          "DBIT"
+        ],
+        "enum": [
+          1,
+          2
+        ]
+      },
+      "PaymentsByDayQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "hideIgnored": {
+            "type": "boolean"
+          },
+          "hideSettled": {
+            "type": "boolean"
+          },
+          "hideIncoming": {
+            "type": "boolean"
+          },
+          "hideOutgoing": {
+            "type": "boolean"
+          },
+          "searchString": {
+            "type": "string",
+            "nullable": true
+          },
+          "showAll": {
+            "type": "boolean"
+          }
+        }
+      },
       "RemoveSlackUserMappingCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -1542,6 +2020,24 @@
         "type": "object",
         "additionalProperties": false
       },
+      "SaveBankAccountConfigurationCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "config": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/BankAccountConfiguration"
+              }
+            ]
+          }
+        }
+      },
       "SaveDomainEventCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -1565,6 +2061,67 @@
           },
           "eventType": {
             "type": "string"
+          }
+        }
+      },
+      "SaveExternalMailConfigurationCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "configs": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ExternalMailConfigurationUpdateItem"
+            }
+          }
+        }
+      },
+      "ExternalMailConfigurationUpdateItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "imapHost": {
+            "type": "string",
+            "nullable": true
+          },
+          "imapPort": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "importMailsSince": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "SavePaymentFileCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "file": {
+            "$ref": "#/components/schemas/FileUpload"
           }
         }
       },
@@ -1733,6 +2290,20 @@
           2,
           3
         ]
+      },
+      "UpsertMembershipFeesForPeriodCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "periodId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
       },
       "UserInPartitionDisplayItem": {
         "type": "object",

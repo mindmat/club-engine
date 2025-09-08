@@ -111,6 +111,16 @@ public static class AppEngineExtensions
         builder.Services.AddScoped<SlackTokenProvider>();
         builder.Services.AddScoped<SlackClient>();
 
+        var registrars = assemblyContainer.Assemblies.GetTypesImplementing(typeof(ITypeRegistrar))
+                                          .Select(type => Activator.CreateInstance(type) as ITypeRegistrar)
+                                          .WhereNotNull();
+
+        foreach (var registrar in registrars)
+        {
+            registrar.Register(builder.Services);
+        }
+
+
         //builder.Configuration.AddAzureKeyVaultSecrets("key-vault");
 
         RegisterCommandQueue(builder, messagingConnectionStringKey);

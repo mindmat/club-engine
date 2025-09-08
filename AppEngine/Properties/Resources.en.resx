@@ -117,11 +117,38 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AccountHolder" xml:space="preserve">
+    <value>Account holder</value>
+  </data>
+  <data name="Accounting" xml:space="preserve">
+    <value>Accounting</value>
+  </data>
+  <data name="AddImap" xml:space="preserve">
+    <value>Add mail import</value>
+  </data>
   <data name="Authorized" xml:space="preserve">
     <value>Authorized</value>
   </data>
+  <data name="BankAccountConfigExplanation" xml:space="preserve">
+    <value>Configure the bank account used to generate the QR Code for e-Banking</value>
+  </data>
+  <data name="BankStatements" xml:space="preserve">
+    <value>Bank statements</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="CountryCode" xml:space="preserve">
+    <value>Country (ISO2)</value>
+  </data>
+  <data name="HouseNo" xml:space="preserve">
+    <value>House N°</value>
+  </data>
+  <data name="Iban" xml:space="preserve">
+    <value>IBAN</value>
+  </data>
+  <data name="ImapConfigExplanation" xml:space="preserve">
+    <value>Configure IMAP access to continuously import mails from external mail addresses.</value>
   </data>
   <data name="InsertRequestText" xml:space="preserve">
     <value>Message</value>
@@ -144,11 +171,41 @@
   <data name="Other" xml:space="preserve">
     <value>Other</value>
   </data>
+  <data name="PaymentFrom" xml:space="preserve">
+    <value>from {{debitor}}</value>
+  </data>
+  <data name="PaymentTo" xml:space="preserve">
+    <value>to {{creditor}}</value>
+  </data>
+  <data name="Plz" xml:space="preserve">
+    <value>ZIP</value>
+  </data>
   <data name="RequestAccess" xml:space="preserve">
     <value>Request access</value>
   </data>
+  <data name="Role" xml:space="preserve">
+    <value>Role</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Setup" xml:space="preserve">
+    <value>Setup</value>
+  </data>
   <data name="SlackMatching" xml:space="preserve">
     <value>Slack matching</value>
+  </data>
+  <data name="Street" xml:space="preserve">
+    <value>Street</value>
+  </data>
+  <data name="TeamMembers" xml:space="preserve">
+    <value>Team members</value>
+  </data>
+  <data name="Town" xml:space="preserve">
+    <value>Town</value>
   </data>
   <data name="UnmatchedSlackAccount" xml:space="preserve">
     <value>Unmatched slack accounts</value>

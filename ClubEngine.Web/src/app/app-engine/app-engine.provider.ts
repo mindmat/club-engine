@@ -6,11 +6,13 @@ import { authHttpInterceptorFn, provideAuth0 } from '@auth0/auth0-angular';
 import { provideHttpClient, withInterceptors } from "@angular/common/http";
 import { fuseLoadingInterceptor } from "@fuse/services/loading";
 
-export interface AppEngineConfig {
+export interface AppEngineConfig
+{
 }
 export const provideAppEngine = (
     config: AppEngineConfig
-): Array<Provider | EnvironmentProviders> => {
+): Array<Provider | EnvironmentProviders> =>
+{
     // Base providers
     const providers: Array<Provider | EnvironmentProviders> = [
 
@@ -26,7 +28,9 @@ export const provideAppEngine = (
         }),
         provideAuth0({
             domain: 'clubengine.eu.auth0.com',
-            clientId: 'PyuWXpy5KXTHXCMjzCe2EeE7We4hSvwe',
+            clientId: 'PyuWXpy5KXTHXCMjzCe2EeE7We4hSvwe',            
+            useRefreshTokens: true,
+            cacheLocation: 'localstorage',
             authorizationParams: {
                 redirect_uri: window.location.origin,
 

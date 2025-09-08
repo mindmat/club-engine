@@ -31,4 +31,11 @@ public static class StringExtensions
         return source.Where(x => x != null)
                      .Select(x => x!);
     }
+
+    public static decimal? TryToDecimal(this string? text)
+    {
+        return text != null && decimal.TryParse(text, out var number)
+            ? number
+            : null;
+    }
 }

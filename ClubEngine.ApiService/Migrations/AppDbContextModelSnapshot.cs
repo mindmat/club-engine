@@ -22,6 +22,344 @@ namespace ClubEngine.ApiService.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("AppEngine.Accounting.Bookings.Booking", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("BookingDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Currency")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Ignore")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("IncrementalKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IncrementalKey"));
+
+                    b.Property<string>("Info")
+                        .HasMaxLength(400)
+                        .HasColumnType("nvarchar(400)");
+
+                    b.Property<string>("InstructionIdentification")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("PartitionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("PaymentsFileId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("RawXml")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecognizedEmail")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Reference")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal?>("Repaid_ReadModel")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<bool>("Settled_ReadModel")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("IncrementalKey")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("IncrementalKey"));
+
+                    b.HasIndex("PartitionId");
+
+                    b.HasIndex("PaymentsFileId");
+
+                    b.ToTable("Bookings", (string)null);
+                });
+
+            modelBuilder.Entity("AppEngine.Accounting.Bookings.BookingAssignment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTimeOffset?>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("IncomingPaymentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("IncrementalKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IncrementalKey"));
+
+                    b.Property<Guid?>("OutgoingPaymentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("PaymentAssignmentId_Counter")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("PayoutRequestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<Guid?>("SegmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("IncomingPaymentId");
+
+                    b.HasIndex("IncrementalKey")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("IncrementalKey"));
+
+                    b.HasIndex("OutgoingPaymentId");
+
+                    b.HasIndex("PaymentAssignmentId_Counter");
+
+                    b.HasIndex("PayoutRequestId");
+
+                    b.ToTable("PaymentAssignments", (string)null);
+                });
+
+            modelBuilder.Entity("AppEngine.Accounting.Bookings.IncomingPayment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("Charges")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("DebitorIban")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("DebitorName")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("IncrementalKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IncrementalKey"));
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("IncrementalKey")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("IncrementalKey"));
+
+                    b.ToTable("IncomingPayments", (string)null);
+                });
+
+            modelBuilder.Entity("AppEngine.Accounting.Bookings.OutgoingPayment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("Charges")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("CreditorIban")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("CreditorName")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<int>("IncrementalKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IncrementalKey"));
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("IncrementalKey")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("IncrementalKey"));
+
+                    b.ToTable("OutgoingPayments", (string)null);
+                });
+
+            modelBuilder.Entity("AppEngine.Accounting.Bookings.PayoutRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("ExternalId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("IbanProposed")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("IncrementalKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IncrementalKey"));
+
+                    b.Property<string>("Reason")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("IncrementalKey")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("IncrementalKey"));
+
+                    b.ToTable("PayoutRequests", (string)null);
+                });
+
+            modelBuilder.Entity("AppEngine.Accounting.Iso20022.Camt.PaymentsFile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AccountIban")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<decimal?>("Balance")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime?>("BookingsFrom")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("BookingsTo")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Currency")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("FileId")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("IncrementalKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IncrementalKey"));
+
+                    b.Property<Guid?>("PartitionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("IncrementalKey")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("IncrementalKey"));
+
+                    b.HasIndex("PartitionId");
+
+                    b.ToTable("PaymentsFiles", (string)null);
+                });
+
             modelBuilder.Entity("AppEngine.Authentication.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -272,6 +610,80 @@ namespace ClubEngine.ApiService.Migrations
                     b.ToTable("DomainEvents", (string)null);
                 });
 
+            modelBuilder.Entity("AppEngine.Mailing.ExternalMails.ExternalMail", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ContentHtml")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContentPlainText")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset>("Date")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid?>("ExternalMailConfigurationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("Imported")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("IncrementalKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IncrementalKey"));
+
+                    b.Property<string>("MessageIdentifier")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid>("PartitionId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Recipients")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<string>("SendGridMessageId")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("SenderMail")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("SenderName")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Subject")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("IncrementalKey")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("IncrementalKey"));
+
+                    b.HasIndex("PartitionId");
+
+                    b.ToTable("ExternalMails", (string)null);
+                });
+
             modelBuilder.Entity("AppEngine.MenuNodes.MenuNodeReadModel", b =>
                 {
                     b.Property<Guid>("Id")
@@ -411,6 +823,47 @@ namespace ClubEngine.ApiService.Migrations
                     b.ToTable("ReadModels", (string)null);
                 });
 
+            modelBuilder.Entity("ClubEngine.ApiService.Clubs.Period", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ClubId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateOnly>("From")
+                        .HasColumnType("date");
+
+                    b.Property<int>("IncrementalKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IncrementalKey"));
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<DateOnly>("Until")
+                        .HasColumnType("date");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("ClubId");
+
+                    b.HasIndex("IncrementalKey")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("IncrementalKey"));
+
+                    b.ToTable("Periods", (string)null);
+                });
+
             modelBuilder.Entity("ClubEngine.ApiService.Members.Member", b =>
                 {
                     b.Property<Guid>("Id")
@@ -488,6 +941,10 @@ namespace ClubEngine.ApiService.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal?>("AnnualFeeOverride")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateOnly>("From")
                         .HasColumnType("date");
@@ -580,6 +1037,58 @@ namespace ClubEngine.ApiService.Migrations
                     b.ToTable("MembershipTypes", (string)null);
                 });
 
+            modelBuilder.Entity("ClubEngine.ApiService.MembershipFees.MembershipFee", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("IncrementalKey")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IncrementalKey"));
+
+                    b.Property<Guid>("MemberId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("MembershipTypeId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PeriodId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("State")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("IncrementalKey")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("IncrementalKey"));
+
+                    b.HasIndex("MemberId");
+
+                    b.HasIndex("MembershipTypeId");
+
+                    b.HasIndex("PeriodId");
+
+                    b.ToTable("MembershipFees", (string)null);
+                });
+
             modelBuilder.Entity("ClubEngine.ApiService.Slack.SlackUserMapping", b =>
                 {
                     b.Property<Guid>("Id")
@@ -627,6 +1136,79 @@ namespace ClubEngine.ApiService.Migrations
                     b.ToTable("Clubs", (string)null);
 
                     b.HasDiscriminator().HasValue("Club");
+                });
+
+            modelBuilder.Entity("AppEngine.Accounting.Bookings.Booking", b =>
+                {
+                    b.HasOne("AppEngine.Partitions.Partition", "Partition")
+                        .WithMany()
+                        .HasForeignKey("PartitionId");
+
+                    b.HasOne("AppEngine.Accounting.Iso20022.Camt.PaymentsFile", "PaymentsFile")
+                        .WithMany()
+                        .HasForeignKey("PaymentsFileId");
+
+                    b.Navigation("Partition");
+
+                    b.Navigation("PaymentsFile");
+                });
+
+            modelBuilder.Entity("AppEngine.Accounting.Bookings.BookingAssignment", b =>
+                {
+                    b.HasOne("AppEngine.Accounting.Bookings.IncomingPayment", "IncomingPayment")
+                        .WithMany("Assignments")
+                        .HasForeignKey("IncomingPaymentId");
+
+                    b.HasOne("AppEngine.Accounting.Bookings.OutgoingPayment", "OutgoingPayment")
+                        .WithMany("Assignments")
+                        .HasForeignKey("OutgoingPaymentId");
+
+                    b.HasOne("AppEngine.Accounting.Bookings.BookingAssignment", "PaymentAssignment_Counter")
+                        .WithMany()
+                        .HasForeignKey("PaymentAssignmentId_Counter");
+
+                    b.HasOne("AppEngine.Accounting.Bookings.PayoutRequest", "PayoutRequest")
+                        .WithMany("Assignments")
+                        .HasForeignKey("PayoutRequestId");
+
+                    b.Navigation("IncomingPayment");
+
+                    b.Navigation("OutgoingPayment");
+
+                    b.Navigation("PaymentAssignment_Counter");
+
+                    b.Navigation("PayoutRequest");
+                });
+
+            modelBuilder.Entity("AppEngine.Accounting.Bookings.IncomingPayment", b =>
+                {
+                    b.HasOne("AppEngine.Accounting.Bookings.Booking", "Booking")
+                        .WithOne("Incoming")
+                        .HasForeignKey("AppEngine.Accounting.Bookings.IncomingPayment", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+                });
+
+            modelBuilder.Entity("AppEngine.Accounting.Bookings.OutgoingPayment", b =>
+                {
+                    b.HasOne("AppEngine.Accounting.Bookings.Booking", "Booking")
+                        .WithOne("Outgoing")
+                        .HasForeignKey("AppEngine.Accounting.Bookings.OutgoingPayment", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+                });
+
+            modelBuilder.Entity("AppEngine.Accounting.Iso20022.Camt.PaymentsFile", b =>
+                {
+                    b.HasOne("AppEngine.Partitions.Partition", "Partition")
+                        .WithMany()
+                        .HasForeignKey("PartitionId");
+
+                    b.Navigation("Partition");
                 });
 
             modelBuilder.Entity("AppEngine.Authorization.UsersInPartition.AccessRequests.AccessToPartitionRequest", b =>
@@ -693,6 +1275,17 @@ namespace ClubEngine.ApiService.Migrations
                     b.Navigation("Partition");
                 });
 
+            modelBuilder.Entity("AppEngine.Mailing.ExternalMails.ExternalMail", b =>
+                {
+                    b.HasOne("AppEngine.Partitions.Partition", "Partition")
+                        .WithMany()
+                        .HasForeignKey("PartitionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Partition");
+                });
+
             modelBuilder.Entity("AppEngine.MenuNodes.MenuNodeReadModel", b =>
                 {
                     b.HasOne("AppEngine.Partitions.Partition", "Partition")
@@ -702,6 +1295,17 @@ namespace ClubEngine.ApiService.Migrations
                         .IsRequired();
 
                     b.Navigation("Partition");
+                });
+
+            modelBuilder.Entity("ClubEngine.ApiService.Clubs.Period", b =>
+                {
+                    b.HasOne("ClubEngine.ApiService.Clubs.Club", "Club")
+                        .WithMany("Periods")
+                        .HasForeignKey("ClubId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Club");
                 });
 
             modelBuilder.Entity("ClubEngine.ApiService.Members.Member", b =>
@@ -751,6 +1355,33 @@ namespace ClubEngine.ApiService.Migrations
                     b.Navigation("Club");
                 });
 
+            modelBuilder.Entity("ClubEngine.ApiService.MembershipFees.MembershipFee", b =>
+                {
+                    b.HasOne("ClubEngine.ApiService.Members.Member", "Member")
+                        .WithMany()
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ClubEngine.ApiService.Members.Memberships.MembershipType", "MembershipType")
+                        .WithMany()
+                        .HasForeignKey("MembershipTypeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ClubEngine.ApiService.Clubs.Period", "Period")
+                        .WithMany()
+                        .HasForeignKey("PeriodId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Member");
+
+                    b.Navigation("MembershipType");
+
+                    b.Navigation("Period");
+                });
+
             modelBuilder.Entity("ClubEngine.ApiService.Slack.SlackUserMapping", b =>
                 {
                     b.HasOne("ClubEngine.ApiService.Members.Member", "Member")
@@ -760,6 +1391,28 @@ namespace ClubEngine.ApiService.Migrations
                         .IsRequired();
 
                     b.Navigation("Member");
+                });
+
+            modelBuilder.Entity("AppEngine.Accounting.Bookings.Booking", b =>
+                {
+                    b.Navigation("Incoming");
+
+                    b.Navigation("Outgoing");
+                });
+
+            modelBuilder.Entity("AppEngine.Accounting.Bookings.IncomingPayment", b =>
+                {
+                    b.Navigation("Assignments");
+                });
+
+            modelBuilder.Entity("AppEngine.Accounting.Bookings.OutgoingPayment", b =>
+                {
+                    b.Navigation("Assignments");
+                });
+
+            modelBuilder.Entity("AppEngine.Accounting.Bookings.PayoutRequest", b =>
+                {
+                    b.Navigation("Assignments");
                 });
 
             modelBuilder.Entity("AppEngine.Authentication.Users.User", b =>
@@ -786,6 +1439,8 @@ namespace ClubEngine.ApiService.Migrations
                     b.Navigation("Members");
 
                     b.Navigation("MembershipTypes");
+
+                    b.Navigation("Periods");
                 });
 #pragma warning restore 612, 618
         }

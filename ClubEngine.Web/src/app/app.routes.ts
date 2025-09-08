@@ -13,6 +13,10 @@ import { combineLatest } from 'rxjs';
 import { AuthGuard } from '@auth0/auth0-angular';
 import { SlackMatchingComponent } from './modules/admin/slack-matching/slack-matching.component';
 import { SlackMatchingService } from './modules/admin/slack-matching/slack-matching.service';
+import { PartitionSettingsComponent } from './app-engine/partition-settings/partition-settings.component';
+import { PartitionSettingsResolver } from './app-engine/partition-settings/partition-settings.resolver';
+import { BankStatementsComponent } from './app-engine/accounting/bankStatements/bankStatements.component';
+import { BankStatementsResolver } from './app-engine/accounting/bankStatements/bankStatements.resolvers';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -69,7 +73,8 @@ export const appRoutes: Route[] = [
                         path: 'members',
                         component: MembersComponent,
                         resolve: {
-                            members: () => {
+                            members: () =>
+                            {
                                 return combineLatest([inject(MembersService).fetch(),
                                 inject(MembersHistoryService).fetch()]);
                             }
@@ -85,7 +90,30 @@ export const appRoutes: Route[] = [
                         resolve: {
                             differences: () => inject(SlackMatchingService).fetch()
                         }
-                    }
+                    },
+                    {
+                        path: 'accounting',
+                        children: [
+                            {
+                                path: 'bank-statements',
+                                component: BankStatementsComponent,
+                                resolve: { initialData: BankStatementsResolver }
+                            }
+                        ]
+                    },
+                    {
+                        path: 'admin',
+                        children: [
+                            {
+                                path: 'settings',
+                                component: PartitionSettingsComponent
+                            },
+                        ],
+                        resolve: {
+                            initialData: PartitionSettingsResolver
+                        }
+                    },
+
                 ]
             }
         ]

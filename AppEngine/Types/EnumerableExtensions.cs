@@ -71,4 +71,13 @@ public static class EnumerableExtensions
     {
         return source as IList<TSource> ?? source.ToList();
     }
+
+    public static IEnumerable<TSource> TakeIf<TSource>(this IEnumerable<TSource> source,
+                                                       bool condition,
+                                                       int count)
+    {
+        return condition
+            ? source.Take(count)
+            : source;
+    }
 }
