@@ -31,7 +31,6 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace AppEngine;
@@ -161,16 +160,13 @@ public static class AppEngineExtensions
         builder.Services.AddScoped<SourceQueueProvider>();
         //builder.Services.AddScoped(typeof(IEventToUserTranslation<>), assemblies);
 
-        builder.AddAzureServiceBusClient(connectionName: messagingConnectionStringKey ?? "messaging");
+        builder.Services.AddSingleton(_ =>
+        {
+            var cs = builder.Configuration.GetConnectionString("messaging");
 
-        //builder.Services.AddSingleton(_ =>
-        //{
-        //    var cs = builder.Configuration.GetValue<string>("service-bus");
+            return new ServiceBusClient(cs);
+        });
 
-        //    return cs != null
-        //        ? new ServiceBusClient(cs)
-        //        : new ServiceBusClient(builder.Configuration.GetValue<string>("ServiceBusNamespace"), new DefaultAzureCredential());
-        //});
         builder.Services.AddSingleton(services => services.GetService<ServiceBusClient>()!.CreateSender(CommandQueue.CommandQueueName));
     }
 
