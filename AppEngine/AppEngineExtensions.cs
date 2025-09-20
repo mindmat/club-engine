@@ -159,13 +159,9 @@ public static class AppEngineExtensions
         builder.Services.AddScoped<IEventBus>(x => x.GetRequiredService<EventBus>());
         builder.Services.AddScoped<SourceQueueProvider>();
         //builder.Services.AddScoped(typeof(IEventToUserTranslation<>), assemblies);
+        var messagingConnectionString = builder.Configuration.GetConnectionString("messaging");
 
-        builder.Services.AddSingleton(_ =>
-        {
-            var cs = builder.Configuration.GetConnectionString("messaging");
-
-            return new ServiceBusClient(cs);
-        });
+        builder.Services.AddSingleton(_ => new ServiceBusClient(messagingConnectionString));
 
         builder.Services.AddSingleton(services => services.GetService<ServiceBusClient>()!.CreateSender(CommandQueue.CommandQueueName));
     }
