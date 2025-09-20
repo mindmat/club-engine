@@ -38,6 +38,11 @@ builder.Services.AddAntiforgery();
 builder.Services.AddScoped<HomeController>();
 builder.AddAppEngine([typeof(Program).Assembly], [Resources.ResourceManager]);
 
+foreach (var cs in builder.Configuration.GetSection("ConnectionString").AsEnumerable())
+{
+    Console.WriteLine($"{cs.Key}: {cs.Value?[..5]}");
+}
+
 var app = builder.Build();
 //app.Services.GetService()
 // Configure the HTTP request pipeline.
