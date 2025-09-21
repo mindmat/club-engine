@@ -38,7 +38,7 @@ builder.Services.AddAntiforgery();
 builder.Services.AddScoped<HomeController>();
 builder.AddAppEngine([typeof(Program).Assembly], [Resources.ResourceManager]);
 
-foreach (var cs in builder.Configuration.GetSection("ConnectionString").AsEnumerable())
+foreach (var cs in builder.Configuration.GetSection("ConnectionStrings").AsEnumerable())
 {
     Console.WriteLine($"{cs.Key}: {cs.Value?[..5]}");
 }
