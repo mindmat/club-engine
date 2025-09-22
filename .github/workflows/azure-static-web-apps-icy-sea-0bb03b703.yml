@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+    paths: 
+      - 'ClubEngine.Web/**'
+  workflow_dispatch: # Enables manual triggering
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
@@ -30,7 +33,7 @@ jobs:
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "./ClubEngine.Web" # App source code path
           api_location: "" # Api source code path - optional
-          output_location: "dist/angular-basic" # Built app content directory - optional
+          output_location: "dist/fuse/browser" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
@@ -44,3 +47,4 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_ICY_SEA_0BB03B703 }}
           action: "close"
+
