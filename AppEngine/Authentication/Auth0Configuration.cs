@@ -15,8 +15,8 @@ public class DefaultAuth0Configuration : Auth0Configuration, IDefaultConfigurati
 {
     public DefaultAuth0Configuration()
     {
-        ClientIdKey = "Auth0-ClientId-ClubEngine";
-        ClientSecretKey = "Auth0-ClientSecret-ClubEngine";
+        ClientIdKey = "Auth0-ClientId";
+        ClientSecretKey = "Auth0-ClientSecret";
         Audience = "https://clubengine.eu.auth0.com/api/v2/";
         TokenUrl = "https://clubengine.eu.auth0.com/oauth/token";
         UserEndpoint = "https://clubengine.eu.auth0.com/api/v2/users";
