@@ -1,4 +1,4 @@
-name: Azure Static Web Apps CI/CD
+name: CI/CD Frontend
 
 on:
   push:
@@ -46,5 +46,6 @@ jobs:
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_ICY_SEA_0BB03B703 }}
           action: "close"
+
 
 
