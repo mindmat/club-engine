@@ -9,7 +9,7 @@ namespace AppEngine.Authentication;
 
 public class Auth0TokenProvider(SingletonConfigurationFeature<Auth0Configuration> configuration,
                                 SecretReader secretReader,
-                                ILogger logger)
+                                ILogger<Auth0TokenProvider> logger)
 {
     private string?         _token;
     private DateTimeOffset? _expires;
