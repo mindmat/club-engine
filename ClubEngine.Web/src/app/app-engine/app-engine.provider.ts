@@ -28,8 +28,8 @@ export const provideAppEngine = (
         }),
         provideAuth0({
             domain: 'clubengine.eu.auth0.com',
-            clientId: 'PyuWXpy5KXTHXCMjzCe2EeE7We4hSvwe',            
-            useRefreshTokens: true,
+            clientId: 'PyuWXpy5KXTHXCMjzCe2EeE7We4hSvwe',
+            // useRefreshTokens: true,
             cacheLocation: 'localstorage',
             authorizationParams: {
                 redirect_uri: window.location.origin,
