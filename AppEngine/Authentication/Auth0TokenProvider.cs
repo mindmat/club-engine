@@ -3,10 +3,13 @@
 using AppEngine.Configurations;
 using AppEngine.Secrets;
 
+using Microsoft.Extensions.Logging;
+
 namespace AppEngine.Authentication;
 
 public class Auth0TokenProvider(SingletonConfigurationFeature<Auth0Configuration> configuration,
-                                SecretReader secretReader)
+                                SecretReader secretReader,
+                                ILogger logger)
 {
     private string?         _token;
     private DateTimeOffset? _expires;
@@ -19,8 +22,11 @@ public class Auth0TokenProvider(SingletonConfigurationFeature<Auth0Configuration
         }
 
         var config = configuration.Configuration;
+        logger.LogInformation($"Get secrets {config.ClientIdKey}, {config.ClientSecretKey}");
         var clientId = await secretReader.GetSecret(config.ClientIdKey);
+        logger.LogInformation(clientId == null ? "clientId is null" : $"clientId {clientId[..2]}..{clientId[^2]}");
         var clientSecret = await secretReader.GetSecret(config.ClientSecretKey);
+        logger.LogInformation(clientSecret == null ? "clientSecret is null" : $"clientSecret {clientSecret[..2]}..{clientSecret[^2]}");
 
         if (clientId == null || clientSecret == null)
         {
