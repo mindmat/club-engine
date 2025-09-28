@@ -1,6 +1,7 @@
 import { BooleanInput } from '@angular/cdk/coercion';
 import { AsyncPipe, NgClass } from '@angular/common';
-import {
+import
+{
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -36,7 +37,8 @@ import { Subject, takeUntil } from 'rxjs';
         AsyncPipe
     ],
 })
-export class UserComponent implements OnInit, OnDestroy {
+export class UserComponent implements OnInit, OnDestroy
+{
     /* eslint-disable @typescript-eslint/naming-convention */
     static ngAcceptInputType_showAvatar: BooleanInput;
     /* eslint-enable @typescript-eslint/naming-convention */
@@ -60,11 +62,13 @@ export class UserComponent implements OnInit, OnDestroy {
     /**
      * On init
      */
-    ngOnInit(): void {
+    ngOnInit(): void
+    {
         // Subscribe to user changes
         this._userService.user$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((user: User) => {
+            .subscribe((user: User) =>
+            {
                 this.user = user;
 
                 // Mark for check
@@ -75,7 +79,8 @@ export class UserComponent implements OnInit, OnDestroy {
     /**
      * On destroy
      */
-    ngOnDestroy(): void {
+    ngOnDestroy(): void
+    {
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
@@ -90,9 +95,11 @@ export class UserComponent implements OnInit, OnDestroy {
      *
      * @param status
      */
-    updateUserStatus(status: string): void {
+    updateUserStatus(status: string): void
+    {
         // Return if user is not available
-        if (!this.user) {
+        if (!this.user)
+        {
             return;
         }
 
@@ -105,11 +112,13 @@ export class UserComponent implements OnInit, OnDestroy {
         //     .subscribe();
     }
 
-    logout(): void {
-        this.authService.logout();
+    logout(): void
+    {
+        this.authService.logout({ logoutParams: { returnTo: document.location.origin } });
     }
 
-    login(): void {
+    login(): void
+    {
         this.authService.loginWithRedirect();
     }
 }

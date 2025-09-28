@@ -72,7 +72,7 @@ export const provideAppEngine = (
                     },
                     {
                         // Match any request that starts {uri} (note the asterisk)
-                        uri: 'https://api.clubengine.ch/*',
+                        uri: 'https://api.clubengine.ch/api/*',
                         tokenOptions: {
                             authorizationParams: {
                                 // The attached token should target this audience
