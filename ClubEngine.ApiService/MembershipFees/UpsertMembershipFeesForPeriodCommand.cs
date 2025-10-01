@@ -1,5 +1,6 @@
 ﻿using AppEngine.Authorization;
 using AppEngine.DataAccess;
+using AppEngine.TimeHandling;
 
 using ClubEngine.ApiService.Clubs;
 using ClubEngine.ApiService.Members.Memberships;
@@ -13,19 +14,24 @@ namespace ClubEngine.ApiService.MembershipFees;
 public class UpsertMembershipFeesForPeriodCommand : IRequest, IPartitionBoundRequest
 {
     public Guid PartitionId { get; set; }
-    public Guid PeriodId { get; set; }
+    public Guid? PeriodId { get; set; }
 }
 
 public class UpsertMembershipFeesForPeriodCommandHandler(IQueryable<Membership> memberships,
                                                          IQueryable<Period> periods,
-                                                         IRepository<MembershipFee> fees)
+                                                         IRepository<MembershipFee> fees,
+                                                         RequestTimeProvider timeProvider)
     : IRequestHandler<UpsertMembershipFeesForPeriodCommand>
 {
     public async Task Handle(UpsertMembershipFeesForPeriodCommand command, CancellationToken cancellationToken)
     {
-        var period = await periods.SingleAsync(per => per.Id == command.PeriodId
-                                                   && per.ClubId == command.PartitionId,
-                                               cancellationToken);
+        var period = periods.Where(per => per.ClubId == command.PartitionId)
+                            .WhereIf(command.PeriodId != null, per => per.Id == command.PeriodId)
+                            .WhereIf(command.PeriodId == null,
+                                     per => per.From <= timeProvider.RequestToday
+                                         && timeProvider.RequestToday <= per.Until)
+                            .FirstOrDefault()
+                  ?? throw new ArgumentNullException(nameof(command.PeriodId));
 
         var activeMembers = await memberships.Where(mbr => mbr.Member!.ClubId == command.PartitionId)
                                              .Overlaps(period)

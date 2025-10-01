@@ -255,6 +255,38 @@
         }
       }
     },
+    "/api/MembershipFeesQuery": {
+      "post": {
+        "tags": [
+          "MembershipFees"
+        ],
+        "operationId": "MembershipFees_Query",
+        "requestBody": {
+          "x-name": "MembershipFeesQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MembershipFeesQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MembershipFeesList"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/MembershipTypesQuery": {
       "post": {
         "tags": [
@@ -1402,6 +1434,60 @@
             "type": "string"
           },
           "memberId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "MembershipFeesList": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "paid": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeeStateInPeriod"
+            }
+          },
+          "due": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeeStateInPeriod"
+            }
+          }
+        }
+      },
+      "FeeStateInPeriod": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "memberId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "memberName": {
+            "type": "string"
+          },
+          "amountExpected": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "amountPaid": {
+            "type": "number",
+            "format": "decimal"
+          }
+        }
+      },
+      "MembershipFeesQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "periodId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "partitionId": {
             "type": "string",
             "format": "guid"
           }

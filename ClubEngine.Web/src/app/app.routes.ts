@@ -9,6 +9,8 @@ import { ImportMemberListComponent } from './modules/admin/import-member-list/im
 import { MembersComponent } from './modules/admin/members/members.component';
 import { MembersService } from './modules/admin/members/members.service';
 import { MembersHistoryService } from './modules/admin/members-history/members-history.service';
+import { MembershipFeesComponent } from './modules/admin/membership-fees/membership-fees.component';
+import { MembershipFeesService } from './modules/admin/membership-fees/membership-fees.service';
 import { combineLatest } from 'rxjs';
 import { AuthGuard } from '@auth0/auth0-angular';
 import { SlackMatchingComponent } from './modules/admin/slack-matching/slack-matching.component';
@@ -98,6 +100,13 @@ export const appRoutes: Route[] = [
                                 path: 'bank-statements',
                                 component: BankStatementsComponent,
                                 resolve: { initialData: BankStatementsResolver }
+                            },
+                            {
+                                path: 'membership-fees',
+                                component: MembershipFeesComponent,
+                                resolve: {
+                                    fees: () => inject(MembershipFeesService).fetch()
+                                }
                             }
                         ]
                     },

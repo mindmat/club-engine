@@ -4,6 +4,7 @@ using AppEngine.Authorization.UsersInPartition;
 using ClubEngine.ApiService.Members;
 using ClubEngine.ApiService.Members.Import;
 using ClubEngine.ApiService.Members.Memberships;
+using ClubEngine.ApiService.MembershipFees;
 using ClubEngine.ApiService.Slack;
 
 namespace ClubEngine.ApiService;
@@ -24,6 +25,7 @@ internal class RightsOfPartitionRoleProvider : IRightsOfPartitionRoleProvider
             yield return nameof(MembershipTypesQuery);
             yield return nameof(MembersQuery);
             yield return nameof(MemberStatsQuery);
+            yield return nameof(MembershipFeesQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInPartitionRole.Writer)
@@ -34,6 +36,7 @@ internal class RightsOfPartitionRoleProvider : IRightsOfPartitionRoleProvider
             yield return nameof(SlackUserDifferencesQuery);
             yield return nameof(MapSlackUserCommand);
             yield return nameof(RemoveSlackUserMappingCommand);
+            yield return nameof(UpsertMembershipFeesForPeriodCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInPartitionRole.Admin))

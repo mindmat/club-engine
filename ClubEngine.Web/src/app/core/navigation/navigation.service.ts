@@ -118,6 +118,14 @@ export class NavigationService
                                     icon: 'heroicons_outline:currency-dollar',
                                     link: `/${e.acronym}/accounting/bank-statements`,
                                 },
+                                {
+                                    id: 'membership-fees',
+                                    title: translateService.instant('MembershipFees'),
+                                    type: 'basic',
+                                    icon: 'heroicons_outline:currency-euro',
+                                    link: `/${e.acronym}/accounting/membership-fees`,
+                                },
+
                                 //         {
                                 //             id: 'settle-bookings',
                                 //             title: translateService.instant('AssignBankStatements'),
