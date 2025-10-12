@@ -590,6 +590,41 @@
         }
       }
     },
+    "/api/PeriodsQuery": {
+      "post": {
+        "tags": [
+          "Periods"
+        ],
+        "operationId": "Periods_Query",
+        "requestBody": {
+          "x-name": "PeriodsQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PeriodsQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PeriodDisplayItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/RemoveSlackUserMappingCommand": {
       "post": {
         "tags": [
@@ -2013,6 +2048,29 @@
           }
         }
       },
+      "PeriodDisplayItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "duration": {
+            "type": "string"
+          }
+        }
+      },
+      "PeriodsQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "RemoveSlackUserMappingCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -2387,7 +2445,8 @@
           },
           "periodId": {
             "type": "string",
-            "format": "guid"
+            "format": "guid",
+            "nullable": true
           }
         }
       },

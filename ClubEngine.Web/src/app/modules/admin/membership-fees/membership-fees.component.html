@@ -1,110 +1,124 @@
 <div
-    class="absolute inset-0 flex min-w-0 flex-col overflow-y-auto"
-    cdkScrollable>
-    <!-- Main -->
-    <div class="flex flex-auto flex-col">
-        <!-- Header -->
-        <div class="bg-card flex flex-col items-start border-b p-6 sm:flex-row sm:items-center sm:justify-between sm:py-12 md:px-8 dark:bg-transparent">
-            <!-- Title -->
-            <div>
-                <div class="text-4xl font-extrabold leading-none tracking-tight">
-                    {{ 'MembershipFees' | translate }}
-                </div>
-            </div>
-            <!-- Actions -->
-            <div class="mt-4 flex items-center gap-2 sm:mt-0">
-                <button
-                    mat-raised-button
-                    color="primary"
-                    (click)="upsertMembershipFees()"
-                    class="flex items-center">
-                    {{ 'UpdateMembershipFees' | translate }}
-                </button>
-            </div>
+  class="absolute inset-0 flex min-w-0 flex-col overflow-y-auto"
+  cdkScrollable>
+  <!-- Main -->
+  <div class="flex flex-auto flex-col">
+    <!-- Header -->
+    <div class="bg-card flex flex-col items-start border-b p-6 sm:flex-row sm:items-center sm:justify-between sm:py-12 md:px-8 dark:bg-transparent">
+      <!-- Title -->
+      <div>
+        <div class="text-4xl font-extrabold leading-none tracking-tight">
+          {{ 'MembershipFees' | translate }}
         </div>
-
-        <div class="space-y-8 p-6 md:p-8">
-            @if (membershipFees$ | async; as fees) {
-                <!-- Summary Cards -->
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                    <mat-card class="p-6">
-                        <div class="text-sm font-medium text-gray-500">{{ 'Expected' | translate }}</div>
-                        <div class="text-2xl font-semibold">{{ getTotalAmount(fees.paid || []) + getTotalAmount(fees.due || []) | number: '1.2-2' }}</div>
-                    </mat-card>
-                    <mat-card class="p-6">
-                        <div class="text-sm font-medium text-gray-500">{{ 'Paid' | translate }}</div>
-                        <div class="text-2xl font-semibold text-green-600">{{ getTotalPaid(fees.paid || []) + getTotalPaid(fees.due || []) | number: '1.2-2' }}</div>
-                    </mat-card>
-                    <mat-card class="p-6">
-                        <div class="text-sm font-medium text-gray-500">{{ 'Due' | translate }}</div>
-                        <div class="text-2xl font-semibold text-red-600">{{ getTotalDue(fees.due || []) | number: '1.2-2' }}</div>
-                    </mat-card>
-                </div>
-
-                <!-- Search and filters -->
-                <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    <mat-form-field [subscriptSizing]="'dynamic'">
-                        <mat-icon
-                            matPrefix
-                            class="icon-size-5"
-                            [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
-                        <input
-                            (input)="filterByQuery(query.value)"
-                            [placeholder]="'SearchByName' | translate"
-                            matInput
-                            #query />
-                    </mat-form-field>
-                </div>
-
-                <!-- Paid Fees Section -->
-                @if (fees.paid && fees.paid.length > 0) {
-                    <div>
-                        <div class="mb-4 flex items-center gap-4">
-                            <div class="text-xl font-semibold">{{ 'PaidFees' | translate }}</div>
-                            <mat-chip class="bg-green-100 text-green-800">{{ filterMembers(fees.paid).length }}</mat-chip>
-                        </div>
-                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                            @for (member of filterMembers(fees.paid); track member.memberId) {
-                                <fuse-card class="flex w-80 flex-col rounded-xl p-4 shadow">
-                                    <div class="flex flex-row items-baseline gap-x-2">
-                                        <a class="text-xl font-semibold leading-tight">{{ member.memberName }}</a>
-                                        <div class="text-secondary ml-auto font-medium">{{ member.amountPaid | number: '1.2-2' }}</div>
-                                    </div>
-                                </fuse-card>
-                            }
-                        </div>
-                    </div>
-                }
-
-                <!-- Due Fees Section -->
-                @if (fees.due && fees.due.length > 0) {
-                    <div>
-                        <div class="mb-4 flex items-center gap-4">
-                            <div class="text-xl font-semibold">{{ 'DueFees' | translate }}</div>
-                            <mat-chip class="bg-red-100 text-red-800">{{ filterMembers(fees.due).length }}</mat-chip>
-                        </div>
-                        <div class="flex flex-wrap gap-4">
-                            @for (member of filterMembers(fees.due); track member.memberId) {
-                                <fuse-card class="flex w-80 flex-col rounded-xl p-4 shadow">
-                                    <div class="flex flex-row items-baseline gap-x-2">
-                                        <a class="text-xl font-semibold leading-tight">{{ member.memberName }}</a>
-                                        <div class="text-secondary ml-auto font-medium">{{ member.amountExpected | number: '1.2-2' }}</div>
-                                    </div>
-                                </fuse-card>
-                            }
-                        </div>
-                    </div>
-                }
-
-                @if ((!fees.paid || fees.paid.length === 0) && (!fees.due || fees.due.length === 0)) {
-                    <!-- No fees template -->
-                    <div class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent">
-                        <div class="text-secondary mt-4 text-2xl font-semibold tracking-tight">
-                            {{ 'NoFeesFound' | translate }}
-                        </div>
-                    </div>
-                }
-            }
-        </div>
+      </div>
+      <!-- Actions -->
+      <div class="mt-4 flex items-center gap-2 sm:mt-0">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="upsertMembershipFees()"
+          class="flex items-center">
+          {{ 'UpdateMembershipFees' | translate }}
+        </button>
+      </div>
     </div>
+
+    <div class="space-y-8 p-6 md:p-8">
+      <mat-form-field
+        [subscriptSizing]="'dynamic'"
+        class="w-64">
+        <mat-label>{{ 'Period' | translate }}</mat-label>
+        <mat-select
+          [value]="selectedPeriodId"
+          (selectionChange)="onPeriodChange($event.value)"
+          [placeholder]="'SelectPeriod' | translate">
+          @for (period of periods$ | async; track period.id) {
+            <mat-option [value]="period.id">{{ period.duration }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      @if (membershipFees$ | async; as fees) {
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <mat-card class="p-6">
+            <div class="text-sm font-medium text-gray-500">{{ 'Expected' | translate }}</div>
+            <div class="text-2xl font-semibold">{{ getTotalAmount(fees.paid || []) + getTotalAmount(fees.due || []) | number: '1.2-2' }}</div>
+          </mat-card>
+          <mat-card class="p-6">
+            <div class="text-sm font-medium text-gray-500">{{ 'Paid' | translate }}</div>
+            <div class="text-2xl font-semibold text-green-600">{{ getTotalPaid(fees.paid || []) + getTotalPaid(fees.due || []) | number: '1.2-2' }}</div>
+          </mat-card>
+          <mat-card class="p-6">
+            <div class="text-sm font-medium text-gray-500">{{ 'Due' | translate }}</div>
+            <div class="text-2xl font-semibold text-red-600">{{ getTotalDue(fees.due || []) | number: '1.2-2' }}</div>
+          </mat-card>
+        </div>
+
+        <!-- Search and filters -->
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <mat-form-field [subscriptSizing]="'dynamic'">
+            <mat-icon
+              matPrefix
+              class="icon-size-5"
+              [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
+            <input
+              (input)="filterByQuery(query.value)"
+              [placeholder]="'SearchByName' | translate"
+              matInput
+              #query />
+          </mat-form-field>
+        </div>
+
+        <!-- Paid Fees Section -->
+        @if (fees.paid && fees.paid.length > 0) {
+          <div>
+            <div class="mb-4 flex items-center gap-4">
+              <div class="text-xl font-semibold">{{ 'PaidFees' | translate }}</div>
+              <mat-chip class="bg-green-100 text-green-800">{{ filterMembers(fees.paid).length }}</mat-chip>
+            </div>
+            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              @for (member of filterMembers(fees.paid); track member.memberId) {
+                <fuse-card class="flex w-80 flex-col rounded-xl p-4 shadow">
+                  <div class="flex flex-row items-baseline gap-x-2">
+                    <a class="text-xl font-semibold leading-tight">{{ member.memberName }}</a>
+                    <div class="text-secondary ml-auto font-medium">{{ member.amountPaid | number: '1.2-2' }}</div>
+                  </div>
+                </fuse-card>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Due Fees Section -->
+        @if (fees.due && fees.due.length > 0) {
+          <div>
+            <div class="mb-4 flex items-center gap-4">
+              <div class="text-xl font-semibold">{{ 'DueFees' | translate }}</div>
+              <mat-chip class="bg-red-100 text-red-800">{{ filterMembers(fees.due).length }}</mat-chip>
+            </div>
+            <div class="flex flex-wrap gap-4">
+              @for (member of filterMembers(fees.due); track member.memberId) {
+                <fuse-card class="flex w-80 flex-col rounded-xl p-4 shadow">
+                  <div class="flex flex-row items-baseline gap-x-2">
+                    <a class="text-xl font-semibold leading-tight">{{ member.memberName }}</a>
+                    <div class="text-secondary ml-auto font-medium">{{ member.amountExpected | number: '1.2-2' }}</div>
+                  </div>
+                </fuse-card>
+              }
+            </div>
+          </div>
+        }
+
+        @if ((!fees.paid || fees.paid.length === 0) && (!fees.due || fees.due.length === 0)) {
+          <!-- No fees template -->
+          <div class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent">
+            <div class="text-secondary mt-4 text-2xl font-semibold tracking-tight">
+              {{ 'NoFeesFound' | translate }}
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
 </div>

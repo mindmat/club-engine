@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Api, MembershipFeesList } from 'app/api/api';
+import { Api, PeriodDisplayItem } from 'app/api/api';
 import { PartitionService } from 'app/app-engine/partitions/partition.service';
 import { Observable } from 'rxjs';
 import { FetchService } from '../infrastructure/fetchService';
@@ -8,20 +8,20 @@ import { NotificationService } from '../infrastructure/notification.service';
 @Injectable({
   providedIn: 'root',
 })
-export class MembershipFeesService extends FetchService<MembershipFeesList> {
+export class PeriodsService extends FetchService<PeriodDisplayItem[]> {
   constructor(
     private api: Api,
     private partitionService: PartitionService,
     notificationService: NotificationService
   ) {
-    super('MembershipFeesQuery', notificationService);
+    super('PeriodsQuery', notificationService);
   }
 
-  get membershipFees$() {
+  get periods$(): Observable<PeriodDisplayItem[]> {
     return this.result$;
   }
 
-  fetch(periodId: string | null = null): Observable<MembershipFeesList> {
-    return this.fetchItems(this.api.membershipFees_Query({ partitionId: this.partitionService.selectedId, periodId }));
+  fetch(): Observable<PeriodDisplayItem[]> {
+    return this.fetchItems(this.api.periods_Query({ partitionId: this.partitionService.selectedId }));
   }
 }

@@ -171,11 +171,17 @@
   <data name="Paid" xml:space="preserve">
     <value>Bezahlt</value>
   </data>
+  <data name="Period" xml:space="preserve">
+    <value>Periode</value>
+  </data>
   <data name="SearchByName" xml:space="preserve">
     <value>Suche (nach Name)</value>
   </data>
   <data name="SearchByNameEmail" xml:space="preserve">
     <value>Suche nach Name, Email</value>
+  </data>
+  <data name="SelectPeriod" xml:space="preserve">
+    <value>Periode auswählen</value>
   </data>
   <data name="Total" xml:space="preserve">
     <value>Total</value>

@@ -1,6 +1,7 @@
 ﻿using AppEngine.Authorization;
 using AppEngine.Authorization.UsersInPartition;
 
+using ClubEngine.ApiService.Clubs;
 using ClubEngine.ApiService.Members;
 using ClubEngine.ApiService.Members.Import;
 using ClubEngine.ApiService.Members.Memberships;
@@ -9,7 +10,7 @@ using ClubEngine.ApiService.Slack;
 
 namespace ClubEngine.ApiService;
 
-internal class RightsOfPartitionRoleProvider : IRightsOfPartitionRoleProvider
+internal class RightsOfRoleProvider : IRightsOfPartitionRoleProvider
 {
     /// <summary>
     /// hook for dynamic setup of rights in roles per event
@@ -26,6 +27,7 @@ internal class RightsOfPartitionRoleProvider : IRightsOfPartitionRoleProvider
             yield return nameof(MembersQuery);
             yield return nameof(MemberStatsQuery);
             yield return nameof(MembershipFeesQuery);
+            yield return nameof(PeriodsQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInPartitionRole.Writer)

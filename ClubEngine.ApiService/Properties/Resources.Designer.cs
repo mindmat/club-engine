@@ -223,6 +223,15 @@ namespace ClubEngine.ApiService.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Periode.
+        /// </summary>
+        public static string Period {
+            get {
+                return ResourceManager.GetString("Period", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Suche (nach Name).
         /// </summary>
         public static string SearchByName {
@@ -237,6 +246,15 @@ namespace ClubEngine.ApiService.Properties {
         public static string SearchByNameEmail {
             get {
                 return ResourceManager.GetString("SearchByNameEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Periode auswählen.
+        /// </summary>
+        public static string SelectPeriod {
+            get {
+                return ResourceManager.GetString("SelectPeriod", resourceCulture);
             }
         }
         
