@@ -1,7 +1,8 @@
 {
-    "printWidth": 80,
+    "printWidth": 200,
     "semi": true,
-    "bracketSameLine": false,
+    "bracketSameLine": true,
+    "singleAttributePerLine": true,
     "trailingComma": "es5",
     "tabWidth": 4,
     "singleQuote": true,

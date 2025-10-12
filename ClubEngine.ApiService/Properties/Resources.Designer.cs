@@ -88,6 +88,33 @@ namespace ClubEngine.ApiService.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ausstehend.
+        /// </summary>
+        public static string Due {
+            get {
+                return ResourceManager.GetString("Due", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ausstehende Beträge.
+        /// </summary>
+        public static string DueFees {
+            get {
+                return ResourceManager.GetString("DueFees", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Erwartet.
+        /// </summary>
+        public static string Expected {
+            get {
+                return ResourceManager.GetString("Expected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Verlauf.
         /// </summary>
         public static string History {
@@ -124,6 +151,15 @@ namespace ClubEngine.ApiService.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mitgliederbeiträge.
+        /// </summary>
+        public static string MembershipFees {
+            get {
+                return ResourceManager.GetString("MembershipFees", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mitgliederliste.
         /// </summary>
         public static string Mitgliederliste {
@@ -138,6 +174,15 @@ namespace ClubEngine.ApiService.Properties {
         public static string NewMembers {
             get {
                 return ResourceManager.GetString("NewMembers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Noch keine Mitgliederbeiträge berechnet.
+        /// </summary>
+        public static string NoFeesFound {
+            get {
+                return ResourceManager.GetString("NoFeesFound", resourceCulture);
             }
         }
         
@@ -169,6 +214,24 @@ namespace ClubEngine.ApiService.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bezahlt.
+        /// </summary>
+        public static string Paid {
+            get {
+                return ResourceManager.GetString("Paid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suche (nach Name).
+        /// </summary>
+        public static string SearchByName {
+            get {
+                return ResourceManager.GetString("SearchByName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Suche nach Name, Email.
         /// </summary>
         public static string SearchByNameEmail {
@@ -183,6 +246,15 @@ namespace ClubEngine.ApiService.Properties {
         public static string Total {
             get {
                 return ResourceManager.GetString("Total", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mitgliederbeiträge berechnen.
+        /// </summary>
+        public static string UpdateMembershipFees {
+            get {
+                return ResourceManager.GetString("UpdateMembershipFees", resourceCulture);
             }
         }
         

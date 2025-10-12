@@ -45,7 +45,7 @@ public class UpsertMembershipFeesForPeriodCommandHandler(IQueryable<Membership> 
                                                             })
                                              .ToListAsync(cancellationToken);
 
-        var existingFees = await fees.Where(msf => msf.PeriodId == command.PeriodId)
+        var existingFees = await fees.Where(msf => msf.PeriodId == period.Id)
                                      .ToListAsync(cancellationToken);
 
         foreach (var activeMember in activeMembers.GroupBy(mbr => mbr.MemberId))

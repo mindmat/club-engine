@@ -41,7 +41,7 @@
             && members.length > 0 )
             {
             <div>
-                <div class="font-medium">Folders</div>
+                <div class="font-medium">{{ 'Members' | translate }}</div>
                 <div class="-m-2 mt-2 flex flex-wrap gap-4">
                     @for ( member of members; track member.id) {
                     <app-member [member]="member"></app-member>

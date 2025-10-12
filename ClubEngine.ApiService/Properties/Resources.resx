@@ -126,6 +126,15 @@
   <data name="ClickToUpload" xml:space="preserve">
     <value>Klicken zum Hochladen</value>
   </data>
+  <data name="Due" xml:space="preserve">
+    <value>Ausstehend</value>
+  </data>
+  <data name="DueFees" xml:space="preserve">
+    <value>Ausstehende Beträge</value>
+  </data>
+  <data name="Expected" xml:space="preserve">
+    <value>Erwartet</value>
+  </data>
   <data name="History" xml:space="preserve">
     <value>Verlauf</value>
   </data>
@@ -138,11 +147,17 @@
   <data name="Members" xml:space="preserve">
     <value>Mitglieder</value>
   </data>
+  <data name="MembershipFees" xml:space="preserve">
+    <value>Mitgliederbeiträge</value>
+  </data>
   <data name="Mitgliederliste" xml:space="preserve">
     <value>Mitgliederliste</value>
   </data>
   <data name="NewMembers" xml:space="preserve">
     <value>Neue Mitglieder</value>
+  </data>
+  <data name="NoFeesFound" xml:space="preserve">
+    <value>Noch keine Mitgliederbeiträge berechnet</value>
   </data>
   <data name="Open" xml:space="preserve">
     <value>Öffnen</value>
@@ -153,11 +168,20 @@
   <data name="Overview" xml:space="preserve">
     <value>Übersicht</value>
   </data>
+  <data name="Paid" xml:space="preserve">
+    <value>Bezahlt</value>
+  </data>
+  <data name="SearchByName" xml:space="preserve">
+    <value>Suche (nach Name)</value>
+  </data>
   <data name="SearchByNameEmail" xml:space="preserve">
     <value>Suche nach Name, Email</value>
   </data>
   <data name="Total" xml:space="preserve">
     <value>Total</value>
+  </data>
+  <data name="UpdateMembershipFees" xml:space="preserve">
+    <value>Mitgliederbeiträge berechnen</value>
   </data>
   <data name="Uploading" xml:space="preserve">
     <value>{{filename}} hochladen...</value>

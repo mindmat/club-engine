@@ -3,7 +3,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { MembershipFeesService } from './membership-fees.service';
 import { MembershipFeesList, FeeStateInPeriod, Api } from 'app/api/api';
 import { Observable } from 'rxjs';
-import { AsyncPipe, CurrencyPipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe, DecimalPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { CdkScrollable } from '@angular/cdk/scrolling';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,21 +13,24 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { PartitionService } from 'app/app-engine/partitions/partition.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FuseCardComponent } from "@fuse/components/card";
 
 @Component({
   selector: 'app-membership-fees',
   imports: [
-    TranslatePipe, 
-    AsyncPipe, 
-    CurrencyPipe,
-    MatIconModule, 
-    MatInputModule, 
-    CdkScrollable, 
+    TranslatePipe,
+    AsyncPipe,
+    MatIconModule,
+    MatInputModule,
+    CdkScrollable,
     MatFormFieldModule,
     MatCardModule,
     MatChipsModule,
-    MatButtonModule
-  ],
+    MatButtonModule,
+    DecimalPipe,
+    FuseCardComponent,
+    DecimalPipe
+],
   templateUrl: './membership-fees.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
