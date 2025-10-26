@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Reflection;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AppEngine.DependencyInjection;
 
 public interface ITypeRegistrar
 {
-    public void Register(IServiceCollection services);
+    public void Register(IServiceCollection services, Assembly[] assemblies);
 }

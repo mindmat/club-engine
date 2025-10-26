@@ -126,6 +126,12 @@
   <data name="AddImap" xml:space="preserve">
     <value>Mail-Import hinzufügen</value>
   </data>
+  <data name="AssignBankStatements" xml:space="preserve">
+    <value>Kontobewegungen zuorden</value>
+  </data>
+  <data name="AssignIncoming" xml:space="preserve">
+    <value>Zahlungseingang zuordnen</value>
+  </data>
   <data name="Authorized" xml:space="preserve">
     <value>Berechtigt</value>
   </data>
@@ -138,14 +144,35 @@
   <data name="Cancel" xml:space="preserve">
     <value>Abbrechen</value>
   </data>
+  <data name="CandidatesForIncomingPayment" xml:space="preserve">
+    <value>Zahlungseingang für:</value>
+  </data>
+  <data name="CandidatesForOutgoingPayment" xml:space="preserve">
+    <value>Rückzahlung für:</value>
+  </data>
   <data name="CountryCode" xml:space="preserve">
     <value>Land (ISO2)</value>
+  </data>
+  <data name="Deposits" xml:space="preserve">
+    <value>Einzahlungen</value>
+  </data>
+  <data name="ExistingAssignments" xml:space="preserve">
+    <value>Bestehende Zuordnungen</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Ausblenden</value>
   </data>
   <data name="HouseNo" xml:space="preserve">
     <value>Hausnr.</value>
   </data>
   <data name="Iban" xml:space="preserve">
     <value>IBAN</value>
+  </data>
+  <data name="Ignore" xml:space="preserve">
+    <value>Ignorieren</value>
+  </data>
+  <data name="Ignored" xml:space="preserve">
+    <value>Ignorierte</value>
   </data>
   <data name="ImapConfigExplanation" xml:space="preserve">
     <value>IMAP-Postfächer konfigurieren, deren eingehende Mails fortlaufend importiert werden sollen.</value>
@@ -177,6 +204,9 @@
   <data name="PaymentTo" xml:space="preserve">
     <value>an {{creditor}}</value>
   </data>
+  <data name="Payouts" xml:space="preserve">
+    <value>Auszahlungen</value>
+  </data>
   <data name="Plz" xml:space="preserve">
     <value>PLZ</value>
   </data>
@@ -189,8 +219,14 @@
   <data name="Save" xml:space="preserve">
     <value>Speichern</value>
   </data>
+  <data name="SearchByNameIbanMessage" xml:space="preserve">
+    <value>Suche nach Namen, IBAN, Mitteilung</value>
+  </data>
   <data name="Settings" xml:space="preserve">
     <value>Einstellungen</value>
+  </data>
+  <data name="Settled" xml:space="preserve">
+    <value>Ausgeglichene</value>
   </data>
   <data name="Setup" xml:space="preserve">
     <value>Event vorbereiten</value>

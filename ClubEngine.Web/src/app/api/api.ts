@@ -79,6 +79,54 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    assignIncomingPayment_Command(assignIncomingPaymentCommand: AssignIncomingPaymentCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/AssignIncomingPaymentCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(assignIncomingPaymentCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAssignIncomingPayment_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAssignIncomingPayment_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processAssignIncomingPayment_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     bankAccountConfiguration_Query(bankAccountConfigurationQuery: BankAccountConfigurationQuery | undefined): Observable<BankAccountConfiguration> {
         let url_ = this.baseUrl + "/api/BankAccountConfigurationQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -886,6 +934,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    paymentAssignments_Query(paymentAssignmentsQuery: PaymentAssignmentsQuery | undefined): Observable<PaymentAssignments> {
+        let url_ = this.baseUrl + "/api/PaymentAssignmentsQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(paymentAssignmentsQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPaymentAssignments_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPaymentAssignments_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PaymentAssignments>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PaymentAssignments>;
+        }));
+    }
+
+    protected processPaymentAssignments_Query(response: HttpResponseBase): Observable<PaymentAssignments> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PaymentAssignments;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     paymentsByDay_Query(paymentsByDayQuery: PaymentsByDayQuery | undefined): Observable<BookingsOfDay[]> {
         let url_ = this.baseUrl + "/api/PaymentsByDayQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -1624,6 +1723,54 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    unassignPayment_Command(unassignPaymentCommand: UnassignPaymentCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/UnassignPaymentCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(unassignPaymentCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUnassignPayment_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUnassignPayment_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUnassignPayment_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     updateReadModel_Command(updateReadModelCommand: UpdateReadModelCommand | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/UpdateReadModelCommand";
         url_ = url_.replace(/[?&]$/, "");
@@ -1833,6 +1980,16 @@ export interface AccessRequestOfPartition {
 export interface AccessRequestsOfPartitionQuery {
     partitionId?: string;
     includeDeniedRequests?: boolean;
+}
+
+export interface AssignIncomingPaymentCommand {
+    partitionId?: string;
+    paymentIncomingId?: string;
+    sourceId?: string;
+    sourceType?: string;
+    amount?: number;
+    acceptDifference?: boolean;
+    acceptDifferenceReason?: string | null;
 }
 
 export interface BankAccountConfiguration {
@@ -2086,6 +2243,49 @@ export interface PartitionsQuery {
     showArchived?: boolean;
 }
 
+export interface PaymentAssignments {
+    openAmount?: number;
+    type?: PaymentType;
+    ignored?: boolean;
+    sourceCandidates?: AssignmentCandidate[] | null;
+    existingAssignments?: ExistingAssignment[] | null;
+}
+
+export enum PaymentType {
+    Incoming = 1,
+    Outgoing = 2,
+}
+
+export interface AssignmentCandidate {
+    sourceId?: string;
+    sourceType?: string;
+    textPrimary?: string | null;
+    textSecondary?: string | null;
+    tags?: string[];
+    amountTotal?: number;
+    amountOpen?: number;
+    amountMatch?: boolean;
+    matchScore?: number;
+    bookingId?: string;
+}
+
+export interface ExistingAssignment {
+    sourceId?: string;
+    sourceType?: string;
+    textPrimary?: string | null;
+    textSecondary?: string | null;
+    tags?: string[] | null;
+    paymentAssignmentId_Existing?: string;
+    assignedAmount?: number | null;
+    bookingId?: string;
+}
+
+export interface PaymentAssignmentsQuery {
+    partitionId?: string;
+    paymentId?: string;
+    searchString?: string | null;
+}
+
 export interface BookingsOfDay {
     bookingDate?: Date;
     bookings?: PaymentDisplayItem[];
@@ -2240,6 +2440,11 @@ export interface StartUpdateReadModelsOfEventCommand {
 
 export interface TranslationQuery {
     language?: string | null;
+}
+
+export interface UnassignPaymentCommand {
+    partitionId?: string;
+    paymentAssignmentId?: string;
 }
 
 export interface UpdateReadModelCommand {

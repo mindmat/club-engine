@@ -1,140 +1,158 @@
-<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
-
-    <!-- Header -->
-    <div class="flex flex-col items-start space-x-4 sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
-        <!-- Title -->
-        <div class="flex flex-row">
-            <div class="text-4xl font-extrabold tracking-tight leading-none">{{ 'SlackMatching' | translate }}</div>
-            <app-update-readmodel queryName="SlackUserDifferencesQuery"></app-update-readmodel>
-            <!-- <div class="mt-1.5 text-lg text-secondary">{{ filteredBookingDays.length }}</div> -->
-        </div>
-        @if(!!selectedMember || !!selectedSlackUser)
-        {
-        <div class="p-2 rounded-xl bg-default gap-2">
-            @if(!!selectedMember)
-            {
-            <app-member [member]="selectedMember"></app-member>
-            }
-            @if (!!selectedSlackUser)
-            {
-            <fuse-card class="flex flex-col w-80 p-4 rounded-xl" [ngClass]="{ 'bg-gray-100': selectedSlackUser.isInvitedUser }">
-                <div class="flex flex-row items-baseline gap-x-2">
-                    <div class="text-xl font-semibold leading-tight">{{selectedSlackUser.firstName }} {{ selectedSlackUser.lastName }}
-                    </div>
-                </div>
-                <div class="flex flex-row items-baseline gap-x-2">
-                    <div class="text-secondary leading-tight">{{ selectedSlackUser.email }}</div>
-                </div>
-            </fuse-card>
-            }
-            <div class="flex flex-row items-center gap-x-2">
-                <button mat-stroked-button type="button" (click)="cancel()">{{ 'Cancel' | translate }}</button>
-
-                @if(!!selectedMember && !!selectedSlackUser && !isMatch)
-                {
-                <button class="ml-auto" mat-flat-button [color]="'primary'" (click)="assign(selectedMember, selectedSlackUser)">
-                    <mat-icon [svgIcon]="'mat_outline:add_link'"></mat-icon>
-                </button>
-                }
-                @if(!!selectedMember && !!selectedSlackUser && isMatch)
-                {
-                <button class="ml-3" mat-flat-button [color]="'primary'" (click)="unassign(selectedMember, selectedSlackUser)">
-                    <mat-icon [svgIcon]="'mat_outline:link_off'"></mat-icon>
-                </button>
-                }
-            </div>
-        </div>
+<div class="absolute inset-0 flex min-w-0 flex-col overflow-hidden">
+  <!-- Header -->
+  <div class="bg-card flex flex-0 flex-col items-start space-x-4 border-b p-6 sm:flex-row sm:items-center sm:justify-between sm:px-10 sm:py-8 dark:bg-transparent">
+    <!-- Title -->
+    <div class="flex flex-row">
+      <div class="text-4xl font-extrabold leading-none tracking-tight">{{ 'SlackMatching' | translate }}</div>
+      <app-update-readmodel queryName="SlackUserDifferencesQuery"></app-update-readmodel>
+      <!-- <div class="mt-1.5 text-lg text-secondary">{{ filteredBookingDays.length }}</div> -->
+    </div>
+    @if (!!selectedMember || !!selectedSlackUser) {
+      <div class="bg-default gap-2 rounded-xl p-2">
+        @if (!!selectedMember) {
+          <app-member [member]="selectedMember"></app-member>
         }
-        <!-- Filters -->
-        <!-- <mat-form-field class="fuse-mat-no-subscript w-full ml-auto sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
-            <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+        @if (!!selectedSlackUser) {
+          <fuse-card
+            class="flex w-80 flex-col rounded-xl p-4"
+            [ngClass]="{ 'bg-gray-100': selectedSlackUser.isInvitedUser }">
+            <div class="flex flex-row items-baseline gap-x-2">
+              <div class="text-xl font-semibold leading-tight">{{ selectedSlackUser.firstName }} {{ selectedSlackUser.lastName }}</div>
+            </div>
+            <div class="flex flex-row items-baseline gap-x-2">
+              <div class="text-secondary leading-tight">{{ selectedSlackUser.email }}</div>
+            </div>
+          </fuse-card>
+        }
+        <div class="flex flex-row items-center gap-x-2">
+          <button
+            mat-stroked-button
+            type="button"
+            (click)="cancel()">
+            {{ 'Cancel' | translate }}
+          </button>
+
+          @if (!!selectedMember && !!selectedSlackUser && !isMatch) {
+            <button
+              class="ml-auto"
+              mat-flat-button
+              [color]="'primary'"
+              (click)="assign(selectedMember, selectedSlackUser)">
+              <mat-icon [svgIcon]="'mat_outline:add_link'"></mat-icon>
+            </button>
+          }
+          @if (!!selectedMember && !!selectedSlackUser && isMatch) {
+            <button
+              class="ml-3"
+              mat-flat-button
+              [color]="'primary'"
+              (click)="unassign(selectedMember, selectedSlackUser)">
+              <mat-icon [svgIcon]="'mat_outline:link_off'"></mat-icon>
+            </button>
+          }
+        </div>
+      </div>
+    }
+    <!-- Filters -->
+    <!-- <mat-form-field class="fuse-mat-no-subscript w-full ml-auto sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
+            <mat-icon matPrefix class="icon-size-5" svgIcon="heroicons_solid:magnifying-glass"></mat-icon>
             <input (input)="filterByQuery(query.value)" placeholder="{{ 'SearchByNameIbanMessage' | translate }}" matInput #query>
         </mat-form-field> -->
-        <mat-form-field [subscriptSizing]="'dynamic'" class="fuse-mat-no-subscript w-full ml-auto sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
-            <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
-            <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByNameEmail' | translate" matInput #query />
-        </mat-form-field>
+    <mat-form-field
+      [subscriptSizing]="'dynamic'"
+      class="fuse-mat-no-subscript ml-auto mt-4 w-full sm:ml-4 sm:mt-0 sm:w-72"
+      [floatLabel]="'always'">
+      <mat-icon
+        matPrefix
+        class="icon-size-5"
+        [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
+      <input
+        (input)="filterByQuery(query.value)"
+        [placeholder]="'SearchByNameEmail' | translate"
+        matInput
+        #query />
+    </mat-form-field>
+  </div>
 
-    </div>
-
-    <!-- Main -->
-    <div class="flex flex-col p-6 sm:p-8 sm:pt-4 overflow-y-auto">
-
-        <!-- Days -->
-        <div class="p-2 rounded-xl bg-default">
-
-            <!-- Differences -->
-            @if (this.matchingService.result$ | async; as differences)
-            {
-            <div class="flex flex-row items-baseline gap-x-2 ml-6">
-                <div class="font-medium">{{ 'MembersWithoutSlackAccount' | translate }}</div>
-                <div class="text-secondary leading-tight">{{ differences.onlyMember.length }}</div>
-                <!-- 
+  <!-- Main -->
+  <div class="flex flex-col overflow-y-auto p-6 sm:p-8 sm:pt-4">
+    <!-- Days -->
+    <div class="bg-default rounded-xl p-2">
+      <!-- Differences -->
+      @if (this.matchingService.result$ | async; as differences) {
+        <div class="ml-6 flex flex-row items-baseline gap-x-2">
+          <div class="font-medium">{{ 'MembersWithoutSlackAccount' | translate }}</div>
+          <div class="text-secondary leading-tight">{{ differences.onlyMember.length }}</div>
+          <!-- 
                 <button class="ml-3" mat-flat-button [color]="'primary'" (click)="addAllNewMembers(differences.added)">
                     <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                     <span class="ml-2 mr-1">{{ 'AddAllNewMembers' | translate:{ count: differences.added.length } }}</span>
                 </button> -->
-            </div>
+        </div>
 
-            <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
-                <!-- Members w/o slack account -->
-                @for(memberOnly of differences.onlyMember; track memberOnly.id)
-                {
-                <app-member [member]="memberOnly" (click)="selectMember(memberOnly)"></app-member>
-                }
-            </div>
+        <div class="mt-2 flex flex-wrap gap-4 rounded-xl bg-gray-400 bg-opacity-12 p-3 dark:border dark:bg-transparent">
+          <!-- Members w/o slack account -->
+          @for (memberOnly of differences.onlyMember; track memberOnly.id) {
+            <app-member
+              [member]="memberOnly"
+              (click)="selectMember(memberOnly)"></app-member>
+          }
+        </div>
 
-            <div class="flex flex-row items-baseline gap-x-2 ml-6">
-                <div class="font-medium">{{ 'UnmatchedSlackAccount' | translate }}</div>
-                <div class="text-secondary leading-tight">{{ differences.onlySlack.length }}</div>
+        <div class="ml-6 flex flex-row items-baseline gap-x-2">
+          <div class="font-medium">{{ 'UnmatchedSlackAccount' | translate }}</div>
+          <div class="text-secondary leading-tight">{{ differences.onlySlack.length }}</div>
 
-                <!-- <button class="ml-3" mat-flat-button [color]="'primary'" (click)="addAllNewMembers(differences.added)">
+          <!-- <button class="ml-3" mat-flat-button [color]="'primary'" (click)="addAllNewMembers(differences.added)">
                     <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                     <span class="ml-2 mr-1">{{ 'AddAllNewMembers' | translate:{ count: differences.added.length } }}</span>
                 </button> -->
-            </div>
-
-            <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
-                <!-- Removed members -->
-                @for(onlySlack of differences.onlySlack; track onlySlack.id)
-                {
-                <fuse-card class="flex flex-col w-80 p-4 rounded-xl" [ngClass]="{ 'bg-gray-100': onlySlack.isInvitedUser }" (click)="selectSlackUser(onlySlack)">
-                    <div class="flex flex-row items-baseline gap-x-2">
-                        <div class="text-xl font-semibold leading-tight">{{ onlySlack.firstName }} {{ onlySlack.lastName }}
-                        </div>
-                    </div>
-                    <div class="flex flex-row items-baseline gap-x-2">
-                        <div class="text-secondary leading-tight">{{ onlySlack.email }}</div>
-                    </div>
-                </fuse-card>
-                }
-            </div>
-
-            <div class="flex flex-row items-baseline gap-x-2 ml-6">
-                <div class="font-medium">{{ 'Matches' | translate }}</div>
-                <div class="text-secondary leading-tight">{{ differences.matches.length }}</div>
-            </div>
-
-            <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
-                <!-- matches -->
-                @for(match of differences.matches; track match.member.id)
-                {
-                <div class="flex flex-col gap-1" (click)="selectMatch(match)">
-                    <app-member [member]="match.member"></app-member>
-                    <fuse-card class="flex flex-col w-80 p-4 rounded-xl" [ngClass]="{ 'bg-gray-100': match.slack.isInvitedUser }" (click)="selectSlackUser(match.slack)">
-                        <div class="flex flex-row items-baseline gap-x-2">
-                            <div class="text-xl font-semibold leading-tight">{{ match.slack.firstName }} {{ match.slack.lastName }}
-                            </div>
-                        </div>
-                        <div class="flex flex-row items-baseline gap-x-2">
-                            <div class="text-secondary leading-tight">{{ match.slack.email }}</div>
-                        </div>
-                    </fuse-card>
-                </div>
-                }
-            </div>
-
-            }
         </div>
+
+        <div class="mt-2 flex flex-wrap gap-4 rounded-xl bg-gray-400 bg-opacity-12 p-3 dark:border dark:bg-transparent">
+          <!-- Removed members -->
+          @for (onlySlack of differences.onlySlack; track onlySlack.id) {
+            <fuse-card
+              class="flex w-80 flex-col rounded-xl p-4"
+              [ngClass]="{ 'bg-gray-100': onlySlack.isInvitedUser }"
+              (click)="selectSlackUser(onlySlack)">
+              <div class="flex flex-row items-baseline gap-x-2">
+                <div class="text-xl font-semibold leading-tight">{{ onlySlack.firstName }} {{ onlySlack.lastName }}</div>
+              </div>
+              <div class="flex flex-row items-baseline gap-x-2">
+                <div class="text-secondary leading-tight">{{ onlySlack.email }}</div>
+              </div>
+            </fuse-card>
+          }
+        </div>
+
+        <div class="ml-6 flex flex-row items-baseline gap-x-2">
+          <div class="font-medium">{{ 'Matches' | translate }}</div>
+          <div class="text-secondary leading-tight">{{ differences.matches.length }}</div>
+        </div>
+
+        <div class="mt-2 flex flex-wrap gap-4 rounded-xl bg-gray-400 bg-opacity-12 p-3 dark:border dark:bg-transparent">
+          <!-- matches -->
+          @for (match of differences.matches; track match.member.id) {
+            <div
+              class="flex flex-col gap-1"
+              (click)="selectMatch(match)">
+              <app-member [member]="match.member"></app-member>
+              <fuse-card
+                class="flex w-80 flex-col rounded-xl p-4"
+                [ngClass]="{ 'bg-gray-100': match.slack.isInvitedUser }"
+                (click)="selectSlackUser(match.slack)">
+                <div class="flex flex-row items-baseline gap-x-2">
+                  <div class="text-xl font-semibold leading-tight">{{ match.slack.firstName }} {{ match.slack.lastName }}</div>
+                </div>
+                <div class="flex flex-row items-baseline gap-x-2">
+                  <div class="text-secondary leading-tight">{{ match.slack.email }}</div>
+                </div>
+              </fuse-card>
+            </div>
+          }
+        </div>
+      }
     </div>
+  </div>
 </div>

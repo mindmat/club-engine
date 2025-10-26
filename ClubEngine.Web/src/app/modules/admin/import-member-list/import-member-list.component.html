@@ -1,100 +1,97 @@
-<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
-
-    <!-- Header -->
-    <div class="flex flex-col items-start space-x-4 sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
-        <!-- Title -->
-        <div>
-            <div class="text-4xl font-extrabold tracking-tight leading-none">{{ 'Mitgliederliste' | translate }}</div>
-            <!-- <div class="mt-1.5 text-lg text-secondary">{{ filteredBookingDays.length }}</div> -->
-        </div>
-
-        <app-file-upload fileTypes="camt.053" [uploadUrl]="uploadUrl" (uploadResult)="uploadDone($event)">
-
-        </app-file-upload>
-
-        <!-- Filters -->
-        <!-- <mat-form-field class="fuse-mat-no-subscript w-full ml-auto sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
-            <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
-            <input (input)="filterByQuery(query.value)" placeholder="{{ 'SearchByNameIbanMessage' | translate }}" matInput #query>
-        </mat-form-field> -->
+<div class="absolute inset-0 flex min-w-0 flex-col overflow-hidden">
+  <!-- Header -->
+  <div class="bg-card flex flex-0 flex-col items-start space-x-4 border-b p-6 sm:flex-row sm:items-center sm:justify-between sm:px-10 sm:py-8 dark:bg-transparent">
+    <!-- Title -->
+    <div>
+      <div class="text-4xl font-extrabold leading-none tracking-tight">{{ 'Mitgliederliste' | translate }}</div>
+      <!-- <div class="mt-1.5 text-lg text-secondary">{{ filteredBookingDays.length }}</div> -->
     </div>
 
-    <!-- Main -->
-    <div class="flex flex-col p-6 sm:p-8 sm:pt-4 overflow-y-auto">
+    <app-file-upload
+      fileTypes="camt.053"
+      [uploadUrl]="uploadUrl"
+      (uploadResult)="uploadDone($event)">
+    </app-file-upload>
 
-        <!-- Days -->
-        <div class="p-2 rounded-xl bg-default">
+    <!-- Filters -->
+    <!-- <mat-form-field class="fuse-mat-no-subscript w-full ml-auto sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
+            <mat-icon matPrefix class="icon-size-5" svgIcon="heroicons_solid:magnifying-glass"></mat-icon>
+            <input (input)="filterByQuery(query.value)" placeholder="{{ 'SearchByNameIbanMessage' | translate }}" matInput #query>
+        </mat-form-field> -->
+  </div>
 
-            <!-- Differences -->
-            @if (differences$ | async; as differences)
-            {
-            <div class="flex flex-row items-baseline gap-x-2 ml-6">
-                <div class="font-medium">{{ 'NewMembers' | translate }}</div>
-                <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
+  <!-- Main -->
+  <div class="flex flex-col overflow-y-auto p-6 sm:p-8 sm:pt-4">
+    <!-- Days -->
+    <div class="bg-default rounded-xl p-2">
+      <!-- Differences -->
+      @if (differences$ | async; as differences) {
+        <div class="ml-6 flex flex-row items-baseline gap-x-2">
+          <div class="font-medium">{{ 'NewMembers' | translate }}</div>
+          <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
 
-                <button class="ml-3" mat-flat-button [color]="'primary'" (click)="addAllNewMembers(differences.added)">
-                    <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                    <span class="ml-2 mr-1">{{ 'AddAllNewMembers' | translate:{ count: differences.added.length } }}</span>
-                </button>
-            </div>
+          <button
+            class="ml-3"
+            mat-flat-button
+            [color]="'primary'"
+            (click)="addAllNewMembers(differences.added)">
+            <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+            <span class="ml-2 mr-1">{{ 'AddAllNewMembers' | translate: { count: differences.added.length } }}</span>
+          </button>
+        </div>
 
-            <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
-                <!-- New members -->
-                @for(added of differences.added; track added.id)
-                {
-                <fuse-card class="flex flex-col w-80 p-4 rounded-xl">
-                    <div class="flex flex-row items-baseline gap-x-2">
-                        <div class="text-xl font-semibold leading-tight">{{ added.firstName }} {{ added.lastName }}
-                        </div>
-                    </div>
-                    <div class="flex flex-row items-baseline gap-x-2">
-                        <div class="text-secondary leading-tight">{{ added.email }}</div>
-                    </div>
+        <div class="mt-2 flex flex-wrap gap-4 rounded-xl bg-gray-400 bg-opacity-12 p-3 dark:border dark:bg-transparent">
+          <!-- New members -->
+          @for (added of differences.added; track added.id) {
+            <fuse-card class="flex w-80 flex-col rounded-xl p-4">
+              <div class="flex flex-row items-baseline gap-x-2">
+                <div class="text-xl font-semibold leading-tight">{{ added.firstName }} {{ added.lastName }}</div>
+              </div>
+              <div class="flex flex-row items-baseline gap-x-2">
+                <div class="text-secondary leading-tight">{{ added.email }}</div>
+              </div>
 
-                    <div class="-m-1 flex flex-wrap items-center">
-                        <app-membership-tag [membershipTypeId]="added.currentMembershipTypeId"></app-membership-tag>
-                        @if (!!added.plannedLeave) {
-                        <div class="m-1 rounded-full bg-stone-300 px-3 py-0.5 text-sm font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
-                            {{ added.plannedLeave }}
-                        </div>
-                        }
-                    </div>
-                </fuse-card>
+              <div class="-m-1 flex flex-wrap items-center">
+                <app-membership-tag [membershipTypeId]="added.currentMembershipTypeId"></app-membership-tag>
+                @if (!!added.plannedLeave) {
+                  <div class="m-1 rounded-full bg-stone-300 px-3 py-0.5 text-sm font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300">
+                    {{ added.plannedLeave }}
+                  </div>
                 }
-            </div>
+              </div>
+            </fuse-card>
+          }
+        </div>
 
-            <div class="flex flex-row items-baseline gap-x-2 ml-6">
-                <div class="font-medium">{{ 'RemovedMembers' | translate }}</div>
-                <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
+        <div class="ml-6 flex flex-row items-baseline gap-x-2">
+          <div class="font-medium">{{ 'RemovedMembers' | translate }}</div>
+          <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
 
-                <!-- <button class="ml-3" mat-flat-button [color]="'primary'" (click)="addAllNewMembers(differences.added)">
+          <!-- <button class="ml-3" mat-flat-button [color]="'primary'" (click)="addAllNewMembers(differences.added)">
                     <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                     <span class="ml-2 mr-1">{{ 'AddAllNewMembers' | translate:{ count: differences.added.length } }}</span>
                 </button> -->
-            </div>
+        </div>
 
-            <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
-                <!-- Removed members -->
-                @for(deleted of differences.deleted; track deleted.id)
-                {
-                <fuse-card class="flex flex-col w-80 p-4 rounded-xl">
-                    <div class="flex flex-row items-baseline gap-x-2">
-                        <div class="text-xl font-semibold leading-tight">{{ deleted.firstName }} {{ deleted.lastName }}
-                        </div>
-                        <!-- <div class="text-secondary leading-tight">{{ added.email }}</div> -->
-                    </div>
-                    <div class="flex flex-row items-baseline gap-x-2">
-                        <!-- <div class="text-xl font-semibold leading-tight">{{ added.email }}</div> -->
-                        <div class="text-secondary leading-tight">{{ deleted.email }}</div>
-                    </div>
-                    <!-- <div *ngIf="booking.message" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
+        <div class="mt-2 flex flex-wrap gap-4 rounded-xl bg-gray-400 bg-opacity-12 p-3 dark:border dark:bg-transparent">
+          <!-- Removed members -->
+          @for (deleted of differences.deleted; track deleted.id) {
+            <fuse-card class="flex w-80 flex-col rounded-xl p-4">
+              <div class="flex flex-row items-baseline gap-x-2">
+                <div class="text-xl font-semibold leading-tight">{{ deleted.firstName }} {{ deleted.lastName }}</div>
+                <!-- <div class="text-secondary leading-tight">{{ added.email }}</div> -->
+              </div>
+              <div class="flex flex-row items-baseline gap-x-2">
+                <!-- <div class="text-xl font-semibold leading-tight">{{ added.email }}</div> -->
+                <div class="text-secondary leading-tight">{{ deleted.email }}</div>
+              </div>
+              <!-- <div *ngIf="booking.message" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
                         <span class="leading-none">{{ booking.message }}</span>
                     </div> -->
-
-                </fuse-card>
-                }
-            </div>
-            }
+            </fuse-card>
+          }
         </div>
+      }
     </div>
+  </div>
 </div>

@@ -1,0 +1,127 @@
+<div class="absolute inset-0 flex min-w-0 flex-col overflow-hidden">
+  <!-- Header -->
+  <div class="bg-card flex flex-0 flex-col border-b p-6 sm:flex-row sm:items-center sm:justify-between sm:px-10 sm:py-8 dark:bg-transparent">
+    <!-- Title -->
+    <div class="min-w-0 flex-1">
+      <div class="text-4xl font-extrabold leading-none tracking-tight">{{ (payment.type === PaymentType.Incoming ? 'AssignIncoming' : 'AssignOutgoing') | translate }}</div>
+      @if (payment.openAmount !== null) {
+        <div class="text-secondary mt-1.5 text-lg">Offen {{ payment.openAmount | number: '1.2-2' }}</div>
+      }
+    </div>
+
+    <!-- context menu -->
+    <div class="ml-auto flex items-center">
+      <button
+        mat-icon-button
+        [matMenuTriggerFor]="paymentMenu">
+        <mat-icon
+          class="icon-size-5"
+          [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
+      </button>
+      <mat-menu #paymentMenu="matMenu">
+        @if (!payment.ignored) {
+          <button
+            mat-menu-item
+            (click)="ignorePayment()">
+            <span class="flex items-center">
+              <mat-icon
+                class="mr-3 icon-size-5"
+                [svgIcon]="'heroicons_outline:eye-slash'"></mat-icon>
+              <span>{{ 'Ignore' | translate }}</span>
+            </span>
+          </button>
+        }
+      </mat-menu>
+    </div>
+
+    <!-- Filters -->
+    <mat-form-field
+      class="fuse-mat-no-subscript mt-4 w-full sm:ml-4 sm:mt-0 sm:w-72"
+      [floatLabel]="'always'">
+      <mat-icon
+        matPrefix
+        class="icon-size-5"
+        svgIcon="heroicons_solid:magnifying-glass"></mat-icon>
+      <input
+        (input)="searchCandidates(query.value)"
+        [placeholder]="'SearchByName' | translate"
+        matInput
+        #query />
+    </mat-form-field>
+  </div>
+
+  <div class="flex flex-col overflow-y-auto p-6 sm:p-8 sm:pt-4">
+    <!-- Existing assignments -->
+    @if (existingAssignments?.length > 0) {
+      <div class="bg-default rounded-xl p-2">
+        <div class="ml-6 flex flex-row items-baseline gap-x-2">
+          <div class="font-medium">{{ 'ExistingAssignments' | translate }}</div>
+          <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
+        </div>
+
+        <div class="mt-2 flex flex-wrap gap-4 rounded-xl bg-gray-400 bg-opacity-12 p-3 dark:border dark:bg-transparent">
+          <!-- existing assignment -->
+          @for (assignment of existingAssignments; track $index) {
+            <fuse-card class="flex w-80 flex-col rounded-xl p-4">
+              <div class="flex flex-row items-baseline gap-x-2">
+                <div class="text-xl font-semibold leading-tight">{{ assignment.assignedAmount | number: '1.2-2' }}</div>
+                <a
+                  class="text-secondary leading-tight hover:underline"
+                  [routerLink]="navigator.getSourceUrl(assignment.sourceType, assignment.sourceId)">
+                  {{ assignment.textPrimary }}
+                </a>
+                @if (assignment.paymentAssignmentId_Existing) {
+                  <button
+                    class="ml-auto"
+                    mat-icon-button
+                    (click)="unassign(assignment.paymentAssignmentId_Existing)">
+                    <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                  </button>
+                }
+              </div>
+              <!-- <div *ngIf="booking.charges" class="flex flex-row items-baseline gap-x-2">
+                                <div class="text-xl font-semibold leading-tight">{{ booking.charges | number: '1.2-2' }}</div>
+                                <div class="text-secondary leading-tight">Fremdspesen</div>
+                            </div> -->
+              <!-- <div *ngIf="booking.message" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
+                                <span class="leading-none">{{ candidate.message }}</span>
+                            </div> -->
+            </fuse-card>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Possible candidates -->
+    @if (candidates?.length > 0) {
+      <div class="bg-default rounded-xl p-2">
+        <div class="ml-6 flex flex-row items-baseline gap-x-2">
+          <div class="font-medium">{{ (payment.type === PaymentType.Incoming ? 'CandidatesForIncomingPayment' : 'CandidatesForOutgoingPayment') | translate }}</div>
+          <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
+        </div>
+
+        <div class="mt-2 flex flex-wrap gap-4 rounded-xl bg-gray-400 bg-opacity-12 p-3 dark:border dark:bg-transparent">
+          @for (candidate of candidates; track $index) {
+            <!-- candidate -->
+            @if (candidate.amountOpen !== 0 || payment.type === PaymentType.Outgoing) {
+              <!-- available -->
+              <app-assignment-candidate
+                [payment]="payment"
+                [candidate]="candidate"
+                (assign)="assign($event)">
+              </app-assignment-candidate>
+            }
+            @if (candidate.amountOpen === 0 && payment.type !== PaymentType.Outgoing) {
+              <!-- unavailable -->
+              <fuse-card
+                class="min-w-10 cursor-pointer rounded-xl bg-gray-300"
+                [routerLink]="navigator.getSourceUrl(candidate.sourceType, candidate.sourceId)">
+                <div class="m-auto flex p-4 text-xl uppercase">({{ candidate.textPrimary?.charAt(0) }})</div>
+              </fuse-card>
+            }
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>

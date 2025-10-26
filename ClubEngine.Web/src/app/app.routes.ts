@@ -6,6 +6,10 @@ import { LayoutComponent } from 'app/layout/layout.component';
 import { combineLatest } from 'rxjs';
 import { BankStatementsComponent } from './app-engine/accounting/bankStatements/bankStatements.component';
 import { BankStatementsResolver } from './app-engine/accounting/bankStatements/bankStatements.resolvers';
+import { SettlePaymentComponent } from './app-engine/accounting/settle-payment/settle-payment.component';
+import { SettlePaymentResolver } from './app-engine/accounting/settle-payment/settle-payment.resolver';
+import { SettlePaymentsComponent } from './app-engine/accounting/settle-payments/settle-payments.component';
+import { SettlePaymentsService } from './app-engine/accounting/settle-payments/settle-payments.service';
 import { PartitionSettingsComponent } from './app-engine/partition-settings/partition-settings.component';
 import { PartitionSettingsResolver } from './app-engine/partition-settings/partition-settings.resolver';
 import { PartitionAcronymResolver } from './app-engine/partitions/club-acronym.resolver';
@@ -103,6 +107,20 @@ export const appRoutes: Route[] = [
                   fees: () => inject(MembershipFeesService).fetch(),
                   periods: () => inject(PeriodsService).fetch(),
                 },
+              },
+              {
+                path: 'settle-payments',
+                component: SettlePaymentsComponent,
+                resolve: {
+                  statements: () => inject(SettlePaymentsService).fetchBankStatements(),
+                },
+                children: [
+                  {
+                    path: ':id',
+                    component: SettlePaymentComponent,
+                    resolve: { initialData: SettlePaymentResolver },
+                  },
+                ],
               },
             ],
           },

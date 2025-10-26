@@ -19,7 +19,7 @@ public class CommitUnitOfWorkDecorator<TRequest, TResponse>(DbContext dbContext,
     {
         try
         {
-            var response = await next();
+            var response = await next(cancellationToken);
             dbContext.ChangeTracker.DetectChanges();
 
             if (dbContext.ChangeTracker.HasChanges())

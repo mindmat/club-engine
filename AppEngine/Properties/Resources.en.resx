@@ -126,6 +126,12 @@
   <data name="AddImap" xml:space="preserve">
     <value>Add mail import</value>
   </data>
+  <data name="AssignBankStatements" xml:space="preserve">
+    <value>Assign bank statements</value>
+  </data>
+  <data name="AssignIncoming" xml:space="preserve">
+    <value>Assign incoming payment</value>
+  </data>
   <data name="Authorized" xml:space="preserve">
     <value>Authorized</value>
   </data>
@@ -141,11 +147,26 @@
   <data name="CountryCode" xml:space="preserve">
     <value>Country (ISO2)</value>
   </data>
+  <data name="Deposits" xml:space="preserve">
+    <value>Deposits</value>
+  </data>
+  <data name="ExistingAssignments" xml:space="preserve">
+    <value>Existing assignments</value>
+  </data>
+  <data name="Hide" xml:space="preserve">
+    <value>Hide</value>
+  </data>
   <data name="HouseNo" xml:space="preserve">
     <value>House N°</value>
   </data>
   <data name="Iban" xml:space="preserve">
     <value>IBAN</value>
+  </data>
+  <data name="Ignore" xml:space="preserve">
+    <value>Ignore</value>
+  </data>
+  <data name="Ignored" xml:space="preserve">
+    <value>Ignored</value>
   </data>
   <data name="ImapConfigExplanation" xml:space="preserve">
     <value>Configure IMAP access to continuously import mails from external mail addresses.</value>
@@ -177,6 +198,9 @@
   <data name="PaymentTo" xml:space="preserve">
     <value>to {{creditor}}</value>
   </data>
+  <data name="Payouts" xml:space="preserve">
+    <value>Payouts</value>
+  </data>
   <data name="Plz" xml:space="preserve">
     <value>ZIP</value>
   </data>
@@ -189,8 +213,14 @@
   <data name="Save" xml:space="preserve">
     <value>Save</value>
   </data>
+  <data name="SearchByNameIbanMessage" xml:space="preserve">
+    <value>Search by name, IBAN, message</value>
+  </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="Settled" xml:space="preserve">
+    <value>Settled</value>
   </data>
   <data name="Setup" xml:space="preserve">
     <value>Setup</value>

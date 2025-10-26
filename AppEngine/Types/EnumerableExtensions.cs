@@ -80,4 +80,18 @@ public static class EnumerableExtensions
             ? source.Take(count)
             : source;
     }
+
+    public static async Task<IEnumerable<T>> SelectManyAsync<TSource, T>(this IEnumerable<TSource> source,
+                                                                         Func<TSource, Task<IEnumerable<T>>> projection)
+    {
+        IEnumerable<T> result = [];
+
+        foreach (var item in source)
+        {
+            var localProjection = await projection(item);
+            result = result.Concat(localProjection);
+        }
+
+        return result;
+    }
 }

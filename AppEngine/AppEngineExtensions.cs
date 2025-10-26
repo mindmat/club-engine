@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Resources;
 
+using AppEngine.Accounting.Assignments;
 using AppEngine.Authentication;
 using AppEngine.Authorization;
 using AppEngine.Authorization.UsersInPartition;
@@ -116,7 +117,7 @@ public static class AppEngineExtensions
 
         foreach (var registrar in registrars)
         {
-            registrar.Register(builder.Services);
+            registrar.Register(builder.Services, assemblyContainer.Assemblies);
         }
 
 

@@ -88,6 +88,24 @@ namespace AppEngine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kontobewegungen zuorden.
+        /// </summary>
+        public static string AssignBankStatements {
+            get {
+                return ResourceManager.GetString("AssignBankStatements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zahlungseingang zuordnen.
+        /// </summary>
+        public static string AssignIncoming {
+            get {
+                return ResourceManager.GetString("AssignIncoming", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Berechtigt.
         /// </summary>
         public static string Authorized {
@@ -124,11 +142,56 @@ namespace AppEngine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zahlungseingang für:.
+        /// </summary>
+        public static string CandidatesForIncomingPayment {
+            get {
+                return ResourceManager.GetString("CandidatesForIncomingPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rückzahlung für:.
+        /// </summary>
+        public static string CandidatesForOutgoingPayment {
+            get {
+                return ResourceManager.GetString("CandidatesForOutgoingPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Land (ISO2).
         /// </summary>
         public static string CountryCode {
             get {
                 return ResourceManager.GetString("CountryCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Einzahlungen.
+        /// </summary>
+        public static string Deposits {
+            get {
+                return ResourceManager.GetString("Deposits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bestehende Zuordnungen.
+        /// </summary>
+        public static string ExistingAssignments {
+            get {
+                return ResourceManager.GetString("ExistingAssignments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ausblenden.
+        /// </summary>
+        public static string Hide {
+            get {
+                return ResourceManager.GetString("Hide", resourceCulture);
             }
         }
         
@@ -147,6 +210,24 @@ namespace AppEngine.Properties {
         public static string Iban {
             get {
                 return ResourceManager.GetString("Iban", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignorieren.
+        /// </summary>
+        public static string Ignore {
+            get {
+                return ResourceManager.GetString("Ignore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignorierte.
+        /// </summary>
+        public static string Ignored {
+            get {
+                return ResourceManager.GetString("Ignored", resourceCulture);
             }
         }
         
@@ -241,6 +322,15 @@ namespace AppEngine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Auszahlungen.
+        /// </summary>
+        public static string Payouts {
+            get {
+                return ResourceManager.GetString("Payouts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PLZ.
         /// </summary>
         public static string Plz {
@@ -277,11 +367,29 @@ namespace AppEngine.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Suche nach Namen, IBAN, Mitteilung.
+        /// </summary>
+        public static string SearchByNameIbanMessage {
+            get {
+                return ResourceManager.GetString("SearchByNameIbanMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Einstellungen.
         /// </summary>
         public static string Settings {
             get {
                 return ResourceManager.GetString("Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ausgeglichene.
+        /// </summary>
+        public static string Settled {
+            get {
+                return ResourceManager.GetString("Settled", resourceCulture);
             }
         }
         

@@ -1,4 +1,5 @@
 ﻿using AppEngine.DataAccess;
+using AppEngine.Partitions;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -7,7 +8,10 @@ namespace AppEngine.Accounting.Bookings;
 
 public class PayoutRequest : Entity
 {
-    public Guid ExternalId { get; set; }
+    public Guid PartitionId { get; set; }
+    public Partition? Partition { get; set; }
+    public string SourceType { get; set; }
+    public Guid SourceId { get; set; }
 
     public IList<BookingAssignment>? Assignments { get; set; }
 
@@ -31,10 +35,13 @@ public class PayoutRequestMap : EntityMap<PayoutRequest>
     {
         builder.ToTable("PayoutRequests");
 
-        builder.Property(prq => prq.IbanProposed)
+        builder.Property(por => por.SourceType)
+               .HasMaxLength(200);
+
+        builder.Property(por => por.IbanProposed)
                .HasMaxLength(100);
 
-        builder.Property(prq => prq.Reason)
+        builder.Property(por => por.Reason)
                .HasMaxLength(500);
     }
 }

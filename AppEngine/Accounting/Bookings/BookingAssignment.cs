@@ -7,7 +7,8 @@ namespace AppEngine.Accounting.Bookings;
 
 public class BookingAssignment : Entity
 {
-    public Guid? SegmentId { get; set; }
+    public Guid? SourceId { get; set; }
+    public string? SourceType { get; set; }
     public Guid? IncomingPaymentId { get; set; }
     public IncomingPayment? IncomingPayment { get; set; }
     public Guid? OutgoingPaymentId { get; set; }
@@ -27,20 +28,23 @@ public class PaymentAssignmentMap : EntityMap<BookingAssignment>
     {
         builder.ToTable("PaymentAssignments");
 
-        builder.HasOne(pas => pas.IncomingPayment)
-               .WithMany(pmt => pmt.Assignments)
-               .HasForeignKey(pas => pas.IncomingPaymentId);
+        builder.Property(bas => bas.SourceType)
+               .HasMaxLength(200);
 
-        builder.HasOne(pas => pas.OutgoingPayment)
-               .WithMany(pmt => pmt.Assignments)
-               .HasForeignKey(pas => pas.OutgoingPaymentId);
+        builder.HasOne(bas => bas.IncomingPayment)
+               .WithMany(ipm => ipm.Assignments)
+               .HasForeignKey(bas => bas.IncomingPaymentId);
 
-        builder.HasOne(pas => pas.PayoutRequest)
-               .WithMany(pmt => pmt.Assignments)
-               .HasForeignKey(pas => pas.PayoutRequestId);
+        builder.HasOne(bas => bas.OutgoingPayment)
+               .WithMany(opm => opm.Assignments)
+               .HasForeignKey(bas => bas.OutgoingPaymentId);
 
-        builder.HasOne(pas => pas.PaymentAssignment_Counter)
+        builder.HasOne(bas => bas.PayoutRequest)
+               .WithMany(por => por.Assignments)
+               .HasForeignKey(bas => bas.PayoutRequestId);
+
+        builder.HasOne(bas => bas.PaymentAssignment_Counter)
                .WithMany()
-               .HasForeignKey(pas => pas.PaymentAssignmentId_Counter);
+               .HasForeignKey(bas => bas.PaymentAssignmentId_Counter);
     }
 }

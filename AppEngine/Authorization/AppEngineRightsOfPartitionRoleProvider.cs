@@ -1,4 +1,5 @@
 ﻿using AppEngine.Accounting.Account;
+using AppEngine.Accounting.Assignments;
 using AppEngine.Accounting.Bookings;
 using AppEngine.Accounting.Iso20022.Camt;
 using AppEngine.Authorization.UsersInPartition;
@@ -36,6 +37,9 @@ internal class AppEngineRightsOfPartitionRoleProvider : IRightsOfPartitionRolePr
          || usersRolesInEvent.Contains(UserInPartitionRole.Admin))
         {
             yield return nameof(SavePaymentFileCommand);
+            yield return nameof(PaymentAssignmentsQuery);
+            yield return nameof(AssignIncomingPaymentCommand);
+            yield return nameof(UnassignPaymentCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInPartitionRole.Admin))

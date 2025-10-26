@@ -46,6 +46,31 @@
         }
       }
     },
+    "/api/AssignIncomingPaymentCommand": {
+      "post": {
+        "tags": [
+          "AssignIncomingPayment"
+        ],
+        "operationId": "AssignIncomingPayment_Command",
+        "requestBody": {
+          "x-name": "AssignIncomingPaymentCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignIncomingPaymentCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/BankAccountConfigurationQuery": {
       "post": {
         "tags": [
@@ -555,6 +580,38 @@
         }
       }
     },
+    "/api/PaymentAssignmentsQuery": {
+      "post": {
+        "tags": [
+          "PaymentAssignments"
+        ],
+        "operationId": "PaymentAssignments_Query",
+        "requestBody": {
+          "x-name": "PaymentAssignmentsQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentAssignmentsQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentAssignments"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/PaymentsByDayQuery": {
       "post": {
         "tags": [
@@ -985,6 +1042,31 @@
         }
       }
     },
+    "/api/UnassignPaymentCommand": {
+      "post": {
+        "tags": [
+          "UnassignPayment"
+        ],
+        "operationId": "UnassignPayment_Command",
+        "requestBody": {
+          "x-name": "UnassignPaymentCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnassignPaymentCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/UpdateReadModelCommand": {
       "post": {
         "tags": [
@@ -1142,6 +1224,38 @@
           },
           "includeDeniedRequests": {
             "type": "boolean"
+          }
+        }
+      },
+      "AssignIncomingPaymentCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "paymentIncomingId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "sourceId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "sourceType": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "acceptDifference": {
+            "type": "boolean"
+          },
+          "acceptDifferenceReason": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -1911,6 +2025,153 @@
           }
         }
       },
+      "PaymentAssignments": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "openAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "type": {
+            "$ref": "#/components/schemas/PaymentType"
+          },
+          "ignored": {
+            "type": "boolean"
+          },
+          "sourceCandidates": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/AssignmentCandidate"
+            }
+          },
+          "existingAssignments": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ExistingAssignment"
+            }
+          }
+        }
+      },
+      "PaymentType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Incoming",
+          "Outgoing"
+        ],
+        "enum": [
+          1,
+          2
+        ]
+      },
+      "AssignmentCandidate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "sourceId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "sourceType": {
+            "type": "string"
+          },
+          "textPrimary": {
+            "type": "string",
+            "nullable": true
+          },
+          "textSecondary": {
+            "type": "string",
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "amountTotal": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "amountOpen": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "amountMatch": {
+            "type": "boolean"
+          },
+          "matchScore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bookingId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "ExistingAssignment": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "sourceId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "sourceType": {
+            "type": "string"
+          },
+          "textPrimary": {
+            "type": "string",
+            "nullable": true
+          },
+          "textSecondary": {
+            "type": "string",
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "paymentAssignmentId_Existing": {
+            "type": "string",
+            "format": "guid"
+          },
+          "assignedAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "bookingId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "PaymentAssignmentsQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "paymentId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "searchString": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "BookingsOfDay": {
         "type": "object",
         "additionalProperties": false,
@@ -2382,6 +2643,20 @@
           "language": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "UnassignPaymentCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "paymentAssignmentId": {
+            "type": "string",
+            "format": "guid"
           }
         }
       },
