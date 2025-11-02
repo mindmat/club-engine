@@ -9,7 +9,6 @@ public interface IRepository<TEntity> : IQueryable<TEntity>
     where TEntity : Entity
 {
     Task<TEntity?> Get(Expression<Func<TEntity, bool>> predicate);
-    Task<TEntity?> GetById(Guid id);
     Task Upsert(TEntity entity, CancellationToken cancellationToken = default);
     Task<TEntity> Upsert(Expression<Func<TEntity, bool>> findExisting, Func<TEntity> createNew, Action<TEntity> update, CancellationToken cancellationToken = default);
     TEntity Insert(TEntity rootEntity);
@@ -23,11 +22,6 @@ public class Repository<TEntity>(DbContext dbContext) : Queryable<TEntity>(dbCon
     public Task<TEntity?> Get(Expression<Func<TEntity, bool>> predicate)
     {
         return DbSet.FirstOrDefaultAsync(predicate);
-    }
-
-    public Task<TEntity?> GetById(Guid id)
-    {
-        return DbSet.FirstOrDefaultAsync(entity => entity.Id == id);
     }
 
     public async Task<TEntity> Upsert(Expression<Func<TEntity, bool>> findExisting, Func<TEntity> createNew, Action<TEntity> update, CancellationToken cancellationToken = default)

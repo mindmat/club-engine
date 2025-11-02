@@ -49,7 +49,7 @@ public class AssignIncomingPaymentCommandHandler(IQueryable<IncomingPayment> inc
                              Amount = command.Amount,
                              Created = dateTimeProvider.RequestNow
                          };
-        await assignments.Upsert(assignment, cancellationToken);
+        assignments.Insert(assignment);
 
         //if (command.AcceptDifference)
         //{
@@ -84,10 +84,17 @@ public class AssignIncomingPaymentCommandHandler(IQueryable<IncomingPayment> inc
                              SourceText = sourceCandidate.TextPrimary
                          });
 
+
         //changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
         //changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, registration.EventId);
         changeTrigger.QueryChanged<PaymentsByDayQuery>(command.PartitionId);
         changeTrigger.QueryChanged<PaymentAssignmentsQuery>(command.PartitionId, incomingPayment.Id);
+
+        changeTrigger.PublishEvent(new SourceAssignmentsChanged
+                                   {
+                                       SourceType = source.Type,
+                                       SourceId = command.SourceId,
+                                   });
     }
 }
 

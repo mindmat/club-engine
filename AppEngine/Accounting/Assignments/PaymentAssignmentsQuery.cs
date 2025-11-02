@@ -2,8 +2,6 @@
 using AppEngine.Authorization;
 using AppEngine.Types;
 
-using MediatR;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace AppEngine.Accounting.Assignments;
@@ -17,8 +15,8 @@ public class PaymentAssignmentsQuery : IRequest<PaymentAssignments>, IPartitionB
 
 public class PaymentAssignmentsQueryHandler(IQueryable<Booking> bookings,
                                             //IQueryable<PayoutRequest> payoutRequests,
-                                            IQueryable<BookingAssignment> assignments,
-                                            IEnumerable<IPaymentAssignmentSource> assignmentSources)
+                                            IEnumerable<IPaymentAssignmentSource> assignmentSources,
+                                            AccountingFacade accounting)
     : IRequestHandler<PaymentAssignmentsQuery, PaymentAssignments>
 {
     public async Task<PaymentAssignments> Handle(PaymentAssignmentsQuery query,
@@ -253,17 +251,10 @@ public class PaymentAssignmentsQueryHandler(IQueryable<Booking> bookings,
 
     private async Task AddExistingAssignmentInfos(List<AssignmentCandidate> candidates, decimal paymentAmount, Guid partitionId)
     {
-        var sourceIds = candidates.Select(sca => sca.SourceId)
+        var sourceIds = candidates.Select(sca => new PaymentAssignee(sca.SourceType, sca.SourceId))
                                   .Distinct();
 
-        var sourceAssignments = await assignments.Where(bas => (bas.IncomingPayment!.Booking!.PartitionId == partitionId
-                                                             || bas.OutgoingPayment!.Booking!.PartitionId == partitionId)
-                                                            && sourceIds.Contains(bas.SourceId!.Value))
-                                                 .GroupBy(bas => new { bas.SourceType, bas.SourceId })
-                                                 .ToDictionaryAsync(grp => grp.Key,
-                                                                    grp => grp.Sum(bas => bas.OutgoingPaymentId == null
-                                                                                       ? bas.Amount
-                                                                                       : -bas.Amount));
+        var sourceAssignments = await accounting.GetAssignedAmount(partitionId, sourceIds);
 
         foreach (var candidate in candidates)
         {

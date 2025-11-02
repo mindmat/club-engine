@@ -29,6 +29,9 @@ public class QueryReadModelMap : IEntityTypeConfiguration<QueryReadModel>
         builder.HasKey(Sequence)
                .IsClustered();
 
+        builder.Property(rdm => rdm.QueryName)
+               .HasMaxLength(200);
+
         builder.HasIndex(rdm => new
                                 {
                                     rdm.QueryName,

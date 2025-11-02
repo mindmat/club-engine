@@ -475,6 +475,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    member_Query(memberQuery: MemberQuery | undefined): Observable<MemberDetails> {
+        let url_ = this.baseUrl + "/api/MemberQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(memberQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMember_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMember_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<MemberDetails>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<MemberDetails>;
+        }));
+    }
+
+    protected processMember_Query(response: HttpResponseBase): Observable<MemberDetails> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as MemberDetails;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     membershipFees_Query(membershipFeesQuery: MembershipFeesQuery | undefined): Observable<MembershipFeesList> {
         let url_ = this.baseUrl + "/api/MembershipFeesQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -1771,6 +1822,54 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    updateFeeAmountPaid_Command(updateFeeAmountPaidCommand: UpdateFeeAmountPaidCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/UpdateFeeAmountPaidCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(updateFeeAmountPaidCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateFeeAmountPaid_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateFeeAmountPaid_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUpdateFeeAmountPaid_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     updateReadModel_Command(updateReadModelCommand: UpdateReadModelCommand | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/UpdateReadModelCommand";
         url_ = url_.replace(/[?&]$/, "");
@@ -2092,6 +2191,40 @@ export interface ImportNewMembersCommand {
 export interface MapSlackUserCommand {
     partitionId?: string;
     slackUserId?: string;
+    memberId?: string;
+}
+
+export interface MemberDetails {
+    id?: string;
+    name?: string | null;
+    email?: string | null;
+    phone?: string | null;
+    lastMembership?: MembershipDetails | null;
+    fees?: FeeDetails[];
+}
+
+export interface MembershipDetails {
+    membershipTypeId?: string;
+    from?: Date;
+    until?: Date;
+}
+
+export interface FeeDetails {
+    periodFrom?: Date;
+    periodUntil?: Date;
+    amount?: number;
+    amountOpen?: number;
+    state?: MembershipFeeState;
+}
+
+export enum MembershipFeeState {
+    Due = 1,
+    Paid = 2,
+    Cancelled = 3,
+}
+
+export interface MemberQuery {
+    partitionId?: string;
     memberId?: string;
 }
 
@@ -2445,6 +2578,11 @@ export interface TranslationQuery {
 export interface UnassignPaymentCommand {
     partitionId?: string;
     paymentAssignmentId?: string;
+}
+
+export interface UpdateFeeAmountPaidCommand {
+    partitionId?: string;
+    membershipFeeId?: string;
 }
 
 export interface UpdateReadModelCommand {

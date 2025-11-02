@@ -18,6 +18,7 @@ public class MembershipFee : Entity
     public Guid MembershipTypeId { get; set; }
     public MembershipType? MembershipType { get; set; }
     public decimal Amount { get; set; }
+    public decimal AmountPaid_ReadModel { get; set; }
     public MembershipFeeState State { get; set; }
 }
 
@@ -35,12 +36,12 @@ public class MembershipFeeMap : EntityMap<MembershipFee>
         builder.ToTable("MembershipFees");
 
         builder.HasOne(mfe => mfe.Period)
-               .WithMany()
+               .WithMany(per => per.Fees)
                .HasForeignKey(mfe => mfe.PeriodId)
                .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(mfe => mfe.Member)
-               .WithMany()
+               .WithMany(mbr => mbr.Fees)
                .HasForeignKey(mfe => mfe.MemberId)
                .OnDelete(DeleteBehavior.Restrict);
 

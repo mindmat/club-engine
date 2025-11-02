@@ -6,8 +6,6 @@ using AppEngine.Internationalization;
 using AppEngine.ReadModels;
 using AppEngine.TimeHandling;
 
-using MediatR;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace AppEngine.Accounting.Assignments;
@@ -61,6 +59,13 @@ public class UnassignPaymentCommandHandler(IRepository<BookingAssignment> assign
                                            SourceId = existingAssignment.SourceId,
                                            Amount = existingAssignment.Amount
                                        });
+
+            changeTrigger.PublishEvent(new SourceAssignmentsChanged
+                                       {
+                                           SourceType = existingAssignment.SourceType,
+                                           SourceId = existingAssignment.SourceId,
+                                       });
+
             changeTrigger.QueryChanged<PaymentAssignmentsQuery>(command.PartitionId, existingAssignment.IncomingPaymentId);
         }
         else if (existingAssignment.OutgoingPaymentId != null)
@@ -75,6 +80,13 @@ public class UnassignPaymentCommandHandler(IRepository<BookingAssignment> assign
                                            SourceId = existingAssignment.SourceId,
                                            Amount = existingAssignment.Amount
                                        });
+
+            changeTrigger.PublishEvent(new SourceAssignmentsChanged
+                                       {
+                                           SourceType = existingAssignment.SourceType,
+                                           SourceId = existingAssignment.SourceId,
+                                       });
+
             changeTrigger.QueryChanged<PaymentAssignmentsQuery>(command.PartitionId, existingAssignment.OutgoingPaymentId);
         }
 
@@ -82,6 +94,12 @@ public class UnassignPaymentCommandHandler(IRepository<BookingAssignment> assign
         //changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
         changeTrigger.QueryChanged<PaymentsByDayQuery>(command.PartitionId);
     }
+}
+
+public class SourceAssignmentsChanged : DomainEvent
+{
+    public string? SourceType { get; set; }
+    public Guid? SourceId { get; set; }
 }
 
 public class IncomingPaymentUnassigned : DomainEvent

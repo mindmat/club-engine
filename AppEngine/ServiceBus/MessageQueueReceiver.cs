@@ -1,10 +1,9 @@
 ﻿using System.Reflection;
 
 using AppEngine.Json;
+using AppEngine.Mediator;
 
 using Azure.Messaging.ServiceBus;
-
-using MediatR;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -16,6 +15,7 @@ public class MessageQueueReceiver : IAsyncDisposable
     private readonly IServiceProvider     _container;
     private readonly Serializer           _serializer;
     private readonly ServiceBusClient     _client;
+    private readonly RequestRegistry      _requestRegistry;
     private readonly ILogger              _logger;
     private readonly MethodInfo           _typedProcessMethod;
     private          ServiceBusProcessor? _processor;
@@ -23,12 +23,14 @@ public class MessageQueueReceiver : IAsyncDisposable
     public MessageQueueReceiver(ILogger<MessageQueueReceiver> logger,
                                 IServiceProvider container,
                                 Serializer serializer,
-                                ServiceBusClient client)
+                                ServiceBusClient client,
+                                RequestRegistry requestRegistry)
     {
         _logger = logger;
         _container = container;
         _serializer = serializer;
         _client = client;
+        _requestRegistry = requestRegistry;
 
         var typedProcessMethod = typeof(MessageQueueReceiver).GetMethod(nameof(ProcessTypedMessage),
                                                                         BindingFlags.NonPublic | BindingFlags.Instance)!;
@@ -82,14 +84,14 @@ public class MessageQueueReceiver : IAsyncDisposable
             throw new ArgumentException($"Invalid message: {arg.Message.Body}");
         }
 
-        var commandType = Type.GetType(commandMessage.CommandType);
+        var commandType = _requestRegistry.RequestTypes.First(rqt => rqt.FullName == commandMessage.CommandType);
 
         if (commandType == null)
         {
-            throw new ArgumentException($"Unknown command type: {commandType}");
+            throw new ArgumentException($"Unknown command type: {commandMessage.CommandType}");
         }
 
-        var typedMethod = _typedProcessMethod.MakeGenericMethod(commandType);
+        var typedMethod = _typedProcessMethod.MakeGenericMethod(commandType.Request);
 
         if (typedMethod.Invoke(this, [commandMessage.CommandSerialized, CommandQueue.CommandQueueName, arg.CancellationToken]) is Task task)
         {

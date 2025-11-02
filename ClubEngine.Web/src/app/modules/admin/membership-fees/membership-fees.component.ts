@@ -9,11 +9,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { RouterLink } from '@angular/router';
 import { FuseCardComponent } from '@fuse/components/card';
 import { TranslatePipe } from '@ngx-translate/core';
 import { Api, FeeStateInPeriod, MembershipFeesList, PeriodDisplayItem } from 'app/api/api';
 import { PartitionService } from 'app/app-engine/partitions/partition.service';
 import { Observable, tap } from 'rxjs';
+import { NavigatorService } from '../navigator.service';
 import { PeriodsService } from '../periods/periods.service';
 import { MembershipFeesService } from './membership-fees.service';
 
@@ -33,6 +35,7 @@ import { MembershipFeesService } from './membership-fees.service';
     DecimalPipe,
     FuseCardComponent,
     DecimalPipe,
+    RouterLink,
   ],
   templateUrl: './membership-fees.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,7 +49,8 @@ export class MembershipFeesComponent {
     private periodsService: PeriodsService,
     private api: Api,
     private partitionService: PartitionService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public navigator: NavigatorService
   ) {}
 
   get membershipFees$(): Observable<MembershipFeesList> {

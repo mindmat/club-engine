@@ -4,8 +4,6 @@ using AppEngine.Partitions;
 using AppEngine.ServiceBus;
 using AppEngine.TimeHandling;
 
-using MediatR;
-
 namespace AppEngine.ReadModels;
 
 public class ChangeTrigger(CommandQueue commandQueue,

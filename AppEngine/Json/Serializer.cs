@@ -6,9 +6,11 @@ public class Serializer
 {
     private static readonly JsonSerializerOptions SerializerOptions = new(JsonSerializerDefaults.Web);
 
-    public string Serialize<T>(T x)
+    public string Serialize<T>(T x, bool useRuntimeTypeInfo = false)
     {
-        return JsonSerializer.Serialize(x, SerializerOptions);
+        return useRuntimeTypeInfo
+            ? JsonSerializer.Serialize(x, x.GetType(), SerializerOptions)
+            : JsonSerializer.Serialize(x, SerializerOptions);
     }
 
 

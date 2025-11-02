@@ -45,7 +45,7 @@ public class CommandQueue(ServiceBusSender sender, RequestTimeProvider timeProvi
                                   TimeSpan? delay = null)
         where T : IRequest
     {
-        var commandSerialized = serializer.Serialize(command);
+        var commandSerialized = serializer.Serialize(command, true);
 
         _messages.Add(new EnqueuedCommand(
                           new CommandMessage(CommandType: command.GetType().FullName!, CommandSerialized: commandSerialized, Delay: delay),

@@ -1,0 +1,131 @@
+@if (member$ | async; as member) {
+  <div class="flex min-w-0 flex-auto flex-col">
+    <!-- Header -->
+    <div class="bg-card flex flex-col shadow">
+      <!-- Cover image -->
+      <!-- <div>
+            <img class="h-40 lg:h-80 object-cover" src="assets/images/pages/profile/cover.jpg" alt="Cover image">
+        </div> -->
+
+      <!-- User info -->
+      <div class="bg-card mx-auto flex w-full max-w-5xl flex-0 flex-col items-center gap-2 px-8 lg:h-18 lg:flex-row">
+        <!-- Avatar -->
+        <!-- <div class="-mt-26 lg:-mt-22 rounded-full">
+                <img class="w-32 h-32 rounded-full ring-4 ring-bg-card" src="assets/images/avatars/male-04.jpg" alt="User avatar">
+            </div> -->
+
+        <!-- Details -->
+        <div class="mt-4 flex flex-col items-center lg:ml-8 lg:mt-0 lg:items-start">
+          <div class="text-lg font-bold leading-none">{{ member.name }}</div>
+          <!-- <div class="text-secondary">London, UK</div> -->
+        </div>
+
+        <app-membership-tag [membershipTypeId]="member.lastMembership.membershipTypeId"></app-membership-tag>
+        <app-update-readmodel
+          queryName="MemberQuery"
+          [rowId]="member.id"></app-update-readmodel>
+        <!-- Separator -->
+        <!-- <div class="mx-8 hidden h-8 border-l-2 lg:flex"></div> -->
+      </div>
+    </div>
+    <!-- Column layout -->
+    <div class="m-6 grid grid-cols-4 gap-8">
+      <!-- Cards -->
+      <!-- Personal Details -->
+      <fuse-card class="flex flex-col p-8">
+        <div class="flex items-center justify-between">
+          <div class="text-2xl font-semibold leading-tight">{{ 'Overview' | translate }}</div>
+          <div class="-mr-3">
+            <!-- <button mat-icon-button [matMenuTriggerFor]="overviewMenu">
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
+                        </button>
+                        <mat-menu #overviewMenu="matMenu">
+                            <button mat-menu-item (click)="addReduction()">{{ 'CreateIndividualReduction' | translate }}</button>
+                            <button mat-menu-item (click)="cancelRegistration()">{{ 'CancelRegistration' | translate }}</button>
+                            <button mat-menu-item (click)="changeName()">{{ 'ChangeName' | translate }}</button>
+                            <button mat-menu-item (click)="changeEmail()">{{ 'ChangeEmail' | translate }}</button>
+                            <button mat-menu-item *ngIf="registration.partnerId===null && registration.partnerOriginal!==null" (click)="convertToSingleRegistration()">
+                                {{ 'TransformToSingle' | translate }}</button>
+                            <button mat-menu-item *ngIf="registration.status===RegistrationState.Received&&registration.paid<registration.price" (click)="setWillPayAtCheckin(true)">
+                                {{ 'SetWillPayAtCheckin' | translate }}</button>
+                            <button mat-menu-item *ngIf="registration.paid<registration.price&&registration.willPayAtCheckin" (click)="setWillPayAtCheckin(false)">
+                                {{ 'SetWillNotPayAtCheckin' | translate }}</button>
+                            <button mat-menu-item *ngIf="registration.partnerId" (click)="unbindPartnerRegistrations()">{{ 'TransformToSingle' | translate }}</button>
+                            <button mat-menu-item (click)="recalculateReadModel()">{{ 'Recalculate' | translate }}</button>
+                        </mat-menu> -->
+          </div>
+        </div>
+        <hr class="my-6 w-full border-t" />
+        <div class="flex flex-col">
+          <!-- <div class="flex items-center">
+            <mat-icon
+              class="mr-3 icon-size-5"
+              [svgIcon]="'mat_solid:more_time'"></mat-icon>
+            <span class="leading-none">{{ member.memberSince | date: 'dd.MM.yy' }} </span>
+          </div> -->
+          <div class="mt-4 flex items-center">
+            <mat-icon
+              class="mr-3 icon-size-5"
+              [svgIcon]="'mat_solid:mail'"></mat-icon>
+            <span class="leading-none">{{ member.email }}</span>
+          </div>
+          @if (member.phone) {
+            <div class="mt-4 flex items-center">
+              <mat-icon
+                class="mr-3 icon-size-5"
+                [svgIcon]="'heroicons_solid:phone'"></mat-icon>
+              <span class="leading-none">{{ member.phone }}</span>
+            </div>
+          }
+        </div>
+      </fuse-card>
+
+      <!-- Fees -->
+      <fuse-card class="flex flex-col rounded-2xl px-8 pb-4 pt-6">
+        <div class="flex items-center justify-between">
+          <div class="text-2xl font-semibold leading-tight">{{ 'MembershipFees' | translate }}</div>
+        </div>
+        <hr class="my-6 w-full border-t" />
+        <div class="mb-4 flex flex-col space-y-4">
+          @for (fee of member.fees; track $index) {
+            <div class="bg-default flex flex-col rounded-xl p-3 shadow">
+              <div class="flex items-center justify-between gap-1">
+                <div class="flex items-baseline">
+                  <div>{{ fee.amount | number: '1.2-2' }}</div>
+                </div>
+                @switch (fee.state) {
+                  @case (MembershipFeeState.Paid) {
+                    <mat-icon
+                      class="text-green-400 icon-size-5"
+                      [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+                  }
+                  @case (MembershipFeeState.Due) {
+                    <mat-icon
+                      class="text-orange-400 icon-size-5"
+                      [svgIcon]="'mat_solid:hourglass_bottom'"></mat-icon>
+                  }
+                  @case (MembershipFeeState.Cancelled) {
+                    <mat-icon
+                      class="text-red-400 icon-size-5"
+                      [svgIcon]="'mat_solid:cancel'"></mat-icon>
+                  }
+                }
+                <div class="text-secondary ml-auto text-sm">
+                  {{ fee.periodFrom | datePeriod: fee.periodUntil : 'short' }}
+                </div>
+              </div>
+              <!-- <div class="text-secondary -mt-1 text-sm">
+                <div *ngIf="payment.debitorName">{{ 'PaymentFrom' | translate: { debitor: payment.debitorName ?? '?' } }}</div>
+                <div *ngIf="payment.creditorName">{{ 'PaymentTo' | translate: { creditor: payment.creditorName ?? '?' } }}</div>
+              </div> -->
+            </div>
+          }
+        </div>
+      </fuse-card>
+    </div>
+  </div>
+} @else {
+  <div class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent">
+    <div class="text-secondary mt-4 text-2xl font-semibold tracking-tight">{{ 'Loading' | translate }}</div>
+  </div>
+}

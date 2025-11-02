@@ -1,12 +1,10 @@
 ﻿using AppEngine.Types;
 
-using MediatR;
-
 using Microsoft.AspNetCore.Authorization;
 
 namespace AppEngine.Mediator;
 
-public record RequestMetadata(Type Request, Type RequestHandler, RequestType Type, RequestKind Kind, string Url);
+public record RequestMetadata(Type Request, Type RequestHandler, RequestType Type, RequestKind Kind, string Url, string FullName);
 
 public enum RequestKind
 {
@@ -17,7 +15,7 @@ public enum RequestKind
 
 public class RequestRegistry
 {
-    public IEnumerable<RequestMetadata> RequestTypes { get; }
+    public IReadOnlyCollection<RequestMetadata> RequestTypes { get; }
 
     public RequestRegistry(IEnumerable<Type> requestQueryTypes, IEnumerable<Type> requestCommandTypes)
     {
@@ -30,7 +28,8 @@ public class RequestRegistry
                                                                         rht,
                                                                         RequestType.Query,
                                                                         kind,
-                                                                        GetUrl(queryType, kind));
+                                                                        GetUrl(queryType, kind),
+                                                                        queryType.FullName!);
                                          }),
                                          requestCommandTypes.Select(rht =>
                                          {
@@ -41,7 +40,8 @@ public class RequestRegistry
                                                                         rht,
                                                                         RequestType.Command,
                                                                         kind,
-                                                                        GetUrl(commandType, kind));
+                                                                        GetUrl(commandType, kind),
+                                                                        commandType.FullName!);
                                          }))
                                  .OrderBy(rht => rht.Request.Name)
                                  .ToList();

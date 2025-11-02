@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { Route } from '@angular/router';
+import { ActivatedRouteSnapshot, Route } from '@angular/router';
 import { AuthGuard } from '@auth0/auth0-angular';
 import { initialDataResolver } from 'app/app.resolvers';
 import { LayoutComponent } from 'app/layout/layout.component';
@@ -14,6 +14,8 @@ import { PartitionSettingsComponent } from './app-engine/partition-settings/part
 import { PartitionSettingsResolver } from './app-engine/partition-settings/partition-settings.resolver';
 import { PartitionAcronymResolver } from './app-engine/partitions/club-acronym.resolver';
 import { ImportMemberListComponent } from './modules/admin/import-member-list/import-member-list.component';
+import { MemberDetailsComponent } from './modules/admin/member-details/member-details.component';
+import { MemberDetailsService } from './modules/admin/member-details/member-details.service';
 import { MembersHistoryService } from './modules/admin/members-history/members-history.service';
 import { MembersComponent } from './modules/admin/members/members.component';
 import { MembersService } from './modules/admin/members/members.service';
@@ -80,6 +82,18 @@ export const appRoutes: Route[] = [
                 return combineLatest([inject(MembersService).fetch(), inject(MembersHistoryService).fetch()]);
               },
             },
+            // children: [
+            //   {
+            //     path: ':id',
+            //     component: MemberDetailsComponent,
+            //     resolve: { member: (route: ActivatedRouteSnapshot) => inject(MemberDetailsService).fetch(route.params.id) },
+            //   },
+            // ],
+          },
+          {
+            path: 'member/:id',
+            component: MemberDetailsComponent,
+            resolve: { member: (route: ActivatedRouteSnapshot) => inject(MemberDetailsService).fetch(route.params.id) },
           },
           {
             path: 'import-member-list',

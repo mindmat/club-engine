@@ -1,15 +1,14 @@
-﻿using AppEngine.DataAccess;
+﻿using AppEngine.Authorization;
+using AppEngine.DataAccess;
 using AppEngine.Json;
 using AppEngine.MenuNodes;
 using AppEngine.TimeHandling;
-
-using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
 namespace AppEngine.ReadModels;
 
-public class UpdateReadModelCommand : IRequest
+public class UpdateReadModelCommand : IRequest, IPartitionBoundRequest
 {
     public Guid PartitionId { get; set; }
     public string QueryName { get; set; } = null!;

@@ -7,6 +7,11 @@ public static class StringExtensions
         return string.Join(separator, strings);
     }
 
+    public static string StringJoinNullable(this IEnumerable<string?> strings, string separator = ", ")
+    {
+        return string.Join(separator, strings.WhereNotNull());
+    }
+
     public static DateOnly ToDate(this string? value, string? mappingFormat, DateOnly fallback)
     {
         if (value != null)

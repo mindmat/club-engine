@@ -1,7 +1,5 @@
 ﻿using System.Globalization;
 
-using MediatR;
-
 using Microsoft.AspNetCore.Authorization;
 
 namespace AppEngine.Internationalization;

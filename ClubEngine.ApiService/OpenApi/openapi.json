@@ -280,6 +280,38 @@
         }
       }
     },
+    "/api/MemberQuery": {
+      "post": {
+        "tags": [
+          "Member"
+        ],
+        "operationId": "Member_Query",
+        "requestBody": {
+          "x-name": "MemberQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemberQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemberDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/MembershipFeesQuery": {
       "post": {
         "tags": [
@@ -1067,6 +1099,31 @@
         }
       }
     },
+    "/api/UpdateFeeAmountPaidCommand": {
+      "post": {
+        "tags": [
+          "UpdateFeeAmountPaid"
+        ],
+        "operationId": "UpdateFeeAmountPaid_Command",
+        "requestBody": {
+          "x-name": "UpdateFeeAmountPaidCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFeeAmountPaidCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/UpdateReadModelCommand": {
       "post": {
         "tags": [
@@ -1581,6 +1638,113 @@
           },
           "slackUserId": {
             "type": "string"
+          },
+          "memberId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "MemberDetails": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastMembership": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MembershipDetails"
+              }
+            ]
+          },
+          "fees": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeeDetails"
+            }
+          }
+        }
+      },
+      "MembershipDetails": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "membershipTypeId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "from": {
+            "type": "string",
+            "format": "date"
+          },
+          "until": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "FeeDetails": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "periodFrom": {
+            "type": "string",
+            "format": "date"
+          },
+          "periodUntil": {
+            "type": "string",
+            "format": "date"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "amountOpen": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "state": {
+            "$ref": "#/components/schemas/MembershipFeeState"
+          }
+        }
+      },
+      "MembershipFeeState": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Due",
+          "Paid",
+          "Cancelled"
+        ],
+        "enum": [
+          1,
+          2,
+          3
+        ]
+      },
+      "MemberQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
           },
           "memberId": {
             "type": "string",
@@ -2655,6 +2819,20 @@
             "format": "guid"
           },
           "paymentAssignmentId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "UpdateFeeAmountPaidCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "membershipFeeId": {
             "type": "string",
             "format": "guid"
           }

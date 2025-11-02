@@ -25,6 +25,7 @@ internal class RightsOfRoleProvider : IRightsOfPartitionRoleProvider
         {
             yield return nameof(MembershipTypesQuery);
             yield return nameof(MembersQuery);
+            yield return nameof(MemberQuery);
             yield return nameof(MemberStatsQuery);
             yield return nameof(MembershipFeesQuery);
             yield return nameof(PeriodsQuery);

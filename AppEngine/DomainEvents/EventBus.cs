@@ -1,4 +1,5 @@
-﻿using AppEngine.Authorization.UsersInPartition;
+﻿using AppEngine.Authorization;
+using AppEngine.Authorization.UsersInPartition;
 using AppEngine.Json;
 using AppEngine.Partitions;
 using AppEngine.ReadModels;
@@ -31,14 +32,23 @@ public class EventBus(IServiceProvider services,
         @event.UserId ??= user.UserId;
         @event.PartitionId ??= partitionContext.PartitionId;
 
-        //var translations = services.GetServices<IEventToCommandTranslation<TEvent>>().ToList();
-        //foreach (var command in translations.SelectMany(trn => trn.Translate(@event)))
-        //{
-        //    commandQueue.EnqueueCommand(command);
-        //}
-        var translations = services.GetServices<IEventToQueryChangedTranslation<TEvent>>().ToList();
+        var commandTranslations = services.GetServices<IEventToCommandTranslation<TEvent>>().ToList();
 
-        foreach (var queryChanged in translations.SelectMany(trn => trn.Translate(@event)))
+        foreach (var command in commandTranslations.SelectMany(trn => trn.Translate(@event)))
+        {
+            if (command is IPartitionBoundRequest partitionCommand
+             && partitionCommand.PartitionId == Guid.Empty
+             && partitionContext.PartitionId != null)
+            {
+                partitionCommand.PartitionId = partitionContext.PartitionId.Value;
+            }
+
+            commandQueue.EnqueueCommand(command);
+        }
+
+        var queryChangedTranslations = services.GetServices<IEventToQueryChangedTranslation<TEvent>>().ToList();
+
+        foreach (var queryChanged in queryChangedTranslations.SelectMany(trn => trn.Translate(@event)))
         {
             _notifications.Add((queryChanged, publishEvenWhenDbCommitFails));
         }

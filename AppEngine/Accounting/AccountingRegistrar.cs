@@ -13,6 +13,7 @@ public class AccountingRegistrar : ITypeRegistrar
     public void Register(IServiceCollection services, Assembly[] assemblies)
     {
         services.AddScoped<Camt053Parser>();
+        services.AddScoped<AccountingFacade>();
 
         services.AddTypesImplementingAsScoped<IPaymentAssignmentSource>(assemblies);
     }

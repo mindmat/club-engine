@@ -43,6 +43,10 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Using Include="MediatR" />
+  </ItemGroup>
+
 
   <Target Name="NSwag" AfterTargets="Build" Condition="'$(Configuration)'=='DEBUG'">
     <!--<Exec EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development" Command="$(NSwagExe) aspnetcore2openapi /assembly:$(TargetDir)ClubEngine.ApiService.dll /documentName:v1 /output:swagger.json" />-->

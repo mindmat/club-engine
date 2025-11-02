@@ -5,8 +5,6 @@ using AppEngine.DomainEvents;
 using AppEngine.ReadModels;
 using AppEngine.Types;
 
-using MediatR;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace AppEngine.Accounting.Bookings;

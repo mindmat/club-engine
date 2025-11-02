@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace AppEngine.Partitions;
 
@@ -21,11 +19,11 @@ public class PartitionByAcronymQueryHandler(IQueryable<IPartition> partitions) :
         var partition = await partitions.FirstAsync(evt => evt.Acronym == query.Acronym.ToLowerInvariant(), cancellationToken);
 
         return new PartitionDetails
-        {
-            Id = partition.Id,
-            Name = partition.Name,
-            Acronym = partition.Acronym
-        };
+               {
+                   Id = partition.Id,
+                   Name = partition.Name,
+                   Acronym = partition.Acronym
+               };
     }
 }
 

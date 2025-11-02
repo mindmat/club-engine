@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using System.Resources;
 
-using AppEngine.Accounting.Assignments;
 using AppEngine.Authentication;
 using AppEngine.Authorization;
 using AppEngine.Authorization.UsersInPartition;
@@ -81,6 +80,26 @@ public static class AppEngineExtensions
         builder.Services.AddSingleton(services => new DomainEventCatalog(domainEventTypes, services.GetService<Translator>()!));
         builder.Services.AddScoped<DomainEventCatalog>();
 
+        var eventTypes = assemblyContainer.Assemblies.GetTypesImplementing(typeof(DomainEvent));
+
+        foreach (var eventType in eventTypes)
+        {
+            var commandTranslationType = typeof(IEventToCommandTranslation<>).MakeGenericType(eventType);
+            var commandTranslations = assemblyContainer.Assemblies.GetTypesImplementing(commandTranslationType);
+
+            foreach (var translation in commandTranslations)
+            {
+                builder.Services.AddScoped(commandTranslationType, translation);
+            }
+
+            var queryChangedTranslationType = typeof(IEventToQueryChangedTranslation<>).MakeGenericType(eventType);
+            var translations = assemblyContainer.Assemblies.GetTypesImplementing(queryChangedTranslationType);
+
+            foreach (var translation in translations)
+            {
+                builder.Services.AddScoped(queryChangedTranslationType, translation);
+            }
+        }
         //builder.Services.AddScoped<IHttpContextAccessor, HttpContextContainer>();
 
         builder.Services.AddScoped<ExceptionMiddleware>();

@@ -63,6 +63,16 @@ export class NavigationService {
                   icon: 'heroicons_outline:users',
                   link: `/${e.acronym}/members`,
                   badge: this.getBadge(nodes, 'MembersNodeKey'),
+                  children: [
+                    {
+                      id: 'member',
+                      title: translateService.instant('Member'),
+                      type: 'basic',
+                      icon: 'heroicons_outline:user',
+                      link: `/${e.acronym}/member`,
+                      hidden: (_) => true,
+                    },
+                  ],
                 },
                 {
                   id: 'slack-matching',
@@ -111,18 +121,18 @@ export class NavigationService {
               type: 'group',
               children: [
                 {
-                  id: 'bank-statements',
-                  title: translateService.instant('BankStatements'),
-                  type: 'basic',
-                  icon: 'heroicons_outline:currency-dollar',
-                  link: `/${e.acronym}/accounting/bank-statements`,
-                },
-                {
                   id: 'membership-fees',
                   title: translateService.instant('MembershipFees'),
                   type: 'basic',
                   icon: 'heroicons_outline:clipboard-document-list',
                   link: `/${e.acronym}/accounting/membership-fees`,
+                },
+                {
+                  id: 'bank-statements',
+                  title: translateService.instant('BankStatements'),
+                  type: 'basic',
+                  icon: 'heroicons_outline:currency-dollar',
+                  link: `/${e.acronym}/accounting/bank-statements`,
                 },
                 {
                   id: 'settle-bookings',

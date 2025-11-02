@@ -2,6 +2,7 @@
 
 using ClubEngine.ApiService.Clubs;
 using ClubEngine.ApiService.Members.Memberships;
+using ClubEngine.ApiService.MembershipFees;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -23,6 +24,7 @@ public class Member : Entity
     public ICollection<Membership>? Memberships { get; set; }
     public Guid? CurrentMembershipTypeId_ReadModel { get; set; }
     public MembershipType? CurrentMembershipType_ReadModel { get; set; }
+    public ICollection<MembershipFee>? Fees { get; set; }
 }
 
 public class MemberMap : EntityMap<Member>

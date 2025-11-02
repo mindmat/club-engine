@@ -81,7 +81,11 @@
               @for (member of filterMembers(fees.paid); track member.memberId) {
                 <fuse-card class="flex w-80 flex-col rounded-xl p-4 shadow">
                   <div class="flex flex-row items-baseline gap-x-2">
-                    <a class="text-xl font-semibold leading-tight">{{ member.memberName }}</a>
+                    <a
+                      class="text-xl font-semibold leading-tight"
+                      [routerLink]="navigator.getMemberUrl(member.memberId)">
+                      {{ member.memberName }}
+                    </a>
                     <div class="text-secondary ml-auto font-medium">{{ member.amountPaid | number: '1.2-2' }}</div>
                   </div>
                 </fuse-card>
@@ -101,7 +105,11 @@
               @for (member of filterMembers(fees.due); track member.memberId) {
                 <fuse-card class="flex w-80 flex-col rounded-xl p-4 shadow">
                   <div class="flex flex-row items-baseline gap-x-2">
-                    <a class="text-xl font-semibold leading-tight">{{ member.memberName }}</a>
+                    <a
+                      class="text-xl font-semibold leading-tight"
+                      [routerLink]="navigator.getMemberUrl(member.memberId)">
+                      {{ member.memberName }}
+                    </a>
                     <div class="text-secondary ml-auto font-medium">{{ member.amountExpected | number: '1.2-2' }}</div>
                   </div>
                 </fuse-card>

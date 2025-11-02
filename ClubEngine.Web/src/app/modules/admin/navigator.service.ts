@@ -19,7 +19,7 @@ export class NavigatorService implements AppEngineNavigator {
   }
 
   getMemberUrl(memberId: string): string {
-    return `/${this.partitionService.selected.acronym}/members/${memberId}`;
+    return `/${this.partitionService.selected.acronym}/member/${memberId}`;
   }
 
   goToMember(memberId: string): void {

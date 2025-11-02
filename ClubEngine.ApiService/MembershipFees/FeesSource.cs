@@ -1,15 +1,14 @@
 ﻿using AppEngine.Accounting.Assignments;
 using AppEngine.DataAccess;
 
-using ClubEngine.ApiService.MembershipFees;
-
 using Microsoft.EntityFrameworkCore;
 
-namespace ClubEngine.ApiService.Accounting.Assignments;
+namespace ClubEngine.ApiService.MembershipFees;
 
 public class FeesSource(IQueryable<MembershipFee> fees) : IPaymentAssignmentSource
 {
-    public string Type => "MembershipFees";
+    public const string SourceType = "MembershipFees";
+    public string Type => SourceType;
 
     public async Task<IDictionary<Guid, SourceInfos>> GetSourceInfos(Guid partitionId, IEnumerable<Guid> sourceIds)
     {
@@ -45,11 +44,11 @@ public class FeesSource(IQueryable<MembershipFee> fees) : IPaymentAssignmentSour
                                       || EF.Functions.Like(msf.Member!.LastName!, $"%{searchString}%")
                                       || EF.Functions.Like(msf.Member!.Email!, $"%{searchString}%"))
                          .WhereIf(!userSearch,
-                                  reg => (paymentMessage != null && reg.Member!.FirstName != null && paymentMessage.Contains(reg.Member!.FirstName!))
-                                      || (paymentMessage != null && reg.Member!.LastName != null && paymentMessage.Contains(reg.Member!.FirstName!))
-                                      || (paymentMessage != null && reg.Member!.Email != null && paymentMessage.Contains(reg.Member!.FirstName!))
-                                      || (paymentOtherParty != null && reg.Member!.FirstName != null && paymentOtherParty.Contains(reg.Member!.FirstName!))
-                                      || (paymentOtherParty != null && reg.Member!.FirstName != null && paymentOtherParty.Contains(reg.Member!.FirstName!)))
+                                  reg => paymentMessage != null && reg.Member!.FirstName != null && paymentMessage.Contains(reg.Member!.FirstName!)
+                                      || paymentMessage != null && reg.Member!.LastName != null && paymentMessage.Contains(reg.Member!.FirstName!)
+                                      || paymentMessage != null && reg.Member!.Email != null && paymentMessage.Contains(reg.Member!.FirstName!)
+                                      || paymentOtherParty != null && reg.Member!.FirstName != null && paymentOtherParty.Contains(reg.Member!.FirstName!)
+                                      || paymentOtherParty != null && reg.Member!.FirstName != null && paymentOtherParty.Contains(reg.Member!.FirstName!))
                          .Select(msf => new SourceAssignmentCandidate
                                         {
                                             SourceId = msf.Id,

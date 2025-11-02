@@ -6,6 +6,7 @@ using AppEngine.Authorization.UsersInPartition;
 using AppEngine.Authorization.UsersInPartition.AccessRequests;
 using AppEngine.Mailing.Configuration;
 using AppEngine.MenuNodes;
+using AppEngine.ReadModels;
 
 namespace AppEngine.Authorization;
 
@@ -31,6 +32,7 @@ internal class AppEngineRightsOfPartitionRoleProvider : IRightsOfPartitionRolePr
             yield return nameof(UsersOfPartitionQuery);
             yield return nameof(MenuNodesQuery);
             yield return nameof(PaymentsByDayQuery);
+            yield return nameof(UpdateReadModelCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInPartitionRole.Writer)

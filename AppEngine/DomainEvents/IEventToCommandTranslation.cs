@@ -1,9 +1,7 @@
-﻿using MediatR;
+﻿namespace AppEngine.DomainEvents;
 
-namespace AppEngine.DomainEvents;
-
-//public interface IEventToCommandTranslation<in TEvent>
-//    where TEvent : DomainEvent
-//{
-//    IEnumerable<IRequest> Translate(TEvent e);
-//}
+public interface IEventToCommandTranslation<in TEvent>
+    where TEvent : DomainEvent
+{
+    IEnumerable<IRequest> Translate(TEvent e);
+}
