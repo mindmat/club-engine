@@ -45,6 +45,7 @@
 
   <ItemGroup>
     <Using Include="MediatR" />
+    <Using Include="Microsoft.EntityFrameworkCore" />
   </ItemGroup>
 
 

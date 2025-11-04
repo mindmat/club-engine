@@ -5,10 +5,6 @@ using AppEngine.TimeHandling;
 using ClubEngine.ApiService.Clubs;
 using ClubEngine.ApiService.Members.Memberships;
 
-using MediatR;
-
-using Microsoft.EntityFrameworkCore;
-
 namespace ClubEngine.ApiService.MembershipFees;
 
 public class UpsertMembershipFeesForPeriodCommand : IRequest, IPartitionBoundRequest
@@ -68,12 +64,22 @@ public class UpsertMembershipFeesForPeriodCommandHandler(IQueryable<Membership> 
                                     MemberId = memberId,
                                     MembershipTypeId = lastMembership.MembershipTypeId,
                                     Amount = lastMembership.Fee,
-                                    State = MembershipFeeState.Due
+                                    State = lastMembership.Fee > 0m
+                                        ? MembershipFeeState.Due
+                                        : MembershipFeeState.Cancelled
                                 });
 
                     break;
                 case 1:
-                    // no update yet
+                {
+                    var existingFee = existing.Single();
+
+                    if (existingFee is { Amount: <= 0, State: MembershipFeeState.Due })
+                    {
+                        existingFee.State = MembershipFeeState.Cancelled;
+                    }
+                }
+
                     break;
                 case > 1:
                     // ToDo: Log

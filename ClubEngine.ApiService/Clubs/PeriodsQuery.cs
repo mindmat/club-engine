@@ -1,10 +1,6 @@
 ﻿using AppEngine.Authorization;
 using AppEngine.TimeHandling;
 
-using MediatR;
-
-using Microsoft.EntityFrameworkCore;
-
 namespace ClubEngine.ApiService.Clubs;
 
 public class PeriodsQuery : IRequest<IEnumerable<PeriodDisplayItem>>, IPartitionBoundRequest
@@ -21,7 +17,7 @@ public class PeriodsQueryHandler(IQueryable<Period> periods, DateFormatter dateF
     {
         return await periods.Where(per => per.ClubId == query.PartitionId)
                             .OrderByDescending(per => per.From)
-                            .Select(per => new PeriodDisplayItem(per.Id, dateFormatter.GetPeriodText(per)))
+                            .Select(per => new PeriodDisplayItem(per.Id, per.Name ?? dateFormatter.GetPeriodText(per)))
                             .ToListAsync(cancellationToken);
     }
 }
