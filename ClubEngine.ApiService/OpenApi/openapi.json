@@ -1767,6 +1767,14 @@
             "items": {
               "$ref": "#/components/schemas/FeeStateInPeriod"
             }
+          },
+          "sumPaid": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "sumDue": {
+            "type": "number",
+            "format": "decimal"
           }
         }
       },

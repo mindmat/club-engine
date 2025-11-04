@@ -1,10 +1,10 @@
-﻿using AppEngine.Authorization;
+﻿using System.Linq;
+
+using AppEngine.Authorization;
 using AppEngine.DataAccess;
 using AppEngine.TimeHandling;
 
 using ClubEngine.ApiService.Clubs;
-
-using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
@@ -16,9 +16,11 @@ public record MembershipFeesQuery(Guid? PeriodId) : IRequest<MembershipFeesList>
 }
 
 public record MembershipFeesList(IEnumerable<FeeStateInPeriod> Paid,
-                                 IEnumerable<FeeStateInPeriod> Due);
+                                 IEnumerable<FeeStateInPeriod> Due,
+                                 decimal SumPaid,
+                                 decimal SumDue);
 
-public record FeeStateInPeriod(Guid MemberId, string MemberName, decimal AmountExpected, decimal AmountPaid);
+public record FeeStateInPeriod(Guid MemberId, string MemberName, decimal AmountExpected, decimal AmountPaid, MembershipFeeState State);
 
 public class MembershipFeesQueryHandler(IQueryable<MembershipFee> fees,
                                         IQueryable<Period> periods,
@@ -37,20 +39,22 @@ public class MembershipFeesQueryHandler(IQueryable<MembershipFee> fees,
         var feesOfPeriod = await fees.Where(mfe => mfe.PeriodId == period.Id)
                                      .OrderBy(mbr => mbr.Member!.FirstName)
                                      .ThenBy(mbr => mbr.Member!.LastName)
-                                     .Select(mfe => new
-                                                    {
-                                                        mfe.MemberId,
-                                                        Member = $"{mfe.Member!.FirstName} {mfe.Member.LastName}",
-                                                        mfe.Amount,
-                                                        mfe.State
-                                                    })
+                                     .Select(mfe => new FeeStateInPeriod(mfe.MemberId,
+                                                                         $"{mfe.Member!.FirstName} {mfe.Member.LastName}",
+                                                                         mfe.Amount,
+                                                                         mfe.AmountPaid_ReadModel,
+                                                                         mfe.State))
                                      .ToListAsync(cancellationToken);
 
-        return new MembershipFeesList(feesOfPeriod.Where(fee => fee.State == MembershipFeeState.Paid)
-                                                  .Select(fee => new FeeStateInPeriod(fee.MemberId, fee.Member, fee.Amount, 0))
-                                                  .ToList(),
-                                      feesOfPeriod.Where(fee => fee.State == MembershipFeeState.Due)
-                                                  .Select(fee => new FeeStateInPeriod(fee.MemberId, fee.Member, fee.Amount, 0))
-                                                  .ToList());
+        var paidFees = feesOfPeriod.Where(fee => fee.State == MembershipFeeState.Paid)
+                                   .ToList();
+
+        var dueFees = feesOfPeriod.Where(fee => fee.State == MembershipFeeState.Due)
+                                  .ToList();
+
+        return new MembershipFeesList(paidFees,
+                                      dueFees,
+                                      paidFees.Sum(fee => fee.AmountPaid),
+                                      dueFees.Sum(fee => fee.AmountExpected - fee.AmountPaid));
     }
 }

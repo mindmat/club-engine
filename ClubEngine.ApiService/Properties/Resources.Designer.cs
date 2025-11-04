@@ -232,6 +232,15 @@ namespace ClubEngine.ApiService.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bezahlte Beträge.
+        /// </summary>
+        public static string PaidFees {
+            get {
+                return ResourceManager.GetString("PaidFees", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Periode.
         /// </summary>
         public static string Period {

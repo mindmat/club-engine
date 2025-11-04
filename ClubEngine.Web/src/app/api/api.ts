@@ -2231,6 +2231,8 @@ export interface MemberQuery {
 export interface MembershipFeesList {
     paid?: FeeStateInPeriod[];
     due?: FeeStateInPeriod[];
+    sumPaid?: number;
+    sumDue?: number;
 }
 
 export interface FeeStateInPeriod {

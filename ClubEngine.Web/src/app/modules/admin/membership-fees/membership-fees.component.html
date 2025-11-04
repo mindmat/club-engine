@@ -43,15 +43,15 @@
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <mat-card class="p-6">
             <div class="text-sm font-medium text-gray-500">{{ 'Expected' | translate }}</div>
-            <div class="text-2xl font-semibold">{{ getTotalAmount(fees.paid || []) + getTotalAmount(fees.due || []) | number: '1.2-2' }}</div>
+            <div class="text-2xl font-semibold">{{ fees.sumDue + fees.sumPaid | number: '1.2-2' }}</div>
           </mat-card>
           <mat-card class="p-6">
             <div class="text-sm font-medium text-gray-500">{{ 'Paid' | translate }}</div>
-            <div class="text-2xl font-semibold text-green-600">{{ getTotalPaid(fees.paid || []) + getTotalPaid(fees.due || []) | number: '1.2-2' }}</div>
+            <div class="text-2xl font-semibold text-green-600">{{ fees.sumPaid | number: '1.2-2' }}</div>
           </mat-card>
           <mat-card class="p-6">
             <div class="text-sm font-medium text-gray-500">{{ 'Due' | translate }}</div>
-            <div class="text-2xl font-semibold text-red-600">{{ getTotalDue(fees.due || []) | number: '1.2-2' }}</div>
+            <div class="text-2xl font-semibold text-red-600">{{ fees.sumDue | number: '1.2-2' }}</div>
           </mat-card>
         </div>
 
