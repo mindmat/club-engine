@@ -1,12 +1,8 @@
-﻿using System.Linq;
-
-using AppEngine.Authorization;
+﻿using AppEngine.Authorization;
 using AppEngine.DataAccess;
 using AppEngine.TimeHandling;
 
 using ClubEngine.ApiService.Clubs;
-
-using Microsoft.EntityFrameworkCore;
 
 namespace ClubEngine.ApiService.MembershipFees;
 

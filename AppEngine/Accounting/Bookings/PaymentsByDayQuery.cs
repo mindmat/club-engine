@@ -30,13 +30,18 @@ public class PaymentsByDayQueryHandler(IQueryable<IncomingPayment> incomingBooki
                                                          CancellationToken cancellationToken)
     {
         var payments = Enumerable.Empty<PaymentDisplayItem>();
+        var searchAmount = 0m;
+        var searchForAmount = query.SearchString != null && decimal.TryParse(query.SearchString, out searchAmount);
+        var searchForText = !searchForAmount && !string.IsNullOrWhiteSpace(query.SearchString);
 
         if (!query.HideIncoming)
         {
             payments = payments.Concat(await incomingBookings.Where(bbk => bbk.Booking!.PartitionId == query.PartitionId)
                                                              .WhereIf(query.HideIgnored, bbk => !bbk.Booking!.Ignore)
                                                              .WhereIf(query.HideSettled, bbk => !bbk.Booking!.Settled_ReadModel)
-                                                             .WhereIf(!string.IsNullOrWhiteSpace(query.SearchString),
+                                                             .WhereIf(searchForAmount,
+                                                                      bbk => bbk.Booking!.Amount == searchAmount)
+                                                             .WhereIf(searchForText,
                                                                       bbk => EF.Functions.Like(bbk.Booking!.Message!, $"%{query.SearchString}%")
                                                                           || EF.Functions.Like(bbk.DebitorName!, $"%{query.SearchString}%"))
                                                              .Select(bbk => new PaymentDisplayItem
@@ -67,7 +72,9 @@ public class PaymentsByDayQueryHandler(IQueryable<IncomingPayment> incomingBooki
             payments = payments.Concat(await outgoingBookings.Where(bbk => bbk.Booking!.PartitionId == query.PartitionId)
                                                              .WhereIf(query.HideIgnored, bbk => !bbk.Booking!.Ignore)
                                                              .WhereIf(query.HideSettled, bbk => !bbk.Booking!.Settled_ReadModel)
-                                                             .WhereIf(!string.IsNullOrWhiteSpace(query.SearchString),
+                                                             .WhereIf(searchForAmount,
+                                                                      bbk => bbk.Booking!.Amount == searchAmount)
+                                                             .WhereIf(searchForText,
                                                                       bbk => EF.Functions.Like(bbk.Booking!.Message!, $"%{query.SearchString}%")
                                                                           || EF.Functions.Like(bbk.CreditorName!, $"%{query.SearchString}%"))
                                                              .Select(bbk => new PaymentDisplayItem
