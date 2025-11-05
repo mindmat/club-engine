@@ -23,8 +23,6 @@ using AppEngine.Types;
 
 using Azure.Messaging.ServiceBus;
 
-using MediatR;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;

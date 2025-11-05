@@ -5,8 +5,6 @@ using AppEngine.Types;
 
 using ClubEngine.ApiService.Members.Memberships;
 
-using Microsoft.EntityFrameworkCore;
-
 namespace ClubEngine.ApiService.Members;
 
 public class MembersNodeKey : IMenuNodeKey;
@@ -27,13 +25,6 @@ public class MembersCalculator(IQueryable<Member> members,
 
         var types = await membershipTypes.Where(mst => mst.ClubId == partitionId)
                                          .ToListAsync(cancellationToken);
-
-        var node = new MenuNodeCalculation
-                   {
-                       Key = nameof(MembersNodeKey),
-                       Style = MenuNodeStyle.Info,
-                       Content = allMembers.Count.ToString()
-                   };
 
         var datesWithChanges = Enumerable.Concat(allMembers.SelectMany(mbr => mbr.Memberships!.Select(msp => msp.From)),
                                                  allMembers.SelectMany(mbr => mbr.Memberships!.Select(msp => msp.Until)))
@@ -74,6 +65,14 @@ public class MembersCalculator(IQueryable<Member> members,
                                                                         grp.Select(stt => new MembershipTypeCount(stt.Date, stt.Count)));
                                              }),
                                         inactiveCount);
+
+        var node = new MenuNodeCalculation
+                   {
+                       Key = nameof(MembersNodeKey),
+                       Style = MenuNodeStyle.Info,
+                       Content = readModel.CurrentTotal.ToString()
+                   };
+
 
         return (readModel, node);
     }

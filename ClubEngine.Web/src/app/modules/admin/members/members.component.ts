@@ -1,30 +1,47 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
-import { MembersService } from './members.service';
-import { MemberDisplayItem, MemberStats } from 'app/api/api';
-import { Observable } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
-import { RouterModule } from '@angular/router';
-import { MembersHistoryComponent } from "../members-history/members-history.component";
 import { CdkScrollable } from '@angular/cdk/scrolling';
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatChipsModule } from '@angular/material/chips';
-import { MembersHistoryService } from '../members-history/members-history.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MemberComponent } from "../member/member.component";
+import { RouterModule } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
+import { MemberDisplayItem, MemberStats } from 'app/api/api';
+import { UpdateReadmodelComponent } from 'app/app-engine/readmodels/update-readmodel/update-readmodel.component';
+import { Observable } from 'rxjs';
+import { MemberComponent } from '../member/member.component';
+import { MembersHistoryComponent } from '../members-history/members-history.component';
+import { MembersHistoryService } from '../members-history/members-history.service';
+import { MembersService } from './members.service';
 
 @Component({
   selector: 'app-members',
-  imports: [TranslatePipe, AsyncPipe, MatIconModule, MatInputModule, RouterModule, MemberComponent, MembersHistoryComponent, MembersHistoryComponent, CdkScrollable, MatChipsModule, MatFormFieldModule, MemberComponent],
+  imports: [
+    TranslatePipe,
+    AsyncPipe,
+    MatIconModule,
+    MatInputModule,
+    RouterModule,
+    MemberComponent,
+    MembersHistoryComponent,
+    MembersHistoryComponent,
+    CdkScrollable,
+    MatChipsModule,
+    MatFormFieldModule,
+    MemberComponent,
+    UpdateReadmodelComponent,
+  ],
   templateUrl: './members.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MembersComponent {
   filterByTypeIds: string[];
   searchString: string;
-  constructor(private membersService: MembersService,
-    private statsService: MembersHistoryService) { }
+  constructor(
+    private membersService: MembersService,
+    private statsService: MembersHistoryService
+  ) {}
 
   get members$(): Observable<MemberDisplayItem[]> {
     return this.membersService.members$;

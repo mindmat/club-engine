@@ -1,64 +1,85 @@
-<div class="absolute inset-0 flex min-w-0 flex-col overflow-y-auto" cdkScrollable>
-    <!-- Main -->
-    <div class="flex flex-auto flex-col">
-        <!-- Header -->
-        <div class="bg-card flex flex-col items-start border-b p-6 dark:bg-transparent sm:flex-row sm:items-center sm:justify-between sm:py-12 md:px-8">
-            <!-- Title -->
-            <div>
-                <div class="text-4xl font-extrabold leading-none tracking-tight">
-                    {{ 'Members' | translate }}
-                </div>
-                <!-- <div class="text-secondary mt-0.5 flex items-center font-medium">
+<div
+  class="absolute inset-0 flex min-w-0 flex-col overflow-y-auto"
+  cdkScrollable>
+  <!-- Main -->
+  <div class="flex flex-auto flex-col">
+    <!-- Header -->
+    <div class="bg-card flex flex-col items-start border-b p-6 sm:flex-row sm:items-center sm:justify-between sm:py-12 md:px-8 dark:bg-transparent">
+      <!-- Title -->
+      <div>
+        <div class="text-4xl font-extrabold leading-none tracking-tight">
+          {{ 'Members' | translate }}
+          <app-update-readmodel queryName="MemberStatsQuery"></app-update-readmodel>
+        </div>
+
+        <!-- <div class="text-secondary mt-0.5 flex items-center font-medium">
                     @if (!items.path.length) {
                     {{ items.folders.length }} folders,
                     {{ items.files.length }} files
                     }
                 </div> -->
-            </div>
-        </div>
-
-        <div class="space-y-8 p-6 md:p-8">
-            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                <app-members-history></app-members-history>
-                <div class="flex flex-col gap-4">
-                    @if(stats$ | async; as stats)
-                    {
-                    <mat-chip-listbox class="mat-mdc-chip-set-stacked" selectable multiple (change)="onSelectionChange($event.value)">
-                        @for (count of stats.currentCounts; track $index) {
-                        <mat-chip-option [value]="count.membershipTypeId" selected [style]="getColor(count.color)">{{ count.name }} ({{count.count}})</mat-chip-option>
-                        }
-                        <mat-chip-option [value]="null" class="bg-[#d6d3d1]">{{ 'Inactive' | translate }} ({{stats.inactiveCount}})</mat-chip-option>
-                    </mat-chip-listbox>
-                    }
-                    <mat-form-field [subscriptSizing]="'dynamic'">
-                        <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
-                        <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByNameEmail' | translate" matInput #query />
-                    </mat-form-field>
-                </div>
-            </div>
-            <!-- Items list -->
-            @if ( members$ | async; as members
-            && members.length > 0 )
-            {
-            <div>
-                <div class="font-medium">{{ 'Members' | translate }}</div>
-                <div class="-m-2 mt-2 flex flex-wrap gap-4">
-                    @for ( member of members; track member.id) {
-                    <app-member [member]="member"></app-member>
-                    }
-                </div>
-            </div>
-
-            } @else {
-            <div class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent">
-                <mat-icon class="icon-size-24" [svgIcon]="'heroicons_outline:folder-open'"></mat-icon>
-                <div class="text-secondary mt-4 text-2xl font-semibold tracking-tight">
-                    There are no items!
-                </div>
-            </div>
-            }
-        </div>
-
-        <!-- No items template -->
+      </div>
     </div>
+
+    <div class="space-y-8 p-6 md:p-8">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <app-members-history></app-members-history>
+        <div class="flex flex-col gap-4">
+          @if (stats$ | async; as stats) {
+            <mat-chip-listbox
+              class="mat-mdc-chip-set-stacked"
+              selectable
+              multiple
+              (change)="onSelectionChange($event.value)">
+              @for (count of stats.currentCounts; track $index) {
+                <mat-chip-option
+                  [value]="count.membershipTypeId"
+                  selected
+                  [style]="getColor(count.color)"
+                  >{{ count.name }} ({{ count.count }})</mat-chip-option
+                >
+              }
+              <mat-chip-option
+                [value]="null"
+                class="bg-[#d6d3d1]"
+                >{{ 'Inactive' | translate }} ({{ stats.inactiveCount }})</mat-chip-option
+              >
+            </mat-chip-listbox>
+          }
+          <mat-form-field [subscriptSizing]="'dynamic'">
+            <mat-icon
+              matPrefix
+              class="icon-size-5"
+              [svgIcon]="'heroicons_solid:magnifying-glass'"></mat-icon>
+            <input
+              (input)="filterByQuery(query.value)"
+              [placeholder]="'SearchByNameEmail' | translate"
+              matInput
+              #query />
+          </mat-form-field>
+        </div>
+      </div>
+      <!-- Items list -->
+      @if (members$ | async; as members 
+      && members.length > 0) {
+        <div>
+          <div class="font-medium">{{ 'Members' | translate }}</div>
+          <div class="-m-2 mt-2 flex flex-wrap gap-4">
+            @for (member of members; track member.id) {
+              <app-member [member]="member"></app-member>
+            }
+          </div>
+        </div>
+      } @else {
+        <div class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent">
+          <mat-icon
+            class="icon-size-24"
+            [svgIcon]="'heroicons_outline:folder-open'"></mat-icon>
+          <div class="text-secondary mt-4 text-2xl font-semibold tracking-tight">There are no items!</div>
+        </div>
+      }
+    </div>
+
+    <!-- No items template -->
+  </div>
 </div>

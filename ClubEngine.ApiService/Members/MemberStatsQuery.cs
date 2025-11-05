@@ -1,8 +1,6 @@
 ﻿using AppEngine.Authorization;
 using AppEngine.ReadModels;
 
-using MediatR;
-
 namespace ClubEngine.ApiService.Members;
 
 public class MemberStatsQuery : IRequest<MemberStats>, IPartitionBoundRequest
