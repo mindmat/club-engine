@@ -3,10 +3,6 @@
 using AppEngine.Authorization;
 using AppEngine.DataAccess;
 
-using MediatR;
-
-using Microsoft.EntityFrameworkCore;
-
 namespace ClubEngine.ApiService.Members;
 
 public class MembersQuery : IRequest<IEnumerable<MemberDisplayItem>>, IPartitionBoundRequest
@@ -24,6 +20,8 @@ public class MembersQueryHandler(IQueryable<Member> members) : IRequestHandler<M
     public async Task<IEnumerable<MemberDisplayItem>> Handle(MembersQuery query, CancellationToken cancellationToken)
     {
         return await members.Where(mbr => mbr.ClubId == query.PartitionId)
+                            .WhereIf(query.MembershipTypeIds == null,
+                                     mbr => mbr.CurrentMembershipTypeId_ReadModel != null)
                             .WhereIf(query.MembershipTypeIds?.Length > 0,
                                      mbr => query.MembershipTypeIds!.Contains(mbr.CurrentMembershipTypeId_ReadModel))
                             .WhereIf(!string.IsNullOrEmpty(query.SearchString),
