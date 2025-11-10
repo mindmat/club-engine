@@ -883,6 +883,54 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    overrideMembershipFee_Command(overrideMembershipFeeCommand: OverrideMembershipFeeCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/OverrideMembershipFeeCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(overrideMembershipFeeCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processOverrideMembershipFee_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processOverrideMembershipFee_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processOverrideMembershipFee_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     partitionByAcronym_Query(partitionByAcronymQuery: PartitionByAcronymQuery | undefined): Observable<PartitionDetails> {
         let url_ = this.baseUrl + "/api/PartitionByAcronymQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -2199,6 +2247,7 @@ export interface MemberDetails {
     name?: string | null;
     email?: string | null;
     phone?: string | null;
+    feeOverride?: number | null;
     lastMembership?: MembershipDetails | null;
     fees?: FeeDetails[];
 }
@@ -2240,6 +2289,7 @@ export interface FeeStateInPeriod {
     memberName?: string;
     amountExpected?: number;
     amountPaid?: number;
+    state?: MembershipFeeState;
 }
 
 export interface MembershipFeesQuery {
@@ -2361,6 +2411,12 @@ export interface MyPartitionsQuery {
 
 export interface MyRightsInPartitionQuery {
     partitionId?: string;
+}
+
+export interface OverrideMembershipFeeCommand {
+    partitionId?: string;
+    memberId?: string;
+    amount?: number | null;
 }
 
 export interface PartitionDetails {

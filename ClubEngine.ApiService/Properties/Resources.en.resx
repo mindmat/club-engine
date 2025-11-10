@@ -132,8 +132,14 @@
   <data name="DueFees" xml:space="preserve">
     <value>Due fees</value>
   </data>
+  <data name="EditFeeOverride" xml:space="preserve">
+    <value>Adjust fee</value>
+  </data>
   <data name="Expected" xml:space="preserve">
     <value>Expected</value>
+  </data>
+  <data name="FeeOverride" xml:space="preserve">
+    <value>Adjusted fee</value>
   </data>
   <data name="History" xml:space="preserve">
     <value>History</value>

@@ -40,6 +40,7 @@ internal class RightsOfRoleProvider : IRightsOfPartitionRoleProvider
             yield return nameof(MapSlackUserCommand);
             yield return nameof(RemoveSlackUserMappingCommand);
             yield return nameof(UpsertMembershipFeesForPeriodCommand);
+            yield return nameof(OverrideMembershipFeeCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInPartitionRole.Admin))

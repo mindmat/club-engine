@@ -4,10 +4,6 @@ using AppEngine.ReadModels;
 
 using ClubEngine.ApiService.MembershipFees;
 
-using MediatR;
-
-using Microsoft.EntityFrameworkCore;
-
 namespace ClubEngine.ApiService.Members;
 
 public class MemberQuery : IRequest<MemberDetails>, IPartitionBoundRequest
@@ -46,6 +42,7 @@ public class MemberCalculator(IQueryable<Member> members)
                                                      mbr.LastName,
                                                      mbr.Email,
                                                      mbr.Phone,
+                                                     mbr.FeeOverride,
                                                      Fees = mbr.Fees!
                                                                .OrderByDescending(mfe => mfe.Period!.From)
                                                                .Select(mfe => new
@@ -74,6 +71,7 @@ public class MemberCalculator(IQueryable<Member> members)
                                           string.Join(", ", member.FirstName, member.LastName),
                                           member.Email,
                                           member.Phone,
+                                          member.FeeOverride,
                                           member.LastMembership == null
                                               ? null
                                               : new MembershipDetails(member.LastMembership.MembershipTypeId,
@@ -89,8 +87,20 @@ public class MemberCalculator(IQueryable<Member> members)
     }
 }
 
-public record MemberDetails(Guid Id, string? Name, string? Email, string? Phone, MembershipDetails? LastMembership, IEnumerable<FeeDetails> Fees);
+public record MemberDetails(Guid Id,
+                            string? Name,
+                            string? Email,
+                            string? Phone,
+                            decimal? FeeOverride,
+                            MembershipDetails? LastMembership,
+                            IEnumerable<FeeDetails> Fees);
 
-public record MembershipDetails(Guid MembershipTypeId, DateOnly From, DateOnly Until);
+public record MembershipDetails(Guid MembershipTypeId,
+                                DateOnly From,
+                                DateOnly Until);
 
-public record FeeDetails(DateOnly PeriodFrom, DateOnly PeriodUntil, decimal Amount, decimal AmountOpen, MembershipFeeState State);
+public record FeeDetails(DateOnly PeriodFrom,
+                         DateOnly PeriodUntil,
+                         decimal Amount,
+                         decimal AmountOpen,
+                         MembershipFeeState State);

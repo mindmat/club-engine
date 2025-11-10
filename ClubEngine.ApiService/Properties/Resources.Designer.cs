@@ -106,11 +106,29 @@ namespace ClubEngine.ApiService.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Beitrag anpassen.
+        /// </summary>
+        public static string EditFeeOverride {
+            get {
+                return ResourceManager.GetString("EditFeeOverride", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Erwartet.
         /// </summary>
         public static string Expected {
             get {
                 return ResourceManager.GetString("Expected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Angepasster Beitrag.
+        /// </summary>
+        public static string FeeOverride {
+            get {
+                return ResourceManager.GetString("FeeOverride", resourceCulture);
             }
         }
         

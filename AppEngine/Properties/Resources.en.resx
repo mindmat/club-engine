@@ -126,6 +126,9 @@
   <data name="AddImap" xml:space="preserve">
     <value>Add mail import</value>
   </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
   <data name="AssignBankStatements" xml:space="preserve">
     <value>Assign bank statements</value>
   </data>

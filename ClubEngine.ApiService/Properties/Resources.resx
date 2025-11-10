@@ -132,8 +132,14 @@
   <data name="DueFees" xml:space="preserve">
     <value>Ausstehende Beträge</value>
   </data>
+  <data name="EditFeeOverride" xml:space="preserve">
+    <value>Beitrag anpassen</value>
+  </data>
   <data name="Expected" xml:space="preserve">
     <value>Erwartet</value>
+  </data>
+  <data name="FeeOverride" xml:space="preserve">
+    <value>Angepasster Beitrag</value>
   </data>
   <data name="History" xml:space="preserve">
     <value>Verlauf</value>

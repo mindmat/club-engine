@@ -24,4 +24,12 @@ export class MemberDetailsService extends FetchService<MemberDetails> {
   fetch(memberId: string | null = null): Observable<MemberDetails> {
     return this.fetchItems(this.api.member_Query({ partitionId: this.partitionService.selectedId, memberId }), memberId, this.partitionService.selectedId);
   }
+
+  updateFeeOverride(memberId: string | null, amount: number | null): Observable<void> {
+    return this.api.overrideMembershipFee_Command({
+      partitionId: this.partitionService.selectedId,
+      memberId,
+      amount,
+    });
+  }
 }

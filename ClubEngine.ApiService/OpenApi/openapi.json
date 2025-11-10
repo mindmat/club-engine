@@ -548,6 +548,31 @@
         }
       }
     },
+    "/api/OverrideMembershipFeeCommand": {
+      "post": {
+        "tags": [
+          "OverrideMembershipFee"
+        ],
+        "operationId": "OverrideMembershipFee_Command",
+        "requestBody": {
+          "x-name": "OverrideMembershipFeeCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OverrideMembershipFeeCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/PartitionByAcronymQuery": {
       "post": {
         "tags": [
@@ -1665,6 +1690,11 @@
             "type": "string",
             "nullable": true
           },
+          "feeOverride": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
           "lastMembership": {
             "nullable": true,
             "oneOf": [
@@ -1796,6 +1826,9 @@
           "amountPaid": {
             "type": "number",
             "format": "decimal"
+          },
+          "state": {
+            "$ref": "#/components/schemas/MembershipFeeState"
           }
         }
       },
@@ -2155,6 +2188,25 @@
           "partitionId": {
             "type": "string",
             "format": "guid"
+          }
+        }
+      },
+      "OverrideMembershipFeeCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "partitionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "memberId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
           }
         }
       },

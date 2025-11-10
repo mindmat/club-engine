@@ -8,14 +8,14 @@
         </div> -->
 
       <!-- User info -->
-      <div class="bg-card mx-auto flex w-full max-w-5xl flex-0 flex-col items-center gap-2 px-8 lg:h-18 lg:flex-row">
+      <div class="bg-card mx-auto flex h-18 w-full max-w-5xl flex-0 flex-row items-center gap-2 px-8">
         <!-- Avatar -->
         <!-- <div class="-mt-26 lg:-mt-22 rounded-full">
                 <img class="w-32 h-32 rounded-full ring-4 ring-bg-card" src="assets/images/avatars/male-04.jpg" alt="User avatar">
             </div> -->
 
         <!-- Details -->
-        <div class="mt-4 flex flex-col items-center lg:ml-8 lg:mt-0 lg:items-start">
+        <div class="mt-0 mt-4 flex flex-col items-start items-center">
           <div class="text-lg font-bold leading-none">{{ member.name }}</div>
           <!-- <div class="text-secondary">London, UK</div> -->
         </div>
@@ -29,7 +29,7 @@
       </div>
     </div>
     <!-- Column layout -->
-    <div class="m-6 grid grid-cols-4 gap-8">
+    <div class="2xl:grid-cols-4 m-6 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
       <!-- Cards -->
       <!-- Personal Details -->
       <fuse-card class="flex flex-col p-8">
@@ -84,8 +84,70 @@
       <fuse-card class="flex flex-col rounded-2xl px-8 pb-4 pt-6">
         <div class="flex items-center justify-between">
           <div class="text-2xl font-semibold leading-tight">{{ 'MembershipFees' | translate }}</div>
+          @if (!member.feeOverride) {
+            <button
+              mat-icon-button
+              (click)="editFeeOverride(member.feeOverride)"
+              [matTooltip]="'EditFeeOverride' | translate">
+              <mat-icon
+                class="text-blue-600 icon-size-4"
+                [svgIcon]="'heroicons_solid:pencil'"></mat-icon>
+            </button>
+          }
         </div>
         <hr class="my-6 w-full border-t" />
+        <!-- Fee Override Section -->
+        <div class="mb-2 flex items-center space-x-2">
+          @if (editingFeeOverride) {
+            <span class="leading-none">{{ 'FeeOverride' | translate }}: </span>
+            <form
+              [formGroup]="feeOverrideForm"
+              class="flex items-center gap-2">
+              <mat-form-field
+                class="w-24"
+                [subscriptSizing]="'dynamic'">
+                <input
+                  matInput
+                  type="number"
+                  min="0"
+                  formControlName="amount"
+                  [placeholder]="'Amount' | translate" />
+              </mat-form-field>
+              <button
+                mat-icon-button
+                type="submit"
+                [disabled]="!feeOverrideForm.valid"
+                (click)="saveFeeOverride(member.id)">
+                <mat-icon
+                  class="text-green-600"
+                  [svgIcon]="'heroicons_solid:check'"></mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                type="button"
+                (click)="cancelFeeOverrideEdit()">
+                <mat-icon
+                  class="text-red-600"
+                  [svgIcon]="'heroicons_solid:x-mark'"></mat-icon>
+              </button>
+            </form>
+          } @else {
+            @if (!!member.feeOverride) {
+              <span class="leading-none">{{ 'FeeOverride' | translate }}: </span>
+              <span class="leading-none">
+                {{ member.feeOverride | number: '1.2-2' }}
+              </span>
+              <button
+                mat-icon-button
+                (click)="editFeeOverride(member.feeOverride)"
+                [matTooltip]="'EditFeeOverride' | translate">
+                <mat-icon
+                  class="text-blue-600 icon-size-4"
+                  [svgIcon]="'heroicons_solid:pencil'"></mat-icon>
+              </button>
+            }
+          }
+        </div>
         <div class="mb-4 flex flex-col space-y-4">
           @for (fee of member.fees; track $index) {
             <div class="bg-default flex flex-col rounded-xl p-3 shadow">
