@@ -111,7 +111,7 @@ public class Translator
 
         foreach (var resourceManager in _namespaceToResources.Values)
         {
-            var keys = resourceManager.GetResourceSet(CultureInfo.InvariantCulture, false, true)
+            var keys = resourceManager.GetResourceSet(CultureInfo.InvariantCulture, true, true)
                                       ?.OfType<DictionaryEntry>()
                                       .ToDictionary(entry => entry.Key, entry => entry.Value)
                                       .Select(entry => entry.Key)
