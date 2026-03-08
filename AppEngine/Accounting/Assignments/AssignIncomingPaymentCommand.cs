@@ -84,7 +84,11 @@ public class AssignIncomingPaymentCommandHandler(IQueryable<IncomingPayment> inc
                              SourceText = sourceCandidate.TextPrimary
                          });
 
-
+        changeTrigger.EnqueueCommand(new CheckIfBookingIsSettledCommand
+                                     {
+                                         PartitionId = command.PartitionId,
+                                         BookingId = incomingPayment.Id
+                                     });
         //changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
         //changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, registration.EventId);
         changeTrigger.QueryChanged<PaymentsByDayQuery>(command.PartitionId);

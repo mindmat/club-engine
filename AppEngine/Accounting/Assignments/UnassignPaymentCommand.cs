@@ -66,6 +66,11 @@ public class UnassignPaymentCommandHandler(IRepository<BookingAssignment> assign
                                            SourceId = existingAssignment.SourceId,
                                        });
 
+            changeTrigger.EnqueueCommand(new CheckIfBookingIsSettledCommand
+                                         {
+                                             PartitionId = command.PartitionId,
+                                             BookingId = existingAssignment.IncomingPaymentId.Value
+                                         });
             changeTrigger.QueryChanged<PaymentAssignmentsQuery>(command.PartitionId, existingAssignment.IncomingPaymentId);
         }
         else if (existingAssignment.OutgoingPaymentId != null)
@@ -86,6 +91,12 @@ public class UnassignPaymentCommandHandler(IRepository<BookingAssignment> assign
                                            SourceType = existingAssignment.SourceType,
                                            SourceId = existingAssignment.SourceId,
                                        });
+
+            changeTrigger.EnqueueCommand(new CheckIfBookingIsSettledCommand
+                                         {
+                                             PartitionId = command.PartitionId,
+                                             BookingId = existingAssignment.OutgoingPaymentId.Value
+                                         });
 
             changeTrigger.QueryChanged<PaymentAssignmentsQuery>(command.PartitionId, existingAssignment.OutgoingPaymentId);
         }
